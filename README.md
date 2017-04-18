@@ -1,6 +1,6 @@
 # cre
-clinical research exome - excel report generation using results from [bcbio variant2](https://bcbio-nextgen.readthedocs.io/en/latest/contents/pipelines.html#germline-variant-calling) 
-germline variant calling pipeline.
+comprehensive,compassionate,clean,computable,cluster,clinical,Canadian,you name it... research exome - excel report generation using results from [bcbio variant2](https://bcbio-nextgen.readthedocs.io/en/latest/contents/pipelines.html#germline-variant-calling) 
+germline variant calling pipeline. I can't claim it clinical, of course, use it for your own risk for research purposes only.
 
 # 0. Prerequisites
 
@@ -56,4 +56,8 @@ in the current directory and folders for projects.
 ```
 qsub -t 1-N ~/cre/bcbio.array.pbs
 ```
-Use a number instead of N, i.e. 100.
+Use a number instead of N, i.e. 100. I'm using 5 cores x 50G of RAM per project. It is HPC-specific. Our policies encourage submitting small jobs.
+I can wait for 2-5 days for a project when working with cohorts. Faster processing is possible using more memory and cores, or with bcbio parallel execution.
+
+# 3.clean up after bcbio and create csv report for excel import
+[bcbio.cleanup.sh](../master/bcbio.cleanup.sh) [family]
