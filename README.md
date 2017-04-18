@@ -23,7 +23,7 @@ CH0136	1013	/somewhere/1013_CH0136.bam
 Then run [bcbio.prepare_families.sh](../master/bcbio.prepare_families.sh) [table.txt] 
 or use qsub, if you have a large cohort:
 ```
-bcbio.prepare_families.sh	-v project_list=table.txt
+qsub ~/cre/bcbio.prepare_families.sh	-v project_list=table.txt
 ```
 
 The script will prepare a folder for each project(family) using (bcbio.templates.exome.yaml)[../master/bcbio.templates.exome.yaml] template.
@@ -43,7 +43,16 @@ we can discover a useful non-coding variant. No sense to filter them out during 
 
 It really depends on your HPC job management system and policies. Our HPC uses torque. It is possible to run jobs from bcbio (it automatically submits jobs to the queue,
 and then those jobs communicate with each other via network - very cool). I've tried this (parallel execution) for some time. I was stuck with some problems, maybe HPC-related. 
-So I decided to keep it simple (remember KISS, keep it simple, stupid), and to run one job per family(project).
+So I decided to keep it simple (remember KISS, keep it simple, stupid), and to run one multicore job on one node per family(project) using torque.
 
-To run one project: [bcbio.pbs](../master/bcbio.pbs).
+To run one project: [bcbio.pbs](../master/bcbio.pbs):
+```
+qsub ~/cre/bcbio.pbs -v project=[project_name],[threads=[number_of_threads]]
+```
+Project should have a folder project_name in the current directory.
 
+To run many project (N) as job array: [bcbio.array.pbs](../master.bcbio.array.pbs) - requires projects.txt in the current directory.
+```
+qsub -t 1-N ~/cre/bcbio.array.pbs
+```
+Use a number instead of N, i.e. 100
