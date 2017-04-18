@@ -50,6 +50,8 @@ fi
 
 cat $project_list | awk '{print $2}' | sort | uniq >  families.txt
 
+cp families.txt projects.txt
+
 for family in `cat families.txt`
 do
     # not grep because two family names may overlap

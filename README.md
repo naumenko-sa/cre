@@ -5,7 +5,7 @@ germline variant calling pipeline.
 
 # 1. Create a project (projects) to run with bcbio.
 
-## 1a. If you start from bam files.
+## 1a. If you start with bam files.
 Suppose you have a WES trio, or a cohort of trios, each sample is a bam file. 
 Then create a file table.txt where each line is sample_name<tab>family_name<tab>file.bam, i.e.
 ```
@@ -21,3 +21,16 @@ Then run a script [bcbio.prepare_families.sh](../master/bcbio.prepare_families.s
 ```
 bcbio.prepare_families.sh	-v project_list=table.txt
 ```
+
+The script will prepare a folder for each project(family) using (bcbio.templates.exome.yaml)[../master/bcbio.templates.exome.yaml] template.
+Using this template is important, because later the final report will be produced from 4 callers.
+
+The details of the template:
+* 4 callers, the order is important, because variant metrics in ensemble calling (like AD) are picked up from the first caller in the list first
+* ensemble calling
+* realignment and recalibration. I know that there is no much sense in it for precision/sensitivity, but people are still asking for realignment and recalibration.
+* no bed file. Let callers call every variant which has coverage, we will filter poorly covered variants later. Modern exome capture kits are so perfect, that
+we can discover a useful non-coding variant. No sense to filter them out during that stage.
+* effects: VEP. There is a holywar VEP/snpEff/Annovar. My choice is VEP. You will see later both Ensembl and Refseq in the report, so no reason for using Annovar.
+* effects_transcripts: all. We want all effects of a variant on all transcripts to be reported.
+
