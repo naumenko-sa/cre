@@ -10,7 +10,7 @@ Bcbio installed and in the PATH and cre cloned to ~/cre and in the PATH.
 
 ## 1a. If you start with bam files.
 Suppose you have a WES trio, or a cohort of trios, each sample is a bam file. 
-Then create a file table.txt where each line is sample_name<tab>family_name<tab>file.bam, i.e.
+Then create a file table.txt where each line is sample_name[tab]family_name[tab]file.bam, i.e.
 ```
 CH0517	1004	/somewhere/1004_CH0517.bam
 CH0518	1004	/somewhere/1004_CH0518.bam
