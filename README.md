@@ -26,7 +26,7 @@ or use qsub, if you have a large cohort:
 qsub ~/cre/bcbio.prepare_families.sh	-v project_list=table.txt
 ```
 
-The script will prepare a folder for each project(family) using (bcbio.templates.exome.yaml)[../master/bcbio.templates.exome.yaml] template.
+The script will prepare a folder for each project(family) using [bcbio.templates.exome.yaml](../master/bcbio.templates.exome.yaml) template.
 Using this template is important, because later the final report will be produced from 4 callers.
 
 The details of the template:
@@ -51,8 +51,9 @@ qsub ~/cre/bcbio.pbs -v project=[project_name],[threads=[number_of_threads]]
 ```
 Project should have a folder project_name in the current directory.
 
-To run many project (N) as job array: [bcbio.array.pbs](../master.bcbio.array.pbs) - requires projects.txt in the current directory.
+To run many project (N) as job array: [bcbio.array.pbs](../master.bcbio.array.pbs) - requires projects.txt (list of project=list of folders)
+in the current directory and folders for projects.
 ```
 qsub -t 1-N ~/cre/bcbio.array.pbs
 ```
-Use a number instead of N, i.e. 100
+Use a number instead of N, i.e. 100.
