@@ -17,7 +17,11 @@ CH0135	1013	/somewhere/1013_CH0135.bam
 CH0136	1013	/somewhere/1013_CH0136.bam
 ```
 
-Then run a script [bcbio.prepare_families.sh](../master/bcbio.prepare_families.sh) [table.txt] or use qsub, if you have a large cohort:
+Then run 
+```
+[bcbio.prepare_families.sh](../master/bcbio.prepare_families.sh) [table.txt] 
+```
+or use qsub, if you have a large cohort:
 ```
 bcbio.prepare_families.sh	-v project_list=table.txt
 ```
@@ -33,4 +37,6 @@ The details of the template:
 we can discover a useful non-coding variant. No sense to filter them out during that stage.
 * effects: VEP. There is a holywar VEP/snpEff/Annovar. My choice is VEP. You will see later both Ensembl and Refseq in the report, so no reason for using Annovar.
 * effects_transcripts: all. We want all effects of a variant on all transcripts to be reported.
+* aligner: bwa. Even staring with bam files, bwa is used. Sometimes input bam files aligned against older reference, or different (chr) naming scheme. It is better to have a bam file consistent with calls made.
 
+# 2. Run bcbio
