@@ -2,6 +2,9 @@
 clinical research exome - excel report generation using results from [bcbio variant2](https://bcbio-nextgen.readthedocs.io/en/latest/contents/pipelines.html#germline-variant-calling) 
 germline variant calling pipeline.
 
+# 0. Prerequisites
+
+Bcbio installed and in the PATH and cre cloned to ~/cre and in the PATH.
 
 # 1. Create a project (projects) to run with bcbio.
 
@@ -17,10 +20,7 @@ CH0135	1013	/somewhere/1013_CH0135.bam
 CH0136	1013	/somewhere/1013_CH0136.bam
 ```
 
-Then run 
-```
-[bcbio.prepare_families.sh](../master/bcbio.prepare_families.sh) [table.txt] 
-```
+Then run [bcbio.prepare_families.sh](../master/bcbio.prepare_families.sh) [table.txt] 
 or use qsub, if you have a large cohort:
 ```
 bcbio.prepare_families.sh	-v project_list=table.txt
@@ -40,3 +40,10 @@ we can discover a useful non-coding variant. No sense to filter them out during 
 * aligner: bwa. Even staring with bam files, bwa is used. Sometimes input bam files aligned against older reference, or different (chr) naming scheme. It is better to have a bam file consistent with calls made.
 
 # 2. Run bcbio
+
+It really depends on your HPC job management system and policies. Our HPC uses torque. It is possible to run jobs from bcbio (it automatically submits jobs to the queue,
+and then those jobs communicate with each other via network - very cool). I've tried this (parallel execution) for some time. I was stuck with some problems, maybe HPC-related. 
+So I decided to keep it simple (remember KISS, keep it simple, stupid), and to run one job per family(project).
+
+To run one project: [bcbio.pbs](../master/bcbio.pbs).
+
