@@ -2,9 +2,14 @@
 comprehensive,compassionate,clean,computable,cluster,Canadian,you name it... research exome - excel report generation using results from [bcbio variant2](https://bcbio-nextgen.readthedocs.io/en/latest/contents/pipelines.html#germline-variant-calling) 
 germline variant calling pipeline. I can't claim it clinical, of course, use it for your own risk for research purposes only.
 
-# 0. Prerequisites
+# 0. Prerequisites and credits
 
-Bcbio installed and in the PATH and cre cloned to ~/cre and in the PATH.
+## 0.1 Prerequisites
+**Bcbio** install and in the PATH and **cre** cloned to ~/cre and in the PATH. 
+If you already have bcbio project results, you may start from step 3. However, note that resulting file names
+may have changed in bcbio since you had run the project, and this scripts follow the latest naming schemes, like project-ensemble-annotated-decomposed.vcf.gz.
+
+## 0.2 Credits
 
 # 1. Create a project (projects) to run with bcbio.
 
@@ -59,5 +64,26 @@ qsub -t 1-N ~/cre/bcbio.array.pbs
 Use a number instead of N, i.e. 100. I'm using 5 cores x 50G of RAM per project. It is HPC-specific. Our policies encourage submitting small jobs.
 I can wait for 2-5 days for a project when working with cohorts. Faster processing is possible using more memory and cores, or with bcbio parallel execution.
 
-# 3.clean up after bcbio and create csv report for excel import
+# 3.clean up after bcbio and create family.csv report for excel import
 [bcbio.cleanup.sh](../master/bcbio.cleanup.sh) [family]
+or 
+```
+qsub bcbio.cleanup.sh -v family=[family]
+``` 
+
+What it does.
+During the cleanup step:
+* moves project results and sample bam files to family dir
+* removes work and final dirs from bcbio project
+* removes gemini databases for individual callers (we need only ensemble gemini database)
+
+During the report generation step:
+* dumps variants from gemini database to tab text file
+* dumps variant impacts from gemini database to tab text file
+* annotates variants with refseq in addition to ensembl
+* gets coverage from GATK Haplotype calls, freebayes, and platypus
+* build excel report based on gemini variants table, variant impacts, coverage information and some other fields.
+
+# 4. Step 3 in detail
+
+## 4.1
