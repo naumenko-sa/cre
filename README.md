@@ -16,5 +16,6 @@ CH0133	1013	/somewhere/1013_CH0133.bam
 CH0135	1013	/somewhere/1013_CH0135.bam
 CH0136	1013	/somewhere/1013_CH0136.bam
 ```
+
 Then run a script [bcbio.prepare_families.sh](../master/bcbio.prepare_families.sh) [table.txt] or use qsub, if you have a large cohort:
 ```bcbio.prepare_families.sh	-v project_list=table.txt```
