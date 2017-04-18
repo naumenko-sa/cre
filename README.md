@@ -1,5 +1,5 @@
 # cre
-comprehensive,compassionate,clean,computable,cluster,clinical,Canadian,you name it... research exome - excel report generation using results from [bcbio variant2](https://bcbio-nextgen.readthedocs.io/en/latest/contents/pipelines.html#germline-variant-calling) 
+comprehensive,compassionate,clean,computable,cluster,Canadian,you name it... research exome - excel report generation using results from [bcbio variant2](https://bcbio-nextgen.readthedocs.io/en/latest/contents/pipelines.html#germline-variant-calling) 
 germline variant calling pipeline. I can't claim it clinical, of course, use it for your own risk for research purposes only.
 
 # 0. Prerequisites
