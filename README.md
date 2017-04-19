@@ -7,14 +7,14 @@ germline variant calling pipeline. I can't claim it clinical, of course, use it 
 ## 0.1 Prerequisites
 * Install **Bcbio** (HPC or server) and add it to the PATH. bcbio installs many other useful tools through bionconda.
 * Clone **cre** to ~/cre and add it to the PATH (HPC).
-* Install R (HPC or laptop, if you'd like to use it for report generation).
-* Install OMIM (HPC or laptop).
+* Install R and packages: stringr,data.table,plyr (HPC or laptop, if you'd like to use it for report generation).
+* [Optional, if absent, OMIM columns will be empty] Install OMIM (HPC or laptop).
   * Goto https://omim.org/downloads/ and request the latest database. It makes sense to renew it once a year.
   * In a couple of days you will get genemap2.txt,genemap.txt,mim2gene.txt,mimTitles.percent.txt,mimTitles.txt,morbidmap.txt. Put them into OMIM_DIR where you want.
   * Preprocess OMIM with ...
-* Install Orphanet (HPC or laptop)
-* Install EXaC scores
-* Install imprinting annotation
+* [Optional, if absent, Orphanet column will be empty]. Install Orphanet (HPC or laptop)
+* [Optional, for now uses old scores from ~/cre] Install EXaC scores
+* [Optional, for now uses old table from ~/cre]  Install imprinting annotation
 
 If you already have bcbio project results, you may start from step 3. However, note that resulting file names
 may have changed in bcbio since you had run the project, and this scripts follow the latest naming schemes, like project-ensemble-annotated-decomposed.vcf.gz.
@@ -74,7 +74,7 @@ qsub -t 1-N ~/cre/bcbio.array.pbs
 Use a number instead of N, i.e. 100. I'm using 5 cores x 50G of RAM per project. It is HPC-specific. Our policies encourage submitting small jobs.
 I can wait for 2-5 days for a project when working with cohorts. Faster processing is possible using more memory and cores, or with bcbio parallel execution.
 
-# 3.clean up after bcbio and create family.csv report for excel import
+# 3.clean up after bcbio and create family.csv report for import to excel
 [bcbio.cleanup.sh](../master/bcbio.cleanup.sh) [family]
 or 
 ```
@@ -103,5 +103,16 @@ I prefer to do report generation in R, and first I tried to access gemini databa
 of packaging of genotype BLOB fields. I ended up with gemini utility query to dump fields I need from variants database. Filters are described in the doc.
 ## 4.2 [gemini.variant_impacts.sh](../master/gemini.variant_impacts.sh) [project-ensembl.db] dumps variant impacts from gemini.
 ## 4.3 [gemini.refseq.sh](../master/gemini.refseq.sh) [project]. Annotates variants with RefSeq transcripts using VEP. Uses project-ensemble-annotated-decomposed.vcf.gz as input.
+## 4.4 creates a vcf file with rare and potentially harmful variants, the same set of variants will be shown in the excel report 
+```
+cat ${family}-ensemble.db.txt | cut -f 23,24  | sed 1d | sed s/chr// > ${family}-ensemble.db.txt.positions
+    bcftools view -R ${family}-ensemble.db.txt.positions -o ${family}.vcf.gz -O z ${family}-ensemble-annotated-decomposed.vcf.gz
 
-## 
+```
+## 4.5 gets coverage from VCFs produced by GATK, platypus, and freebayes - requires gatk wrapper from bcbio.
+```
+vcf.freebayes.getAO.sh ${family}-freebayes-annotated-decomposed.vcf.gz
+vcf.gatk.get_depth.sh ${family}-gatk-haplotype-annotated-decomposed.vcf.gz
+vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
+
+```

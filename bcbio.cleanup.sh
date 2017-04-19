@@ -68,10 +68,10 @@ function make_report
     #gemini.decompose.sh ${family}-platypus.vcf.gz
     vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 
-    module load R
-    Rscript ~/bioscripts/gemini.gemini2report.R $family
-
     cd ..
+
+    module load R
+    Rscript ~/cre/cre.R $family
 }
 
 if [ -z $family ]
