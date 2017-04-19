@@ -9,9 +9,9 @@ germline variant calling pipeline. I can't claim it clinical, of course, use it 
 * Clone **cre** to ~/cre and add it to the PATH (HPC).
 * Install R (HPC or laptop, if you'd like to use it for report generation).
 * Install OMIM (HPC or laptop).
-..* Goto https://omim.org/downloads/ and request the latest database. It makes sense to renew it once a year.
-..* In a couple of days you will get genemap2.txt,genemap.txt,mim2gene.txt,mimTitles.percent.txt,mimTitles.txt,morbidmap.txt. Put them into OMIM_DIR where you want.
-..* Preprocess OMIM with ...
+  * Goto https://omim.org/downloads/ and request the latest database. It makes sense to renew it once a year.
+  * In a couple of days you will get genemap2.txt,genemap.txt,mim2gene.txt,mimTitles.percent.txt,mimTitles.txt,morbidmap.txt. Put them into OMIM_DIR where you want.
+  * Preprocess OMIM with ...
 * Install Orphanet (HPC or laptop)
 * Install EXaC scores
 * Install imprinting annotation
