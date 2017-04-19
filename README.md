@@ -1,5 +1,5 @@
 # cre
-comprehensive,compassionate,clean,computable,clustered,Canadian,you name it... research exome - excel report generation using results from [bcbio variant2](https://bcbio-nextgen.readthedocs.io/en/latest/contents/pipelines.html#germline-variant-calling) 
+comprehensive,composite,compassionate,clean,computable,clustered,Canadian,you name it... research exome - excel report generation using results from [bcbio variant2](https://bcbio-nextgen.readthedocs.io/en/latest/contents/pipelines.html#germline-variant-calling) 
 germline variant calling pipeline. I can't claim it clinical, of course, use it for your own risk for research purposes only.
 
 # 0. Prerequisites and credits
@@ -8,13 +8,13 @@ germline variant calling pipeline. I can't claim it clinical, of course, use it 
 * Install **Bcbio** (HPC or server) and add it to the PATH. bcbio installs many other useful tools through bionconda.
 * Clone **cre** to ~/cre and add it to the PATH (HPC).
 * Install R and packages: stringr,data.table,plyr (HPC or laptop, if you'd like to use it for report generation).
-* [Optional, if absent, OMIM columns will be empty] Install OMIM (HPC or laptop).
+* Install OMIM (HPC or laptop).
   * Goto https://omim.org/downloads/ and request the latest database. It makes sense to renew it once a year.
   * In a couple of days you will get genemap2.txt,genemap.txt,mim2gene.txt,mimTitles.percent.txt,mimTitles.txt,morbidmap.txt. Put them into OMIM_DIR where you want.
   * Preprocess OMIM with ...
-* [Optional, if absent, Orphanet column will be empty]. Install Orphanet (HPC or laptop)
-* [Optional, for now uses old scores from ~/cre] Install EXaC scores
-* [Optional, for now uses old table from ~/cre]  Install imprinting annotation
+* Install Orphanet (HPC or laptop)
+* [Optional, for now uses old scores from ~/cre/exac_scores.txt] Install EXaC scores.
+* [Optional, for now uses old table from ~/cre/imprinting.txt] Install imprinting annotation.
 
 If you already have bcbio project results, you may start from step 3. However, note that resulting file names
 may have changed in bcbio since you had run the project, and cre follows the latest naming scheme, like project-ensemble-annotated-decomposed.vcf.gz.
@@ -53,6 +53,10 @@ we can discover a useful non-coding variant. No sense to filter them out during 
 * effects: VEP. There is a holywar VEP/snpEff/Annovar. My choice is VEP. You will see later both Ensembl and Refseq in the report, so no reason for using Annovar.
 * effects_transcripts: all. We want all effects of a variant on all transcripts to be reported.
 * aligner: bwa. Even staring with bam files, bwa is used. Sometimes input bam files aligned against older reference, or different (chr) naming scheme. It is better to have a bam file consistent with calls made.
+
+## 1b. If you start with fastq files.
+
+## 1c. If you start with Illumina basespace.
 
 # 2. Run bcbio
 
@@ -116,4 +120,4 @@ vcf.gatk.get_depth.sh ${family}-gatk-haplotype-annotated-decomposed.vcf.gz
 vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 
 ```
-## 4.7 Rscript ~/cre/[cre.R](../master/cre.R) [family] - creates report family.csv
+## 4.7 Rscript ~/cre/[cre.R](../master/cre.R) [family] - creates report family.csv.

@@ -15,8 +15,6 @@ add_placeholder=function(variants,column_name,placeholder)
    return(variants)
 }
 
-#in the meanwhile using cheo.gemini2txt.single_sample.sh query in bash to decode 
-#blob fields
 get_variants_from_file = function (filename)
 {
     variants = read.delim(filename, stringsAsFactors=FALSE)
@@ -60,46 +58,40 @@ genotype2zygocity = function (genotype_str,ref)
 #output : family.ensemble.txt
 create_report = function(family,samples)
 {
-    #test: 3 samples in a family
+    #test1: 3 samples in a family
     #family="166"
     #samples=c("166_3_5","166_4_10","166_4_8")
-    #suffix = "gatk-haplotype"
-    #suffix = "ensemble"
-  
-    #test: 1 sample in a familty
+ 
+    #test2: 1 sample in a familty
     #family="NA12878-1"
     #samples=c("NA12878.1")
   
-    #test: 
+    #test3: 
     #setwd("~/Desktop/project_cheo/2017-01-30_dorin/1092R")
     #family="1092R"
     #samples = c("1092R_1613029","1092R_1613440","1092R_1613445")
-    #family="muscle1_wes"
-    #samples=c("muscle1_wes")  
-  
-  
+    
     file=paste0(family,"-ensemble.db.txt")
   
     variants = get_variants_from_file(file)
 
-    #field1 - Position
+    #Column1 - Position
     variants$Position=with(variants,paste(Chrom,Pos,sep=':'))
     
-    #field2 - UCSC link
+    #Column2 - UCSC link
     sUCSC1="=HYPERLINK(\"http://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&hgt.out3=10x&position="
     sUCSC2="\",\"UCSC_link\""
     variants$UCSC_Link=with(variants,paste(sUCSC1,Position,sUCSC2,")",sep=''))
 
-    #fields 3,4: Ref,Alt
+    # Columns 3,4: Ref,Alt
 
-    # field5 - Zygocity
+    # Column 5 - Zygosity, column 7 - Burden
     # use new loader vcf2db.py - with flag  to load plain text
     # for genotype and depth - Noah
     # otherwise have to decode BLOB 
     # snappy decompression
     # https://github.com/arq5x/gemini/issues/700
     # https://github.com/lulyon/R-snappy
-    #variants = cbind(variants,lapply(variants$gts.100940,genotype2zygocity))
     for(sample in samples)
     {
         #DEBUG: gene = IL20RA
@@ -117,17 +109,14 @@ create_report = function(family,samples)
         variants = merge(variants,df_burden,all.x=T)
         variants[,burden_column_name][is.na(variants[,burden_column_name])] = 0
     }
-
-    #field 8 - Variation
-    #add splicing and splicing extended annotation - just use RefSeq annotation and chr:pos
-    #in the meawhile we have splice_region_variant
-    #http://sequenceontology.org/browser/current_svn/term/SO:0001630
-    #1-3 bases of exon, 3-8 bases of intron
-
-    #field9: Info_ensembl
-    #Info, we want all transcripts, not it is more more severily affected
-    #example from Kristin: PHLPP2:NM_001289003:exon2:c.A250G:p.S84G,PHLPP2:NM_015020:exon2:c.A250G:p.S84G
     
+    # Column6 - Gene
+    
+    # Column8 - gts
+    
+    # Column9 - Variation
+    
+    # Column 10 -  Info_ensembl
     variants = add_placeholder(variants,"Info_ensembl","Info_ensembl")
     impact_file=paste0(family,"-ensemble.db.impacts.txt")
     impacts = get_variants_from_file(impact_file)
@@ -150,40 +139,64 @@ create_report = function(family,samples)
         variants[i,"Info_ensembl"] = s_impacts
     }
     
-    #refseq_impacts in merge_reports
+    # Column 11 - Protein_change_ensembl
+    
+    # Column 12,13 - Info_refseq, Protein_change_refseq
+    # refseq_impacts are pasted in merge_reports function
     variants = add_placeholder(variants,"Info_refseq","Info_refseq")
     variants = add_placeholder(variants,"Protein_change_refseq","NA")
     
-    #variants = merge(variants,ensembl_refseq,all.x=T)
-    #variants$Info = with(variants,paste(Gene,Refseq_mrna,Codon_change,Protein_change,sep=':'))
+    # Columns 14,15 - Depth, Qual_depth
 
-    #fields 8,9 - Depth, Qual_depth
-
-    #field 10 - Alt_depth - from v.gt_alt_depth
-    #when multiple callers used, AD is not set
+    # Column 16 - Alt_depth - from v.gt_alt_depth
+    # when multiple callers used, AD is not set and fixed in merge_reports function
     for(sample in samples)
     {
-      new_name = paste0("Alt_depths.",sample)
-      setnames(variants, paste0("gt_alt_depths.",sample),new_name)
-      #variants[,new_name] = with(variants,gsub("-1","Multiple_callers",get(new_name),fixed=T))
+        new_name = paste0("Alt_depths.",sample)
+        setnames(variants, paste0("gt_alt_depths.",sample),new_name)
     }
 
-    #fields 11,12 - Gene, ENS_ID
+    # Column 17 - Trio_coverage - fixed in merge_reports function
+    
+    # Column 18 - Ensembl_gene_id
 
-    #field13 - Gene_description - from biomart
-    gene_descriptions = read.delim2(paste0(reference_tables_path,"/ensembl_w_description.txt"), stringsAsFactors=F)
+    # Column 19 - Gene_description
+    gene_descriptions = read.delim2(paste0(default_tables_path,"/ensembl_w_description.txt"), stringsAsFactors=F)
     variants = merge(variants,gene_descriptions,by.x = "Ensembl_gene_id",by.y = "ensembl_gene_id",all.x=T)
-
-    #field14 - Omim_gene_description - from omim text file
-    omim = read.delim2(paste0(reference_tables_path,"/omim.forannotation2"), stringsAsFactors=FALSE)
+    
+    # Column 20 - Omim_gene_description - from omim text file
+    # omim.forannotation2 previously
+    # I use my copy of omim first, then look into cre, because I don't want to distribute omim
+    # through my github.
+    omim_file_name_cre = paste0(default_tables_path,"/omim.txt")
+    omim_file_name_local = paste0(reference_tables_path,"/omim.txt")
+    if (file.exists(omim_file_name_local))
+    {
+        omim = read.delim2(omim_file_name_local, stringsAsFactors=F)
+    }
+    else
+    {
+        omim = read.delim2(omim_file_name_cre, stringsAsFactors=F)
+    }
     variants = merge(variants,omim,all.x=T)
 
-    #field15 - Omim_inheritance 
-    #from Kristin xls
-    omim_inheritance = read.delim(paste0(reference_tables_path,"/omim_inheritance.txt"), stringsAsFactors=F)
+    # Column 21 - Omim_inheritance 
+    omim_file_name_cre = paste0(default_tables_path,"/omim_inheritance.txt")
+    omim_file_name_local = paste0(reference_tables_path,"/omim_inheritance.txt")
+    if (file.exists(omim_file_name_local))
+    {
+        omim_inheritance = read.delim(omim_file_name_local, stringsAsFactors=F)
+    }
+    else
+    {
+        omim_inheritance = read.delim(paste0(omim_file_name_cre,"/omim_inheritance.txt"), stringsAsFactors=F)
+    }
     variants = merge(variants,omim_inheritance,all.x=T)
 
-    #field16 - Orphanet
+    # Column 22 - Orphanet
+    orphanet_file_name_cre = paste0(default_tables_path,"/omim_inheritance.txt")
+    orphanet_file_name_local = paste0(reference_tables_path,"/omim_inheritance.txt")
+    
     orphanet = read.delim(paste0(reference_tables_path,"/orphanet.deduplicated.txt"), stringsAsFactors=F)
     variants = merge(variants,orphanet,all.x=T)
     # mind the samples order: it will influence the Trio
@@ -216,7 +229,7 @@ create_report = function(family,samples)
     n_sample = 1
     prefix = ""
   
-    #order gts column in the same way as 
+    #order gts column in the same way as in samples
     variants$gts=""
     for(sample in samples)
     {
@@ -517,8 +530,16 @@ default_tables_path="~/cre"
 reference_tables_path = "~/Desktop/reference_tables"
 
 #load c4r information
-seen_in_c4r_counts = read.delim(paste0(reference_tables_path,"/seen_in_c4r_counts.txt"), stringsAsFactors=F)
-seen_in_c4r_samples = read.csv(paste0(reference_tables_path,"/seen_in_c4r_samples.txt"), stringsAsFactors=F, sep=";")
+seen_in_c4r_counts.txt = paste0(reference_tables_path,"/seen_in_c4r_counts.txt")
+if (file.exists(seen_in_c4r_counts.txt))
+{
+    seen_in_c4r_counts = read.delim(seen_in_c4r_counts.txt, stringsAsFactors=F)
+}
+seen_in_c4r_samples.txt = paste0(reference_tables_path,"/seen_in_c4r_samples.txt")
+if (file.exists(seen_in_c4r_samples.txt))
+{
+    seen_in_c4r_samples = read.csv(seen_in_c4r_samples.txt, stringsAsFactors=F, sep=";")
+}
 
 # R substitutes "-" with "." in sample names in columns so fix this in samples.txt
 # sample names starting with letters should be prefixed by X in *.table
@@ -530,7 +551,7 @@ family = args[1]
 
 setwd(family)
 
-samples = unlist(read.table("samples.txt", quote="\"", comment.char="", stringsAsFactors=FALSE))
+samples = unlist(read.table("samples.txt", stringsAsFactors=F))
 samples = gsub("-",".",samples)
     
 create_report(family,samples)
