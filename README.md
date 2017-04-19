@@ -98,22 +98,22 @@ During the report generation step:
 
 ## 4.0 [Report description](https://docs.google.com/document/d/1zL4QoINtkUd15a0AK4WzxXoTWp2MRcuQ9l_P9-xSlS4/edit?usp=sharing).
 ## 4.1 Report example for NA12878
-## 4.1 [gemini.gemini2.txt](../master/gemini.gemini2.txt) [project-ensembl.db] - dumps a gemini database into text file.
+## 4.2 [gemini.gemini2txt.sh](../master/gemini.gemini2txt.sh) [project-ensembl.db] - dumps a gemini database into text file.
 I prefer to do report generation in R, and first I tried to access gemini database from R using sqlite interface. It turned out impossible, because
 of packaging of genotype BLOB fields. I ended up with gemini utility query to dump fields I need from variants database. Filters are described in the doc.
-## 4.2 [gemini.variant_impacts.sh](../master/gemini.variant_impacts.sh) [project-ensembl.db] dumps variant impacts from gemini.
-## 4.3 [gemini.refseq.sh](../master/gemini.refseq.sh) [project]. Annotates variants with RefSeq transcripts using VEP. Uses project-ensemble-annotated-decomposed.vcf.gz as input.
-## 4.4 creates a vcf file with rare and potentially harmful variants, the same set of variants will be shown in the excel report 
+## 4.3 [gemini.variant_impacts.sh](../master/gemini.variant_impacts.sh) [project-ensembl.db] dumps variant impacts from gemini.
+## 4.4 [gemini.refseq.sh](../master/gemini.refseq.sh) [project]. Annotates variants with RefSeq transcripts using VEP. Uses project-ensemble-annotated-decomposed.vcf.gz as input.
+## 4.5 creates a vcf file with rare and potentially harmful variants, the same set of variants will be shown in the excel report 
 ```
 cat ${family}-ensemble.db.txt | cut -f 23,24  | sed 1d | sed s/chr// > ${family}-ensemble.db.txt.positions
     bcftools view -R ${family}-ensemble.db.txt.positions -o ${family}.vcf.gz -O z ${family}-ensemble-annotated-decomposed.vcf.gz
 
 ```
-## 4.5 gets coverage from VCFs produced by GATK, platypus, and freebayes - requires gatk wrapper from bcbio.
+## 4.6 gets coverage from VCFs produced by GATK, platypus, and freebayes - requires gatk wrapper from bcbio.
 ```
 vcf.freebayes.getAO.sh ${family}-freebayes-annotated-decomposed.vcf.gz
 vcf.gatk.get_depth.sh ${family}-gatk-haplotype-annotated-decomposed.vcf.gz
 vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 
 ```
-## 4.6 Rscript ~/cre/[cre.R](../master/cre.R) [family] - creates report family.csv
+## 4.7 Rscript ~/cre/[cre.R](../master/cre.R) [family] - creates report family.csv
