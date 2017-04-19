@@ -98,8 +98,10 @@ During the report generation step:
 
 ## 4.0 [Report description](https://docs.google.com/document/d/1zL4QoINtkUd15a0AK4WzxXoTWp2MRcuQ9l_P9-xSlS4/edit?usp=sharing).
 ## 4.1 Report example for NA12878
-## 4.1 [gemini.gemini2.txt](../master/gemini.gemini2.txt) - dumps a gemini database into text file.
+## 4.1 [gemini.gemini2.txt](../master/gemini.gemini2.txt) [project-ensembl.db] - dumps a gemini database into text file.
 I prefer to do report generation in R, and first I tried to access gemini database from R using sqlite interface. It turned out impossible, because
-of packaging of genotype BLOB fields. I ended up with gemini utility query to dump fields I need from variants database.
+of packaging of genotype BLOB fields. I ended up with gemini utility query to dump fields I need from variants database. Filters are described in the doc.
+## 4.2 [gemini.variant_impacts.sh](../master/gemini.variant_impacts.sh) [project-ensembl.db] dumps variant impacts from gemini.
+## 4.3 [gemini.refseq.sh](../master/gemini.refseq.sh) [project]. Annotates variants with RefSeq transcripts using VEP. Uses project-ensemble-annotated-decomposed.vcf.gz as input.
 
 ## 
