@@ -1,9 +1,10 @@
 #!/bin/bash
 
-# cleans up after bcbio - when running large cohort only the final folder is kept
-# and only one ensemble gemini database: 2-3G per family
-# keeps bam files for new samples
+# cleans up after bcbio - 
+# 	when running large cohort only the final folder is kept and only one ensemble gemini database: 2-3G per family
+# 	keeps bam files for new samples
 # prepares tables for report generation
+# generates report
 
 # parameters:
 # family = [family_id] (=folder_name,main result file should be family-ensemble.db)

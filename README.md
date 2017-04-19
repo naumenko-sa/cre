@@ -17,7 +17,7 @@ germline variant calling pipeline. I can't claim it clinical, of course, use it 
 * [Optional, for now uses old table from ~/cre]  Install imprinting annotation
 
 If you already have bcbio project results, you may start from step 3. However, note that resulting file names
-may have changed in bcbio since you had run the project, and this scripts follow the latest naming schemes, like project-ensemble-annotated-decomposed.vcf.gz.
+may have changed in bcbio since you had run the project, and cre follows the latest naming scheme, like project-ensemble-annotated-decomposed.vcf.gz.
 
 ## 0.2 Credits
 
@@ -116,3 +116,4 @@ vcf.gatk.get_depth.sh ${family}-gatk-haplotype-annotated-decomposed.vcf.gz
 vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 
 ```
+## 4.6 Rscript ~/cre/[cre.R](../master/cre.R) [family] - creates report family.csv
