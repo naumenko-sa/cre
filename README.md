@@ -1,11 +1,21 @@
 # cre
-comprehensive,compassionate,clean,computable,cluster,Canadian,you name it... research exome - excel report generation using results from [bcbio variant2](https://bcbio-nextgen.readthedocs.io/en/latest/contents/pipelines.html#germline-variant-calling) 
+comprehensive,compassionate,clean,computable,clustered,Canadian,you name it... research exome - excel report generation using results from [bcbio variant2](https://bcbio-nextgen.readthedocs.io/en/latest/contents/pipelines.html#germline-variant-calling) 
 germline variant calling pipeline. I can't claim it clinical, of course, use it for your own risk for research purposes only.
 
 # 0. Prerequisites and credits
 
 ## 0.1 Prerequisites
-**Bcbio** install and in the PATH and **cre** cloned to ~/cre and in the PATH. 
+* Install **Bcbio** (HPC or server) and add it to the PATH. bcbio installs many other useful tools through bionconda.
+* Clone **cre** to ~/cre and add it to the PATH (HPC).
+* Install R (HPC or laptop, if you'd like to use it for report generation).
+* Install OMIM (HPC or laptop).
+..* Goto https://omim.org/downloads/ and request the latest database. It makes sense to renew it once a year.
+..* In a couple of days you will get genemap2.txt,genemap.txt,mim2gene.txt,mimTitles.percent.txt,mimTitles.txt,morbidmap.txt. Put them into OMIM_DIR where you want.
+..* Preprocess OMIM with ...
+* Install Orphanet (HPC or laptop)
+* Install EXaC scores
+* Install imprinting annotation
+
 If you already have bcbio project results, you may start from step 3. However, note that resulting file names
 may have changed in bcbio since you had run the project, and this scripts follow the latest naming schemes, like project-ensemble-annotated-decomposed.vcf.gz.
 
@@ -86,4 +96,10 @@ During the report generation step:
 
 # 4. Step 3 in detail
 
-## 4.1
+## 4.0 [Report description](https://docs.google.com/document/d/1zL4QoINtkUd15a0AK4WzxXoTWp2MRcuQ9l_P9-xSlS4/edit?usp=sharing).
+## 4.1 Report example for NA12878
+## 4.1 [gemini.gemini2.txt](../master/gemini.gemini2.txt) - dumps a gemini database into text file.
+I prefer to do report generation in R, and first I tried to access gemini database from R using sqlite interface. It turned out impossible, because
+of packaging of genotype BLOB fields. I ended up with gemini utility query to dump fields I need from variants database.
+
+## 
