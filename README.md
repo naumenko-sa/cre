@@ -24,7 +24,7 @@ may have changed in bcbio since you had run the project, and cre follows the lat
 # 1. Create a project (projects) to run with bcbio.
 
 ## 1a. If you start with bam files.
-Suppose you have a WES trio, or a cohort of trios, each sample is a bam file. 
+Suppose you have a WES trio, or a cohort of trios, each sample is a bam file. You may try NIST Ashkenazim trio: ftp://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/data/AshkenazimTrio (download OsloUniversityHospital exomes).
 Then create a file table.txt where each line is sample_name[tab]family_name[tab]file.bam, i.e.
 ```
 CH0517	1004	/somewhere/1004_CH0517.bam

@@ -1,13 +1,4 @@
-#moves last column to the position number
-move_column=function (variants,number)
-{
-  columns = ncol(variants)
-  if (number > 2)
-    variants=variants[c(1:(number-1),columns,number:(columns-1))] 
-  else
-    variants=variants[c(1,columns,number:(columns-1))] 
-  return(variants)
-}
+# variant report generator
 
 add_placeholder=function(variants,column_name,placeholder)
 {
@@ -568,7 +559,10 @@ if (file.exists(seen_in_c4r_samples.txt))
 
 args = commandArgs(trailingOnly = T)
 family = args[1]
-#test: family="CHEO_0001"
+
+#DEBUG
+setwd("~/Desktop/project_cheo/2017-03-16_NextSeq/")
+family="CHEO_0001"
 
 setwd(family)
 
