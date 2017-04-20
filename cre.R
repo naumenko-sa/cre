@@ -181,16 +181,12 @@ create_report = function(family,samples)
     # omim.forannotation2 previously
     # I use my copy of omim first, then look into cre, because I don't want to distribute omim
     # through my github.
-    omim_file_name_cre = paste0(default_tables_path,"/omim.txt")
+    omim_file_name = paste0(default_tables_path,"/omim.txt")
     omim_file_name_local = paste0(reference_tables_path,"/omim.txt")
-    if (file.exists(omim_file_name_local))
-    {
-        omim = read.delim2(omim_file_name_local, stringsAsFactors=F)
-    }
-    else
-    {
-        omim = read.delim2(omim_file_name_cre, stringsAsFactors=F)
-    }
+    
+    if (file.exists(omim_file_name_local)) omim_file_name = omim_file_name_local
+  
+    omim = read.delim2(omim_file_name_local, stringsAsFactors=F)
     variants = merge(variants,omim,all.x=T)
 
     # Column 21 - Omim_inheritance 
@@ -268,7 +264,7 @@ create_report = function(family,samples)
     select_and_write(variants,samples,paste0(family,".ensemble"))
 }
 
-#final selection and order
+# column selection and order
 select_and_write = function(variants,samples,prefix)
 {
     variants = variants[c(c("Position","UCSC_Link","Ref","Alt"),
@@ -560,9 +556,9 @@ if (file.exists(seen_in_c4r_samples.txt))
 args = commandArgs(trailingOnly = T)
 family = args[1]
 
-#DEBUG
-setwd("~/Desktop/project_cheo/2017-03-16_NextSeq/")
-family="CHEO_0001"
+# DEBUG - replace with Ashkenazim trio
+# setwd("~/Desktop/project_cheo/2017-03-16_NextSeq/")
+# family="CHEO_0001"
 
 setwd(family)
 
