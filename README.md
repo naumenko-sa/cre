@@ -13,6 +13,10 @@ germline variant calling pipeline. I can't claim it clinical, of course, use it 
   * In a couple of days you will get genemap2.txt,genemap.txt,mim2gene.txt,mimTitles.percent.txt,mimTitles.txt,morbidmap.txt. Put them into OMIM_DIR where you want.
   * Preprocess OMIM with ...
 * Install Orphanet (HPC or laptop)
+```
+    cd ~/cre
+    orphanet.sh
+```
 * [Optional, for now uses old scores from ~/cre/exac_scores.txt] Install EXaC scores.
 * [Optional, for now uses old table from ~/cre/imprinting.txt] Install imprinting annotation.
 

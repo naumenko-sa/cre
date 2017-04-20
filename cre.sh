@@ -71,6 +71,7 @@ function make_report
 
     cd ..
 
+    #HPC-specific
     module load R
     Rscript ~/cre/cre.R $family
 }
