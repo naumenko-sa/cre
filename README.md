@@ -15,7 +15,6 @@ germline variant calling pipeline. I can't claim it clinical, of course, use it 
 ```
     cd OMIM_DIR
     ~/cre/omim.sh
-    cp omim.txt ~/cre/
 ```
 * Install Orphanet (HPC or laptop) ~ 3600 genes:
 ```
