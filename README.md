@@ -27,6 +27,9 @@ may have changed in bcbio since you had run the project, and cre follows the lat
 Suppose you have a WES trio, or a cohort of trios, each sample is a bam file. You may try NIST Ashkenazim trio: ftp://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/data/AshkenazimTrio (download OsloUniversityHospital exomes).
 Then create a file table.txt where each line is sample_name[tab]family_name[tab]file.bam, i.e.
 ```
+Ashkenazim_HG002	Ashkenazim	/data/Ashkenazim_HG002.bam
+Ashkenazim_HG003	Ashkenazim	/data/Ashkenazim_HG003.bam
+Ashkenazim_HG004	Ashkenazim	/data/Ashkenazim_HG004.bam
 CH0517	1004	/somewhere/1004_CH0517.bam
 CH0518	1004	/somewhere/1004_CH0518.bam
 CH0519	1004	/somewhere/1004_CH0519.bam
