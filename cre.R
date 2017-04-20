@@ -157,6 +157,28 @@ create_report = function(family,samples)
     }
 
     # Column 17 - Trio_coverage - fixed in merge_reports function
+    variants = add_placeholder(variants,"Trio_coverage","")
+    n_sample = 1
+    prefix = ""
+    
+    #order gts column in the same way as in samples
+    variants$gts=""
+    for(sample in samples)
+    {
+        column = paste0("gt_depths.",sample)
+        
+        if (n_sample>1) prefix="/"
+        
+        variants$Trio_coverage = with(variants,paste0(Trio_coverage,prefix,get(column)))
+      
+        column = paste0("gts.",sample)
+        
+        if (n_sample>1) prefix=","
+        
+        variants$gts = with(variants,paste0(gts,prefix,get(column)))
+      
+        n_sample = n_sample+1
+    }
     
     # Column 18 - Ensembl_gene_id
 
@@ -181,70 +203,67 @@ create_report = function(family,samples)
     variants = merge(variants,omim,all.x=T)
 
     # Column 21 - Omim_inheritance 
-    omim_file_name_cre = paste0(default_tables_path,"/omim_inheritance.txt")
+    omim_file_name = paste0(default_tables_path,"/omim_inheritance.txt")
     omim_file_name_local = paste0(reference_tables_path,"/omim_inheritance.txt")
-    if (file.exists(omim_file_name_local))
-    {
-        omim_inheritance = read.delim(omim_file_name_local, stringsAsFactors=F)
-    }
-    else
-    {
-        omim_inheritance = read.delim(paste0(omim_file_name_cre,"/omim_inheritance.txt"), stringsAsFactors=F)
-    }
+    
+    if (file.exists(omim_file_name_local)) omim_file_name = omim_file_name_local
+    
+    omim_inheritance = read.delim(omim_file_name, stringsAsFactors=F)
     variants = merge(variants,omim_inheritance,all.x=T)
 
     # Column 22 - Orphanet
-    orphanet_file_name_cre = paste0(default_tables_path,"/omim_inheritance.txt")
-    orphanet_file_name_local = paste0(reference_tables_path,"/omim_inheritance.txt")
+    # previous name - orphanet.deduplicated.txt
+    orphanet_file_name = paste0(default_tables_path,"/orphanet.txt")
+    orphanet_file_name_local = paste0(reference_tables_path,"/orphanet.txt")
     
-    orphanet = read.delim(paste0(reference_tables_path,"/orphanet.deduplicated.txt"), stringsAsFactors=F)
+    if (file.exists(orphanet_file_name_local)) orphanet_file_name = orphanet_file_name_local
+    
+    orphanet = read.delim(orphanet_file_name, stringsAsFactors=F)  
     variants = merge(variants,orphanet,all.x=T)
-    # mind the samples order: it will influence the Trio
-    #fields17-18 Clinvar, Ensembl Transcript ID
-
-    #fields19-20-21-22 - protein change, aa_position, exon, pfam domain
-
-    #fields 23-24
+    
+    # Column 23 - Clinvar
+    
+    # Column 24 - Ensembl_transcript_id
+    
+    # Column 25 - AA_position
+    
+    # Column 26 - Exon
+    
+    # Column 27 - Pfam_domain
+    
+    # Column 28, 29 = Frequency_in_C4R, Seen_in_C4R_samples
     variants = add_placeholder(variants,"Frequency_in_C4R","Frequency_in_C4R")
     variants = add_placeholder(variants,"Seen_in_C4R_samples","Seen_in_C4R_samples")
 
-    #field 25, 26 - rsIDs, Maf_1000g
+    # Column 30 - rsIds
 
-    #fields 27-29 EVS frequencies
+    # Columns 31-36 - population frequencies
 
-    #fields 30-31: Exac_maf, Maf_all
-    #fields 32-33: Exac scores
-    exac_scores = read.delim(paste0(reference_tables_path,"/exac_scores.txt"), stringsAsFactors=F)
+    # Columns 37-38, Exac scores
+    exac_scores_file = paste0(default_tables_path,"/exac_scores.txt")
+    exac_scores = read.delim(exac_scores_file, stringsAsFactors=F)
     variants = merge(variants,exac_scores,all.x=T)
 
-    #field 34-35  Exac het, exac_hom_alt
-
-    #field36 - Conserved in 29 mammals instead of phastcons
+    # Column 39 - Exac_het
+    # Column 40 - Exac_hom_alt
+    
+    # Column 41 - Conserved in 29 mammals instead of phastcons
     #https://www.biostars.org/p/150152/
 
-    #fields 37-39: sift,polyphen,cadd
+    # Column 42-43-44: sift,polyphen,cadd scores
 
-    #field40
-    variants = add_placeholder(variants,"Trio_coverage","")
-    n_sample = 1
-    prefix = ""
-  
-    #order gts column in the same way as in samples
-    variants$gts=""
-    for(sample in samples)
-    {
-        column = paste0("gt_depths.",sample)
-        if (n_sample>1) prefix="/"
-        variants$Trio_coverage = with(variants,paste0(Trio_coverage,prefix,get(column)))
     
-        column = paste0("gts.",sample)
-        if (n_sample>1) prefix=","
-            variants$gts = with(variants,paste0(gts,prefix,get(column)))
+    # Columns 45,46 - imprinting
+    imprinting_file_name = paste0(default_tables_path,"/imprinting.txt")
+    imprinting = read.delim(imprinting_file_name, stringsAsFactors=F)
+    variants = merge(variants,imprinting,all.x=T)
     
-        n_sample = n_sample+1
-    }
-
-    #substitute -1 to 0
+    # Column 47 - pseudoautosomal
+    pseudoautosomal_file_name = paste0(default_tables_path,"/pseudoautosomal.txt")
+    pseudoautosomal = read.delim(pseudoautosomal_file_name, stringsAsFactors=F)
+    variants = merge(variants,pseudoautosomal,all.x=T)
+    
+    # replace -1 with 0
     for (field in c("EVS_maf_aa","EVS_maf_ea","EVS_maf_all","Maf_1000g","Exac_maf","Maf_all","Exac_het","Exac_hom_alt","Trio_coverage"))
     {
         variants[,field] = with(variants,gsub("-1","0",get(field),fixed=T))  
@@ -254,14 +273,6 @@ create_report = function(family,samples)
     {
         variants[,field] = with(variants,gsub("-1",NA,get(field),fixed=T))  
     }
-
-    #fields 41-42 - imprinting
-    imprinting = read.delim(paste0(reference_tables_path,"/imprinting.txt"), stringsAsFactors=FALSE)
-    variants = merge(variants,imprinting,all.x=T)
-
-    #field 43 - pseudoautosomal
-    pseudoautosomal = read.delim(paste0(reference_tables_path,"/pseudoautosomal.txt"), stringsAsFactors=F)
-    variants = merge(variants,pseudoautosomal,all.x=T)
 
     select_and_write(variants,samples,paste0(family,".ensemble"))
 }
@@ -315,10 +326,11 @@ fix_column_name = function(column_name)
 #   indels called differently should be reported from GATK
 merge_reports = function(family,samples)
 {
-    #setwd("/home/sergey/Desktop/project_cheo/2016-11-09_rerun10")
-    #family = "166"
+    # test:
+    # setwd("/home/sergey/Desktop/project_cheo/2016-11-09_rerun10")
+    # family = "166"
     # mind the samples order: it will influence the Trio
-    #samples=c("166_3_5","166_4_10","166_4_8")
+    # samples=c("166_3_5","166_4_10","166_4_8")
   
     ensemble_file = paste0(family,".ensemble.txt")
     
@@ -374,6 +386,7 @@ merge_reports = function(family,samples)
         column = paste0(column,".DP")
         
         if (n_sample>1) prefix="/"
+        
         ensemble$Trio_coverage = with(ensemble,paste0(Trio_coverage,prefix,get(column)))
       
         column = paste0("Alt_depths.",sample)
@@ -513,12 +526,20 @@ annotate_w_care4rare = function(family,samples)
     variants = read.csv(paste0(family,".txt"), sep=";", stringsAsFactors=F,quote="")
   
     variants$superindex=with(variants,paste(Position,Ref,Alt,sep='-'))
-    variants = merge(variants,seen_in_c4r_counts,by.x = "superindex", by.y="superindex",all.x = T)
-    variants$Frequency_in_C4R = variants$counts
-    variants$counts=NULL
-  
-    variants = merge(variants,seen_in_c4r_samples,by.x = "superindex", by.y="superindex",all.x = T)
-    variants$Seen_in_C4R_samples=variants$samples
+    
+    if(exists("seen_in_c4r_counts"))
+    {
+        variants = merge(variants,seen_in_c4r_counts,by.x = "superindex", by.y="superindex",all.x = T)
+        variants$Frequency_in_C4R = variants$counts
+        variants$counts=NULL
+    }
+    
+    if(exists("seen_in_c4r_samples"))
+    {
+        variants = merge(variants,seen_in_c4r_samples,by.x = "superindex", by.y="superindex",all.x = T)
+        variants$Seen_in_C4R_samples=variants$samples
+    }
+    
     select_and_write2(variants,samples,family)
 }
 
