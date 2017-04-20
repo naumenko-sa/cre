@@ -54,7 +54,7 @@ qsub ~/cre/bcbio.prepare_families.sh	-v project_list=table.txt
 ```
 
 The script will prepare a folder for each project(family) using [bcbio.templates.exome.yaml](../master/bcbio.templates.exome.yaml) template.
-Using this template is important, because later the final report will be produced from 4 callers.
+Using this template is important, because later the report will be produced from 4 callers.
 
 The details of the template:
 * 4 callers, the order is important, because variant metrics in ensemble calling (like AD) are picked up from the first caller in the list first
