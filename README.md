@@ -20,6 +20,7 @@ germline variant calling pipeline. I can't claim it clinical, of course, use it 
 * Install Orphanet (HPC or laptop) ~ 3600 genes:
 ```
     cd ~/cre
+    wget http://www.orphadata.org/data/xml/en_product6.xml
     orphanet.sh
 ```
 * [Optional, for now uses old scores from ~/cre/exac_scores.txt] Install EXaC scores.
