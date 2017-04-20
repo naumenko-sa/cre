@@ -4,6 +4,10 @@ cat genemap2.txt | grep -v "^#" | grep '(3)' | grep ENSG | awk -F "\t" '{print $
 
 #some genes may have two entries
 
-cat omim.tmp  | awk -F "\t" 'BEGIN{prev_gene="Ensembl_gene_id\tOmim_gene_description";buf=""}{if(prev_gene != $1){print prev_gene"\t"buf;buf=$2;prev_gene=$1}else{buf=buf","$2;}}END{print prev_gene","buf'} > omim.txt
+cat omim.tmp  | awk -F "\t" 'BEGIN{prev_gene="Ensembl_gene_id\tOmim_gene_description";buf=""}{if(prev_gene != $1){print prev_gene"\t"buf;buf=$2;prev_gene=$1}else{buf=buf","$2;}}END{print prev_gene"\t"buf'} > omim.txt
+
+omim.inheritance.py genemap2.txt > omim_inheritance.txt
+
+cp omim_inheritance.txt omim.txt ~/cre
 
 rm omim.tmp

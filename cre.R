@@ -195,7 +195,7 @@ create_report = function(family,samples)
     
     if (file.exists(omim_file_name_local)) omim_file_name = omim_file_name_local
     
-    omim_inheritance = read.delim(omim_file_name, stringsAsFactors=F)
+    omim_inheritance = read.csv(omim_file_name, sep="",stringsAsFactors = F)
     variants = merge(variants,omim_inheritance,all.x=T)
 
     # Column 22 - Orphanet
@@ -319,9 +319,9 @@ merge_reports = function(family,samples)
     # mind the samples order: it will influence the Trio
     # samples=c("166_3_5","166_4_10","166_4_8")
   
-    ensemble_file = paste0(family,".ensemble.txt")
+    ensemble_file = paste0(family,".ensemble.csv")
     
-    ensemble = read.csv(ensemble_file, quote="", stringsAsFactors=F)
+    ensemble = read.csv(ensemble_file, stringsAsFactors=F)
     ensemble$superindex=with(ensemble,paste(Position,Ref,Alt,sep='-'))
     
     refseq_file = paste0(family,".refseq.txt")
@@ -505,7 +505,7 @@ merge_reports = function(family,samples)
         }
     }
     
-    select_and_write(ensemble,samples,family)
+    select_and_write2(ensemble,samples,family)
 }
 
 annotate_w_care4rare = function(family,samples)
@@ -557,8 +557,8 @@ args = commandArgs(trailingOnly = T)
 family = args[1]
 
 # DEBUG - replace with Ashkenazim trio
-# setwd("~/Desktop/project_cheo/2017-03-16_NextSeq/")
-# family="CHEO_0001"
+ setwd("~/Desktop/project_cheo/2017-03-16_NextSeq/")
+ family="CHEO_0001"
 
 setwd(family)
 
