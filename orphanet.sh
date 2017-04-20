@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # prepares orpanet database for cre report generator
+# result is orphanet.txt - should be 3602 genes
 
 read_dom () {
     local IFS=\>
@@ -14,9 +15,9 @@ do
     echo "$ENTITY => $CONTENT"
 done < en_product6.xml > en_product6.xml.txt
 
-cat en_product6.xml.txt | egrep "(Disorder id)|(Name lang)|ENSG" > en_product6.xml.parsed
+cat en_product6.xml.txt | egrep -a "(Disorder id)|(Name lang)|ENSG" > en_product6.xml.parsed
 
-cat en_product6.xml.parsed | awk '{if($0~"Disorder") {print $0;getline;print $0;}; if ($0~"ENSG") print $0;}' | grep -v "Disorder id" | awk -F '=> ' '{print $2}' > en_product6.xml.final
+cat en_product6.xml.parsed | awk '{if($0~"Disorder") {print $0;getline;print $0;}; if ($0~"ENSG") print $0;}' | grep -a -v "Disorder id" | awk -F '=> ' '{print $2}' > en_product6.xml.final
 
 cat en_product6.xml.final | awk '{if($0 ~ "ENSG") {print $0"\t"dis}else{dis=$0}}' > orphanet.tmp
 
