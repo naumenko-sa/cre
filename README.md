@@ -69,6 +69,7 @@ So I decided to keep it simple (remember KISS, keep it simple, stupid), and to r
 
 To run one project: [bcbio.pbs](../master/bcbio.pbs):
 ```
+cd [project_name]/work
 qsub ~/cre/bcbio.pbs -v project=[project_name],[threads=[number_of_threads]]
 ```
 Project should have a folder project_name in the current directory.
