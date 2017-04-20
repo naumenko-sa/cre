@@ -97,7 +97,7 @@ qsub -t 1-N ~/cre/bcbio.array.pbs
 Use a number instead of N, i.e. 100. I'm using 5 cores x 50G of RAM per project. It is HPC-specific. Our policies encourage submitting small jobs.
 I can wait for 2-5 days for a project when working with cohorts. Faster processing is possible using more memory and cores, or with bcbio parallel execution.
 
-# 3.clean up after bcbio and create family.csv report for import to excel
+# 3.clean project directory  and create family.csv report for import to excel
 [bcbio.cleanup.sh](../master/bcbio.cleanup.sh) [family]
 or 
 ```
