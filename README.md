@@ -31,6 +31,11 @@ may have changed in bcbio since you had run the project, and cre follows the lat
 
 ## 0.2 Credits
 
+This work is inspired by 
+* [bcbio](https://github.com/chapmanb/bcbio-nextgen/) and [gemini](https://github.com/arq5x/gemini). Thank you all, team members!
+* Kristin Kernohan from Children Hospital of Eastern Ontario (CHEO), who generated most ideas about the report contents. Thank you, Kristin, for all of the discussions!
+Thank you colleagues from [ccm](https://ccm.sickkids.ca/), for seminars and personal discussions.
+
 # 1. Create a project (projects) to run with bcbio.
 
 ## 1a. If you start with bam files.
