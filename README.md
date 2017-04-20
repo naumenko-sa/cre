@@ -11,8 +11,13 @@ germline variant calling pipeline. I can't claim it clinical, of course, use it 
 * Install OMIM (HPC or laptop).
   * Goto https://omim.org/downloads/ and request the latest database. It makes sense to renew it once a year.
   * In a couple of days you will get genemap2.txt,genemap.txt,mim2gene.txt,mimTitles.percent.txt,mimTitles.txt,morbidmap.txt. Put them into OMIM_DIR where you want.
-  * Preprocess OMIM with ...
-* Install Orphanet (HPC or laptop) - 3602 genes in the result.
+  * Preprocess OMIM ~ 3700 genes:
+```
+    cd OMIM_DIR
+    ~/cre/omim.sh
+    cp omim.txt ~/cre/
+```
+* Install Orphanet (HPC or laptop) ~ 3600 genes:
 ```
     cd ~/cre
     orphanet.sh

@@ -261,7 +261,7 @@ create_report = function(family,samples)
         variants[,field] = with(variants,gsub("-1",NA,get(field),fixed=T))  
     }
 
-    select_and_write(variants,samples,paste0(family,".ensemble"))
+    select_and_write2(variants,samples,paste0(family,".ensemble"))
 }
 
 # column selection and order
@@ -321,7 +321,7 @@ merge_reports = function(family,samples)
   
     ensemble_file = paste0(family,".ensemble.txt")
     
-    ensemble = read.csv(ensemble_file, sep=";", quote="", stringsAsFactors=F)
+    ensemble = read.csv(ensemble_file, quote="", stringsAsFactors=F)
     ensemble$superindex=with(ensemble,paste(Position,Ref,Alt,sep='-'))
     
     refseq_file = paste0(family,".refseq.txt")
