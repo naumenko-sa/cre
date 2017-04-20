@@ -261,7 +261,7 @@ create_report = function(family,samples)
         variants[,field] = with(variants,gsub("-1",NA,get(field),fixed=T))  
     }
 
-    select_and_write2(variants,samples,paste0(family,".ensemble"))
+    select_and_write2(variants,samples,paste0(family,".create_report"))
 }
 
 # column selection and order
@@ -319,7 +319,7 @@ merge_reports = function(family,samples)
     # mind the samples order: it will influence the Trio
     # samples=c("166_3_5","166_4_10","166_4_8")
   
-    ensemble_file = paste0(family,".ensemble.csv")
+    ensemble_file = paste0(family,".create_report.csv")
     
     ensemble = read.csv(ensemble_file, stringsAsFactors=F)
     ensemble$superindex=with(ensemble,paste(Position,Ref,Alt,sep='-'))
@@ -505,12 +505,12 @@ merge_reports = function(family,samples)
         }
     }
     
-    select_and_write2(ensemble,samples,family)
+    select_and_write2(ensemble,samples,paste0(family,".merge_reports"))
 }
 
 annotate_w_care4rare = function(family,samples)
 {
-    variants = read.csv(paste0(family,".txt"), sep=";", stringsAsFactors=F,quote="")
+    variants = read.csv(paste0(family,".merge_reports.csv"), stringsAsFactors=F)
   
     variants$superindex=with(variants,paste(Position,Ref,Alt,sep='-'))
     
@@ -557,8 +557,8 @@ args = commandArgs(trailingOnly = T)
 family = args[1]
 
 # DEBUG - replace with Ashkenazim trio
- setwd("~/Desktop/project_cheo/2017-03-16_NextSeq/")
- family="CHEO_0001"
+# setwd("~/Desktop/project_cheo/2017-03-16_NextSeq/")
+# family="CHEO_0001"
 
 setwd(family)
 
