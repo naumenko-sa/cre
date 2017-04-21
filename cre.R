@@ -305,12 +305,7 @@ fix_column_name = function(column_name)
     return(column_name)
 }
 
-# merges ensembl and gatk-haplotype reports to 
-# - fill alt_depths, Trio_coverage, qual_depths columns
-# fix NO_CALL issue
-#   complex alleles like T > C,TA are divided into two variants : T>C, T>TA
-#   why are they not separated before loading to gemini - check
-#   indels called differently should be reported from GATK
+# merges ensembl, gatk-haplotype reports
 merge_reports = function(family,samples)
 {
     # test:

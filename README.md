@@ -11,12 +11,12 @@ germline variant calling pipeline. I can't claim it clinical, of course, use it 
 * Install OMIM (HPC or laptop).
   * Goto https://omim.org/downloads/ and request the latest database. It makes sense to renew it once a year.
   * In a couple of days you will get genemap2.txt,genemap.txt,mim2gene.txt,mimTitles.percent.txt,mimTitles.txt,morbidmap.txt. Put them into OMIM_DIR where you want.
-  * Preprocess OMIM ~ 3700 genes:
+  * Preprocess OMIM with [omim](../master/omim.sh) ~ 3700 genes:
 ```
     cd OMIM_DIR
     ~/cre/omim.sh
 ```
-* Install Orphanet (HPC or laptop) ~ 3600 genes:
+* Install Orphanet (HPC or laptop) with [orphanet.sh](../master/orphanet.sh) ~ 3600 genes:
 ```
     cd ~/cre
     wget http://www.orphadata.org/data/xml/en_product6.xml
@@ -34,7 +34,7 @@ This work was inspired by
 * [bcbio](https://github.com/chapmanb/bcbio-nextgen/) and [gemini](https://github.com/arq5x/gemini) communities. Thank you all!
 * Kristin Kernohan from Children Hospital of Eastern Ontario (CHEO), who generated most ideas about the report contents. Thank you, Kristin, for all of the discussions!
 
-Thank you colleagues from [CCM](https://ccm.sickkids.ca/), for seminars and personal discussions.
+Thank you colleagues at [CCM](https://ccm.sickkids.ca/), for seminars and personal discussions.
 
 # 1. Create a project (projects) to run with bcbio.
 
