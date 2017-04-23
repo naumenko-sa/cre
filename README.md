@@ -1,6 +1,10 @@
 # cre
-CCM's,comprehensive,composite,compassionate,clean,computational,clustered,Canadian,command line, you name it... research exome - excel report generation using results from [bcbio variant2](https://bcbio-nextgen.readthedocs.io/en/latest/contents/pipelines.html#germline-variant-calling) 
-germline variant calling pipeline. I can't claim it clinical, of course, use it for your own risk for research purposes only.
+Simple clinically oriented research exome - excel report generation using results from [bcbio variant2](https://bcbio-nextgen.readthedocs.io/en/latest/contents/pipelines.html#germline-variant-calling) 
+germline variant calling pipeline.
+
+#-1. TODO
+* do all additional annotations with vcfanno
+* no need in gemini db - now bcbio makes all gemini annotations with vcfanno
 
 # 0. Prerequisites and credits
 
