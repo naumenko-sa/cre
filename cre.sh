@@ -14,7 +14,7 @@
 #PBS -d .
 #PBS -l vmem=20g,mem=20g
 
-function cleanup
+function f_cleanup
 {
 
     # better to look for project-summary than hardcode the year
@@ -40,7 +40,7 @@ function cleanup
     cd ..
 }
 
-function make_report
+function f_make_report
 {
     cd $family
 
@@ -82,5 +82,23 @@ then
 fi
 
 echo $family
-cleanup
-make_report
+
+if [ -z $cleanup ]
+then
+    cleanup = 1
+fi
+
+if [ $cleanup -eq 1 ]
+then
+    f_cleanup
+fi
+
+if [ -z $make_report ]
+then
+    make_report = 1
+fi 
+
+if [ $make_report -eq 1 ]
+then
+    f_make_report
+fi

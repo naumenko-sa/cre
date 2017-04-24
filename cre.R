@@ -320,167 +320,176 @@ merge_reports = function(family,samples)
     ensemble$superindex=with(ensemble,paste(Position,Ref,Alt,sep='-'))
     
     refseq_file = paste0(family,".refseq.txt")
-    refseq = read.delim(refseq_file, stringsAsFactors=F,na.strings = "")
-    ensemble = merge(ensemble,refseq,by.x = "superindex", by.y="superindex",all.x = T)
-    
-    for (i in 1:nrow(ensemble))
+    if (file.exists(refseq_file))
     {
-        if (is.na(ensemble[i,"Info_refseq_no_gene"]))
+        refseq = read.delim(refseq_file, stringsAsFactors=F,na.strings = "")
+        ensemble = merge(ensemble,refseq,by.x = "superindex", by.y="superindex",all.x = T)
+    
+        for (i in 1:nrow(ensemble))
         {
-              ensemble[i,"Info_refseq"] = NA
-              ensemble[i,"Protein_change_refseq"] = NA
-        }
-        else
-        {
-            v_impacts = strsplit(ensemble[i,"Info_refseq_no_gene"],",",fixed=T)[[1]]
-            gene = ensemble[i,"Gene"]
-            ensemble[i,"Info_refseq"]=paste(paste(gene,v_impacts,sep=":"),collapse=",")
-            for (impact in v_impacts)
+            if (is.na(ensemble[i,"Info_refseq_no_gene"]))
             {
-                if (grepl(":NP_",impact,fixed = T))
+                ensemble[i,"Info_refseq"] = NA
+                ensemble[i,"Protein_change_refseq"] = NA
+            }
+            else
+            {
+                v_impacts = strsplit(ensemble[i,"Info_refseq_no_gene"],",",fixed=T)[[1]]
+                gene = ensemble[i,"Gene"]
+                ensemble[i,"Info_refseq"]=paste(paste(gene,v_impacts,sep=":"),collapse=",")
+                for (impact in v_impacts)
                 {
-                    v_subimpacts = strsplit(impact,":",fixed=T)[[1]]
-                    ensemble[i,"Protein_change_refseq"] = v_subimpacts[5]
-                    break
+                    if (grepl(":NP_",impact,fixed = T))
+                    {
+                        v_subimpacts = strsplit(impact,":",fixed=T)[[1]]
+                        ensemble[i,"Protein_change_refseq"] = v_subimpacts[5]
+                        break
+                    }
                 }
             }
         }
     }
     
+    
     gatk_file = paste0(family,"-gatk-haplotype-annotated-decomposed.table")
-    gatk = read.delim(gatk_file, stringsAsFactors=F)
-    gatk$superindex=with(gatk,paste(paste0("chr",CHROM,":",POS),REF,ALT,sep='-'))
-    gatk[c("CHROM","POS","REF","ALT")]=NULL
-    
-    ensemble = merge(ensemble,gatk,by.x = "superindex", by.y="superindex",all.x = T)
-    
-    ensemble$Depth = ensemble$DP
-    n_sample = 1
-    prefix = ""
-    ensemble$Trio_coverage=""
-    
-    for(sample in samples)
+    if (file.exists(gatk_file))
     {
-        #R fixes numerical column names with X?
-        #what if sample is not numerical
-      
-        column = fix_column_name(sample)  
-        column = paste0(column,".DP")
-        
-        if (n_sample>1) prefix="/"
-        
-        ensemble$Trio_coverage = with(ensemble,paste0(Trio_coverage,prefix,get(column)))
-      
-        column = paste0("Alt_depths.",sample)
-        column_gatk = fix_column_name(sample)
-        column_gatk = paste0(column_gatk,".AD")
-        
-        ensemble[,column] = ensemble[,column_gatk]
-      
-        n_sample = n_sample+1
-    }
+        gatk = read.delim(gatk_file, stringsAsFactors=F)
+        gatk$superindex=with(gatk,paste(paste0("chr",CHROM,":",POS),REF,ALT,sep='-'))
+        gatk[c("CHROM","POS","REF","ALT")]=NULL
     
-    for (i in 1:nrow(ensemble))
-    {
+        ensemble = merge(ensemble,gatk,by.x = "superindex", by.y="superindex",all.x = T)
+    
+        ensemble$Depth = ensemble$DP
+        n_sample = 1
+        prefix = ""
+        ensemble$Trio_coverage=""
+    
+        for(sample in samples)
+        {
+            #R fixes numerical column names with X?
+            #what if sample is not numerical
+      
+            column = fix_column_name(sample)  
+            column = paste0(column,".DP")
+        
+            if (n_sample>1) prefix="/"
+        
+            ensemble$Trio_coverage = with(ensemble,paste0(Trio_coverage,prefix,get(column)))
+      
+            column = paste0("Alt_depths.",sample)
+            column_gatk = fix_column_name(sample)
+            column_gatk = paste0(column_gatk,".AD")
+        
+            ensemble[,column] = ensemble[,column_gatk]
+      
+            n_sample = n_sample+1
+        }
+    
+        for (i in 1:nrow(ensemble))
+        {
+            for (sample in samples)
+            {
+                field = paste0("Alt_depths.",sample)
+                ensemble[i,field]=strsplit(ensemble[i,field],",",fixed=T)[[1]][2]
+            }
+        }
+    
         for (sample in samples)
         {
-            field = paste0("Alt_depths.",sample)
-            
-            ensemble[i,field]=strsplit(ensemble[i,field],",",fixed=T)[[1]][2]
+            ensemble[c("DP",paste0(fix_column_name(sample),".DP"),paste0(fix_column_name(sample),".AD"))]=NULL
         }
-    }
-    
-    for (sample in samples)
-    {
-        ensemble[c("DP",paste0(fix_column_name(sample),".DP"),paste0(fix_column_name(sample),".AD"))]=NULL
     }
     
     freebayes_file = paste0(family,"-freebayes-annotated-decomposed.table")
-    freebayes = read.delim(freebayes_file, stringsAsFactors=F)
-    freebayes$superindex=with(freebayes,paste(paste0("chr",CHROM,":",POS),REF,ALT,sep='-'))
-    freebayes[c("CHROM","POS","REF","ALT")]=NULL
-    ensemble = merge(ensemble,freebayes,by.x = "superindex", by.y="superindex",all.x = T)
-    
-    for (i in 1:nrow(ensemble))
+    if(file.exists(freebayes_file))
     {
-        
-        #if(grepl("NA",ensemble[i,"Trio_coverage"]))
-        #wrong: a variant may be called by gatk with 10/10/NA,
-        #and freebayes will destroy coverage info
-        if (str_count(ensemble[i,"Trio_coverage"],"NA") == length(samples))
+        freebayes = read.delim(freebayes_file, stringsAsFactors=F)
+        freebayes$superindex=with(freebayes,paste(paste0("chr",CHROM,":",POS),REF,ALT,sep='-'))
+        freebayes[c("CHROM","POS","REF","ALT")]=NULL
+        ensemble = merge(ensemble,freebayes,by.x = "superindex", by.y="superindex",all.x = T)
+    
+        for (i in 1:nrow(ensemble))
         {
-            ensemble[i,"Depth"] = ensemble[i,"DP"]
-            for (sample in samples)
+            #if(grepl("NA",ensemble[i,"Trio_coverage"]))
+            #wrong: a variant may be called by gatk with 10/10/NA,
+            #and freebayes will destroy coverage info
+            if (str_count(ensemble[i,"Trio_coverage"],"NA") == length(samples))
             {
-                field_depth = paste0("Alt_depths.",sample)
-                field_bayes = paste0(fix_column_name(sample),".AO")
-                #field_bayes = paste0(sample,".AO")
+                ensemble[i,"Depth"] = ensemble[i,"DP"]
+                for (sample in samples)
+                {
+                    field_depth = paste0("Alt_depths.",sample)
+                    field_bayes = paste0(fix_column_name(sample),".AO")
+                    #field_bayes = paste0(sample,".AO")
                       
-                ensemble[i,field_depth] = ensemble[i,field_bayes]
-        
-            }
-            n_sample = 1
-            prefix = ""
-            ensemble[i,"Trio_coverage"]=""
+                    ensemble[i,field_depth] = ensemble[i,field_bayes]
+                }
+                n_sample = 1
+                prefix = ""
+                ensemble[i,"Trio_coverage"]=""
             
-            for(sample in samples)
-            {
-                column = paste0(fix_column_name(sample),".DP")
-                if (n_sample>1) prefix="/"
-                ensemble[i,"Trio_coverage"] = paste(ensemble[i,"Trio_coverage"],ensemble[i,column],sep = prefix)
+                for(sample in samples)
+                {
+                    column = paste0(fix_column_name(sample),".DP")
+                    if (n_sample>1) prefix="/"
+                        ensemble[i,"Trio_coverage"] = paste(ensemble[i,"Trio_coverage"],ensemble[i,column],sep = prefix)
               
-                n_sample = n_sample+1
-            }
-        }
-    }
+                    n_sample = n_sample+1
+                }
+          }
+      }
     
-    for (sample in samples)
-    {
-        ensemble[c("DP",paste0(fix_column_name(sample),".DP"),paste0(fix_column_name(sample),".AO"))]=NULL
-    }
-    
-    platypus_file = paste0(family,"-platypus-annotated-decomposed.table")
-    platypus = read.delim(platypus_file, stringsAsFactors=F)
-    platypus$superindex=with(platypus,paste(paste0("chr",CHROM,":",POS),REF,ALT,sep='-'))
-    platypus[c("CHROM","POS","REF","ALT")]=NULL
-    ensemble = merge(ensemble,platypus,by.x = "superindex", by.y="superindex",all.x = T)
-    
-    for (i in 1:nrow(ensemble))
-    {
-      #if(grepl("NA",ensemble[i,"Trio_coverage"])) - wrong, may be 10/10/NA in gatk
-      #if (ensemble[i,"Trio_coverage"]=="NA/NA/NA")
-      if (str_count(ensemble[i,"Trio_coverage"],"NA") == length(samples))
+      for (sample in samples)
       {
-        ensemble[i,"Depth"] = ensemble[i,"TC"]
-        for (sample in samples)
-        {
-          field_depth = paste0("Alt_depths.",sample)
-          field_bayes = paste0(fix_column_name(sample),".NV")
-          
-          #sometimes freebayes has 10,10,10 for decomposed alleles
-          ensemble[i,field_depth] = strsplit(ensemble[i,field_bayes],",",fixed=T)[[1]][1]
-          
-        }
-        n_sample = 1
-        prefix = ""
-        ensemble[i,"Trio_coverage"]=""
-        
-        for(sample in samples)
-        {
-          column = paste0(fix_column_name(sample),".NR")
-          if (n_sample>1) prefix="/"
-          #sometimes freebayes has 10,10,10 for decomposed alleles
-          cov_value=strsplit(ensemble[i,column],",",fixed=T)[[1]][1]
-          ensemble[i,"Trio_coverage"] = paste(ensemble[i,"Trio_coverage"],cov_value,sep = prefix)
-          
-          n_sample = n_sample+1
-        }
+          ensemble[c("DP",paste0(fix_column_name(sample),".DP"),paste0(fix_column_name(sample),".AO"))]=NULL
       }
     }
     
-    for (sample in samples)
+    platypus_file = paste0(family,"-platypus-annotated-decomposed.table")
+    if(file.exists(platypus_file))
     {
-        ensemble[c("TC",paste0(fix_column_name(sample),".NV"),paste0(fix_column_name(sample),".NR"))]=NULL
+        platypus = read.delim(platypus_file, stringsAsFactors=F)
+        platypus$superindex=with(platypus,paste(paste0("chr",CHROM,":",POS),REF,ALT,sep='-'))
+        platypus[c("CHROM","POS","REF","ALT")]=NULL
+        ensemble = merge(ensemble,platypus,by.x = "superindex", by.y="superindex",all.x = T)
+    
+        for (i in 1:nrow(ensemble))
+        {
+          #if(grepl("NA",ensemble[i,"Trio_coverage"])) - wrong, may be 10/10/NA in gatk
+          #if (ensemble[i,"Trio_coverage"]=="NA/NA/NA")
+            if (str_count(ensemble[i,"Trio_coverage"],"NA") == length(samples))
+            {
+                ensemble[i,"Depth"] = ensemble[i,"TC"]
+                for (sample in samples)
+                {
+                    field_depth = paste0("Alt_depths.",sample)
+                    field_bayes = paste0(fix_column_name(sample),".NV")
+          
+                    #sometimes freebayes has 10,10,10 for decomposed alleles
+                    ensemble[i,field_depth] = strsplit(ensemble[i,field_bayes],",",fixed=T)[[1]][1]
+                }
+                n_sample = 1
+                prefix = ""
+                ensemble[i,"Trio_coverage"]=""
+        
+                for(sample in samples)
+                {
+                    column = paste0(fix_column_name(sample),".NR")
+                    if (n_sample>1) prefix="/"
+                    #sometimes freebayes has 10,10,10 for decomposed alleles
+                    cov_value=strsplit(ensemble[i,column],",",fixed=T)[[1]][1]
+                    ensemble[i,"Trio_coverage"] = paste(ensemble[i,"Trio_coverage"],cov_value,sep = prefix)
+          
+                    n_sample = n_sample+1
+                }
+          }
+      }
+    
+      for (sample in samples)
+      {
+          ensemble[c("TC",paste0(fix_column_name(sample),".NV"),paste0(fix_column_name(sample),".NR"))]=NULL
+      }
     }
     
     ensemble[,"Trio_coverage"] = with(ensemble,gsub("NA","0",get("Trio_coverage"),fixed=T))  
