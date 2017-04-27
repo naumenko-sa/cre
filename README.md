@@ -125,7 +125,7 @@ During the report generation step:
 # 4. Step 3 in detail
 
 ## 4.0 [Report description](https://docs.google.com/document/d/1zL4QoINtkUd15a0AK4WzxXoTWp2MRcuQ9l_P9-xSlS4/edit?usp=sharing).
-## 4.1 Report example for Ashkenazim trio from NIST - fill be here soon.
+## 4.1 [Report example for Ashkenazim trio from NIST](https://drive.google.com/open?id=0B_bLL10GwDnsZkNkWjN0d0tLcVE).
 ## 4.2 [gemini.gemini2txt.sh](../master/gemini.gemini2txt.sh) [project-ensembl.db] - dumps a gemini database into text file.
 I prefer to do report generation in R, and first I tried to access gemini database from R using sqlite interface. It turned out impossible, because
 of packaging of genotype BLOB fields. I ended up with gemini utility query to dump fields I need from variants database. Filters are described in the doc.

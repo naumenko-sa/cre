@@ -85,7 +85,7 @@ echo $family
 
 if [ -z $cleanup ]
 then
-    cleanup = 1
+    cleanup=1
 fi
 
 if [ $cleanup -eq 1 ]
@@ -95,7 +95,7 @@ fi
 
 if [ -z $make_report ]
 then
-    make_report = 1
+    make_report=1
 fi 
 
 if [ $make_report -eq 1 ]
