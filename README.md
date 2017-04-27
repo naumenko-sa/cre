@@ -103,10 +103,10 @@ Use a number instead of N, i.e. 100. I'm using 5 cores x 50G of RAM per project.
 I can wait for 2-5 days for a project when working with cohorts. Faster processing is possible using more memory and cores, or with bcbio parallel execution.
 
 # 3.clean project directory  and create family.csv report for import to excel
-[bcbio.cleanup.sh](../master/bcbio.cleanup.sh) [family]
+[cre.sh](../master/cre.sh) [family]
 or 
 ```
-qsub bcbio.cleanup.sh -v family=[family]
+qsub cre.sh -v family=[family],cleanup=1,make_report=1
 ``` 
 
 What it does.
