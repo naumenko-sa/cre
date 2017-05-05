@@ -5,10 +5,10 @@
 # it is easier just to get variant super index - VEP refseq annotation from VCF file
 # finally no databaes for refseq, but possible to create in future if needed
 
-#PBS -l walltime=10:00:00,nodes=1:ppn=10
+#PBS -l walltime=10:00:00,nodes=1:ppn=1
 #PBS -joe .
 #PBS -d .
-#PBS -l vmem=50g,mem=50g
+#PBS -l vmem=20g,mem=20g
 
 if [ -z $family ];
 then
