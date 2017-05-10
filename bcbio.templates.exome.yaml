@@ -26,7 +26,7 @@ details:
     batch: 166
 resources:
   default:
-    cores: 5
+    cores: 7
     jvm_opts:
     - -Xms750m
     - -Xmx7000m
