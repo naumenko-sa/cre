@@ -107,7 +107,21 @@ I can wait for 2-5 days for a project when working with cohorts. Faster processi
 or 
 ```
 qsub cre.sh -v family=[family],cleanup=1,make_report=1
-``` 
+```
+
+If you run a large cohort, some families maybe finished while some are still running.
+To delete unnecessary filed, cleanup finished projects:
+```
+mkdir ready4report
+for f in `cat all_dirs.txt`;do if [ -d ${f}/final/ ];then mv $f ready4report/;fi;done;
+
+```
+And then run cre for them:
+```
+cd ready4report
+ls | grep -v projects.txt > projects.txt
+for f in `cat projects.txt`;do qsub ~/cre/cre.sh -v family=$f;done;
+```
 
 What it does.
 During the cleanup step:
