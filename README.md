@@ -106,7 +106,12 @@ I can wait for 2-5 days for a project when working with cohorts. Faster processi
 [cre.sh](../master/cre.sh) [family]
 or 
 ```
-qsub cre.sh -v family=[family],cleanup=1,make_report=1
+qsub cre.sh -v family=[family]
+```
+by default it does both cleanup and make_report steps.
+If you want to do one of those steps:
+```
+qsub cre.sh -v family=[family],cleanup=0,make_report=1
 ```
 
 If you run a large cohort, some families maybe finished while some are still running.

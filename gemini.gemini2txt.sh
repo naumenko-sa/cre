@@ -57,8 +57,9 @@ done < samples.txt
 
 # gene_detailed may contain 2 records per single transcript - because of synonymous gene names, and some genes may have None in the name,for example TSRM
 # https://groups.google.com/forum/#!topic/gemini-variation/U3uEvWCzuQo
+# v.depth = 'None' see https://github.com/chapmanb/bcbio-nextgen/issues/1894
 sQuery=$sQuery"v.vep_hgvsc as Nucleotide_change_ensembl,v.vep_hgvsp as Protein_change_ensembl from variants v, gene_detailed g
-        where v.transcript=g.transcript and (v.gene=g.gene or g.gene is NULL) and v.impact_severity <> 'LOW' and v.max_aaf_all < 0.01 and v.depth >= 10"
+        where v.transcript=g.transcript and (v.gene=g.gene or g.gene is NULL) and v.impact_severity <> 'LOW' and v.max_aaf_all < 0.01 and (v.depth >= 10 or v.depth = '' or v.depth is null)"
 
 echo $sQuery
 gemini query --header -q "$sQuery" $file > ${file}.txt;

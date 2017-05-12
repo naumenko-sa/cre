@@ -37,7 +37,7 @@ sQuery="select
 	i.vep_hgvsc,
 	i.vep_hgvsp 
 	from variants v, variant_impacts i 
-	where v.impact_severity <> 'LOW' and v.max_aaf_all < 0.01 and v.variant_id=i.variant_id and v.depth>=10"
+	where v.impact_severity <> 'LOW' and v.max_aaf_all < 0.01 and v.variant_id=i.variant_id and (v.depth>=10 or v.depth='' or v.depth is null)"
 
 echo $sQuery
 
