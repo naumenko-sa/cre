@@ -21,12 +21,14 @@ function f_cleanup
     # keep bam files for new samples
     cd $family
     result_dir=`find final -name project-summary.yaml | sed s/"\/project-summary.yaml"//`
-    mv $result_dir/* .
-    mv final/*/*.bam .
-    mv final/*/*.bai .
-
-    rm -rf final/
-    rm -rf work/
+    if [ -d $result_dirt ];
+    then
+	mv $result_dir/* .
+	mv final/*/*.bam .
+	mv final/*/*.bai .
+        rm -rf final/
+	rm -rf work/
+    fi
 
     #don't remove input files for new projects
     #rm -rf input/
@@ -83,9 +85,10 @@ fi
 
 echo $family
 
+#no cleanup by default
 if [ -z $cleanup ]
 then
-    cleanup=1
+    cleanup=0
 fi
 
 if [ $cleanup -eq 1 ]
