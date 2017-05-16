@@ -11,7 +11,7 @@
 #PBS -l walltime=2:00:00,nodes=1:ppn=1
 #PBS -joe .
 #PBS -d .
-#PBS -l vmem=10g,mem=10g
+#PBS -l vmem=20g,mem=20g
 
 if [ -z $vcf ];
 then
