@@ -17,6 +17,7 @@ fi
 
 # 1.remove VEP ensembl annotation, the file is already decomposed
 vt rminfo ${family}-ensemble-annotated-decomposed.vcf.gz -t CSQ -o ${family}.no_vep.vcf.gz
+tabix $family.no_vep.vcf.gz
 
 # annotate with refseq - lets annotate only those variants we really need - much faster
 #gemini.vep.refseq.sh ${family}.no_vep.vcf.gz
