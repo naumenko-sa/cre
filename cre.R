@@ -87,6 +87,7 @@ create_report = function(family,samples)
     {
         #DEBUG: gene = IL20RA
         #sample=samples[1]
+        
         zygocity_column_name = paste0("Zygosity.",sample)
         #t = lapply(variants[,paste0("gts.",sample),"Ref"],genotype2zygocity)
         #t = lapply(variants[,paste0("gts.",sample),"Ref"],genotype2zygocity)
@@ -492,6 +493,36 @@ merge_reports = function(family,samples)
       }
     }
     
+    #don't use samtools file by default!
+    samtools_file = paste0(family,"-samtools-annotated-decomposed.table")
+    if(file.exists(samtools_file))
+    {
+        samtools = read.delim(samtools_file, stringsAsFactors=F)
+        samtools$superindex=with(samtools,paste(paste0("chr",CHROM,":",POS),REF,ALT,sep='-'))
+        samtools[c("CHROM","POS","REF","ALT")]=NULL
+        ensemble = merge(ensemble,samtools,by.x = "superindex", by.y="superindex",all.x = T)
+      
+        for (i in 1:nrow(ensemble))
+        {
+            ensemble[i,"Depth"] = ensemble[i,"DP"]
+            for (sample in samples)
+            {
+                field_depth = paste0("Alt_depths.",sample)
+                field_samtools = paste0(fix_column_name(sample),".DP")
+                ensemble[i,field_depth] = ensemble[i,field_samtools]
+            }
+            ensemble[i,"Trio_coverage"]=""
+        }
+        for (sample in samples)
+        {
+          ensemble[c("DP",paste0(fix_column_name(sample),".DP"))]=NULL
+          #samtools does not discriminate between insufficient coverage (cannot call) and no_call =reference
+          field=paste0("Zygosity.",sample)
+          ensemble[,field] = with(ensemble,gsub("Insufficient_coverage","-",get(field),fixed=T)) 
+        }
+    }
+      
+    
     ensemble[,"Trio_coverage"] = with(ensemble,gsub("NA","0",get("Trio_coverage"),fixed=T))  
    
     for (i in 1:nrow(ensemble))
@@ -563,6 +594,8 @@ family = args[1]
 # DEBUG - replace with Ashkenazim trio
 # setwd("~/Desktop/project_cheo/2017-03-16_NextSeq/")
 # family="CHEO_0001"
+#setwd("~/Desktop/project_cheo/2017-05-18_Kristin_naked_vcf/")
+#family = "family2"
 
 setwd(family)
 
