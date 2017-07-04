@@ -1,0 +1,1 @@
+- 2017-07-04: bcbio uses vep-merged, a merged cache of refseq and vep, no need to annotate with refseq anymore

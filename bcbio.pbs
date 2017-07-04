@@ -10,6 +10,7 @@
 #PBS -l vmem=50g,mem=50g
 
 echo "START: " `date`;
+hostname
 
 module load java/1.8.0_91
 

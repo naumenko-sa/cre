@@ -8,6 +8,7 @@ details:
       use_filtered: false
     realign: true
     recalibrate: true
+    mark_duplicates: true
     save_diskspace: true
     tools_on:
     - svplots

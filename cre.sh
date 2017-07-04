@@ -14,6 +14,7 @@
 #PBS -d .
 #PBS -l vmem=20g,mem=20g
 
+
 function f_cleanup
 {
 
@@ -21,7 +22,7 @@ function f_cleanup
     # keep bam files for new samples
     cd $family
     result_dir=`find final -name project-summary.yaml | sed s/"\/project-summary.yaml"//`
-    if [ -d $result_dirt ];
+    if [ -d $result_dir ];
     then
 	mv $result_dir/* .
 	mv final/*/*.bam .
