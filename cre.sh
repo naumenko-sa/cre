@@ -34,6 +34,16 @@ function f_cleanup
     #don't remove input files for new projects
     #rm -rf input/
 
+    #rename bam files to match sample names
+    for f in *ready.bam;do mv $f `echo $f | sed s/"-ready"//`;done;
+    for f in *ready.bam.bai;do mv $f `echo $f | sed s/"-ready"//`;done;
+
+    #split vcf to for uploading to phenomecentral
+    for sample in `cat samples.txt`
+    do 
+	bcftools view -c1 -Ov -s $sample -o $sample.vcf $family.vcf.gz
+    done
+
     # we don't need gemini databases for particular calling algorythms
     rm ${family}-freebayes.db
     rm ${family}-gatk-haplotype.db
@@ -77,7 +87,9 @@ function f_make_report
     module load R
     Rscript ~/cre/cre.R $family
     
+    cd $family
     rm $family.create_report.csv $family.merge_reports.csv
+    cd ..
 }
 
 if [ -z $family ]
