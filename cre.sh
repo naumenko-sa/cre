@@ -49,7 +49,6 @@ function f_make_report
 
     gemini.gemini2txt.sh ${family}-ensemble.db
     gemini.variant_impacts.sh ${family}-ensemble.db
-    gemini.refseq.sh $family
 
     for f in *.vcf.gz;
     do
@@ -77,6 +76,8 @@ function f_make_report
     #HPC-specific
     module load R
     Rscript ~/cre/cre.R $family
+    
+    rm $family.create_report.csv $family.merge_reports.csv
 }
 
 if [ -z $family ]

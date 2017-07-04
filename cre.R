@@ -108,8 +108,8 @@ create_report = function(family,samples)
     
     # Column9 - Variation
     
-    # Column 10 -  Info_ensembl
-    variants = add_placeholder(variants,"Info_ensembl","Info_ensembl")
+    # Column 10 -  Info
+    variants = add_placeholder(variants,"Info","Info")
     impact_file=paste0(family,"-ensemble.db.impacts.txt")
     impacts = get_variants_from_file(impact_file)
     
@@ -128,19 +128,17 @@ create_report = function(family,samples)
         v_impacts = paste0(gene_impacts$gene,":exon",gene_impacts$exon,":",gene_impacts$vep_hgvsc,":",gene_impacts$vep_hgvsp)
         s_impacts = paste(v_impacts,collapse=",")
       
-        variants[i,"Info_ensembl"] = s_impacts
+        variants[i,"Info"] = s_impacts
     }
     
     # Column 11 - Protein_change_ensembl
     
-    # Column 12,13 - Info_refseq, Protein_change_refseq
-    # refseq_impacts are pasted in merge_reports function
-    variants = add_placeholder(variants,"Info_refseq","Info_refseq")
+    # Column 12 - Protein_change_refseq
     variants = add_placeholder(variants,"Protein_change_refseq","NA")
     
-    # Columns 14,15 - Depth, Qual_depth
+    # Columns 13,14 - Depth, Qual_depth
 
-    # Column 16 - Alt_depth - from v.gt_alt_depth
+    # Column 15 - Alt_depth - from v.gt_alt_depth
     # when multiple callers used, AD is not set and fixed in merge_reports function
     for(sample in samples)
     {
@@ -148,7 +146,7 @@ create_report = function(family,samples)
         setnames(variants, paste0("gt_alt_depths.",sample),new_name)
     }
 
-    # Column 17 - Trio_coverage - fixed in merge_reports function
+    # Column 16 - Trio_coverage - fixed in merge_reports function
     variants = add_placeholder(variants,"Trio_coverage","")
     n_sample = 1
     prefix = ""
@@ -172,13 +170,13 @@ create_report = function(family,samples)
         n_sample = n_sample+1
     }
     
-    # Column 18 - Ensembl_gene_id
+    # Column 17 - Ensembl_gene_id
 
-    # Column 19 - Gene_description
+    # Column 18 - Gene_description
     gene_descriptions = read.delim2(paste0(default_tables_path,"/ensembl_w_description.txt"), stringsAsFactors=F)
     variants = merge(variants,gene_descriptions,by.x = "Ensembl_gene_id",by.y = "ensembl_gene_id",all.x=T)
     
-    # Column 20 - Omim_gene_description - from omim text file
+    # Column 19 - Omim_gene_description - from omim text file
     # omim.forannotation2 previously
     # I use my copy of omim first, then look into cre, because I don't want to distribute omim
     # through my github.
@@ -190,7 +188,7 @@ create_report = function(family,samples)
     omim = read.delim2(omim_file_name_local, stringsAsFactors=F)
     variants = merge(variants,omim,all.x=T)
 
-    # Column 21 - Omim_inheritance 
+    # Column 20 - Omim_inheritance 
     omim_file_name = paste0(default_tables_path,"/omim_inheritance.txt")
     omim_file_name_local = paste0(reference_tables_path,"/omim_inheritance.txt")
     
@@ -199,7 +197,7 @@ create_report = function(family,samples)
     omim_inheritance = read.csv(omim_file_name, sep="",stringsAsFactors = F)
     variants = merge(variants,omim_inheritance,all.x=T)
 
-    # Column 22 - Orphanet
+    # Column 21 - Orphanet
     # previous name - orphanet.deduplicated.txt
     orphanet_file_name = paste0(default_tables_path,"/orphanet.txt")
     orphanet_file_name_local = paste0(reference_tables_path,"/orphanet.txt")
@@ -209,44 +207,44 @@ create_report = function(family,samples)
     orphanet = read.delim(orphanet_file_name, stringsAsFactors=F)  
     variants = merge(variants,orphanet,all.x=T)
     
-    # Column 23 - Clinvar
+    # Column 22 - Clinvar
     
-    # Column 24 - Ensembl_transcript_id
+    # Column 23 - Ensembl_transcript_id
     
-    # Column 25 - AA_position
+    # Column 24 - AA_position
     
-    # Column 26 - Exon
+    # Column 25 - Exon
     
-    # Column 27 - Pfam_domain
+    # Column 26 - Pfam_domain
     
-    # Column 28, 29 = Frequency_in_C4R, Seen_in_C4R_samples
+    # Column 27, 28 = Frequency_in_C4R, Seen_in_C4R_samples
     variants = add_placeholder(variants,"Frequency_in_C4R","Frequency_in_C4R")
     variants = add_placeholder(variants,"Seen_in_C4R_samples","Seen_in_C4R_samples")
 
-    # Column 30 - rsIds
+    # Column 29 - rsIds
 
-    # Columns 31-36 - population frequencies
+    # Columns 30-35 - population frequencies
 
-    # Columns 37-38, Exac scores
+    # Columns 36-37, Exac scores
     exac_scores_file = paste0(default_tables_path,"/exac_scores.txt")
     exac_scores = read.delim(exac_scores_file, stringsAsFactors=F)
     variants = merge(variants,exac_scores,all.x=T)
 
-    # Column 39 - Exac_het
-    # Column 40 - Exac_hom_alt
+    # Column 38 - Exac_het
+    # Column 39 - Exac_hom_alt
     
-    # Column 41 - Conserved in 29 mammals instead of phastcons
+    # Column 40 - Conserved in 29 mammals instead of phastcons
     #https://www.biostars.org/p/150152/
 
-    # Column 42-43-44: sift,polyphen,cadd scores
+    # Column 41-42-43: sift,polyphen,cadd scores
 
     
-    # Columns 45,46 - imprinting
+    # Columns 44,45 - imprinting
     imprinting_file_name = paste0(default_tables_path,"/imprinting.txt")
     imprinting = read.delim(imprinting_file_name, stringsAsFactors=F)
     variants = merge(variants,imprinting,all.x=T)
     
-    # Column 47 - pseudoautosomal
+    # Column 46 - pseudoautosomal
     pseudoautosomal_file_name = paste0(default_tables_path,"/pseudoautosomal.txt")
     pseudoautosomal = read.delim(pseudoautosomal_file_name, stringsAsFactors=F)
     variants = merge(variants,pseudoautosomal,all.x=T)
@@ -270,7 +268,7 @@ select_and_write = function(variants,samples,prefix)
 {
     variants = variants[c(c("Position","UCSC_Link","Ref","Alt"),
                         paste0("Zygosity.",samples),c("Gene"),
-                        paste0("Burden.",samples),c("gts","Variation","Info_ensembl","Protein_change_ensembl","Info_refseq","Protein_change_refseq","Depth","Quality"),
+                        paste0("Burden.",samples),c("gts","Variation","Info","Protein_change_ensembl","Protein_change_refseq","Depth","Quality"),
                         paste0("Alt_depths.",samples),
                         c("Trio_coverage","Ensembl_gene_id","Gene_description","Omim_gene_description","Omim_inheritance",
                           "Orphanet", "Clinvar","Ensembl_transcript_id","AA_position","Exon","Pfam_domain",
@@ -285,8 +283,8 @@ select_and_write = function(variants,samples,prefix)
 # writes in CSV format
 select_and_write2 = function(variants,samples,prefix)
 {
-  variants = variants[c(c("Position","UCSC_Link","Ref","Alt"),paste0("Zygosity.",samples),c("Gene"),
-                        paste0("Burden.",samples),c("gts","Variation","Info_ensembl","Protein_change_ensembl","Info_refseq","Protein_change_refseq","Depth","Quality"),
+    variants = variants[c(c("Position","UCSC_Link","Ref","Alt"),paste0("Zygosity.",samples),c("Gene"),
+                        paste0("Burden.",samples),c("gts","Variation","Info","Protein_change_ensembl","Protein_change_refseq","Depth","Quality"),
                         paste0("Alt_depths.",samples),c("Trio_coverage","Ensembl_gene_id","Gene_description","Omim_gene_description","Omim_inheritance",
                                                         "Orphanet", "Clinvar","Ensembl_transcript_id","AA_position","Exon","Pfam_domain",
                                                         "Frequency_in_C4R","Seen_in_C4R_samples","rsIDs","Maf_1000g","EVS_maf_aa","EVS_maf_ea","EVS_maf_all",
@@ -320,37 +318,19 @@ merge_reports = function(family,samples)
     ensemble = read.csv(ensemble_file, stringsAsFactors=F)
     ensemble$superindex=with(ensemble,paste(Position,Ref,Alt,sep='-'))
     
-    refseq_file = paste0(family,".refseq.txt")
-    if (file.exists(refseq_file))
+    for (i in 1:nrow(ensemble))
     {
-        refseq = read.delim(refseq_file, stringsAsFactors=F,na.strings = "")
-        ensemble = merge(ensemble,refseq,by.x = "superindex", by.y="superindex",all.x = T)
-    
-        for (i in 1:nrow(ensemble))
+        v_impacts = strsplit(ensemble[i,"Info"],",",fixed=T)[[1]]
+	for (impact in v_impacts)
         {
-            if (is.na(ensemble[i,"Info_refseq_no_gene"]))
+            if (grepl(":NP_",impact,fixed = T))
             {
-                ensemble[i,"Info_refseq"] = NA
-                ensemble[i,"Protein_change_refseq"] = NA
-            }
-            else
-            {
-                v_impacts = strsplit(ensemble[i,"Info_refseq_no_gene"],",",fixed=T)[[1]]
-                gene = ensemble[i,"Gene"]
-                ensemble[i,"Info_refseq"]=paste(paste(gene,v_impacts,sep=":"),collapse=",")
-                for (impact in v_impacts)
-                {
-                    if (grepl(":NP_",impact,fixed = T))
-                    {
-                        v_subimpacts = strsplit(impact,":",fixed=T)[[1]]
-                        ensemble[i,"Protein_change_refseq"] = v_subimpacts[5]
-                        break
-                    }
-                }
+                v_subimpacts = strsplit(impact,":",fixed=T)[[1]]
+                ensemble[i,"Protein_change_refseq"] = paste0(v_subimpacts[5],":",v_subimpacts[6])
+                break
             }
         }
     }
-    
     
     gatk_file = paste0(family,"-gatk-haplotype-annotated-decomposed.table")
     if (file.exists(gatk_file))
