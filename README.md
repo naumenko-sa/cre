@@ -149,18 +149,17 @@ During the report generation step:
 I prefer to do report generation in R, and first I tried to access gemini database from R using sqlite interface. It turned out impossible, because
 of packaging of genotype BLOB fields. I ended up with gemini utility query to dump fields I need from variants database. Filters are described in the doc.
 ## 4.3 [gemini.variant_impacts.sh](../master/gemini.variant_impacts.sh) [project-ensembl.db] dumps variant impacts from gemini.
-## 4.4 [gemini.refseq.sh](../master/gemini.refseq.sh) [project]. Annotates variants with RefSeq transcripts using VEP. Uses project-ensemble-annotated-decomposed.vcf.gz as input.
-## 4.5 creates a vcf file with rare and potentially harmful variants, the same set of variants will be shown in the excel report 
+## 4.4 creates a vcf file with rare and potentially harmful variants, the same set of variants will be shown in the excel report 
 ```
 cat ${family}-ensemble.db.txt | cut -f 23,24  | sed 1d | sed s/chr// > ${family}-ensemble.db.txt.positions
     bcftools view -R ${family}-ensemble.db.txt.positions -o ${family}.vcf.gz -O z ${family}-ensemble-annotated-decomposed.vcf.gz
 
 ```
-## 4.6 gets coverage from VCFs produced by GATK, platypus, and freebayes - requires gatk wrapper from bcbio.
+## 4.5 gets coverage from VCFs produced by GATK, platypus, and freebayes - requires gatk wrapper from bcbio.
 ```
 vcf.freebayes.getAO.sh ${family}-freebayes-annotated-decomposed.vcf.gz
 vcf.gatk.get_depth.sh ${family}-gatk-haplotype-annotated-decomposed.vcf.gz
 vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 
 ```
-## 4.7 Rscript ~/cre/[cre.R](../master/cre.R) [family] - creates report family.csv.
+## 4.6 Rscript ~/cre/[cre.R](../master/cre.R) [family] - creates report family.csv.
