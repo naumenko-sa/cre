@@ -2,7 +2,8 @@
 
 # prepares a run of multiples families to run variant calling, one family may have several samples
 # $1 - a file table.txt in the format
-# sample_id	family_id	absolute_path_to_bam_file
+# sample_id	family_id	absolute_path_to_bam_file, i.e.
+# 531_IN0067	531	/hpf/largeprojects/ccm_dccforge/dccdipg/dccc4r/c4r_wes/bam_files/531_IN0067.bam
 # creates one project per family
 # 
 # run with 
