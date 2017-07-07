@@ -38,6 +38,9 @@ function f_cleanup
     for f in *ready.bam;do mv $f `echo $f | sed s/"-ready"//`;done;
     for f in *ready.bam.bai;do mv $f `echo $f | sed s/"-ready"//`;done;
 
+    #validate bam files
+    for f in *.bam;do	bam.validate.sh $f;done;
+    
     #split vcf to for uploading to phenomecentral
     for sample in `cat samples.txt`
     do 
