@@ -11,7 +11,7 @@ germline variant calling pipeline.
 ## 0.1 Prerequisites
 * Install **Bcbio** (HPC or server) and add it to the PATH. bcbio installs many other useful tools through bionconda.
 * Clone **cre** to ~/cre and add it to the PATH (HPC).
-* Install R and packages: stringr,data.table,plyr (HPC or laptop, if you'd like to use it for report generation).
+* Install R and packages: stringr,data.table,plyr (HPC or laptop, if you'd like to use it for the report generation).
 * Install OMIM (HPC or laptop).
   * Goto https://omim.org/downloads/ and request the latest database. It makes sense to renew it once a year.
   * In a couple of days you will get genemap2.txt,genemap.txt,mim2gene.txt,mimTitles.percent.txt,mimTitles.txt,morbidmap.txt. Put them into OMIM_DIR where you want.
@@ -80,6 +80,9 @@ we can discover a useful non-coding variant. No sense to filter them out during 
 ## 1b. If you start with fastq files.
 
 ## 1c. If you start with Illumina basespace.
+
+## 1d. If you start with bcl files.
+* create a samples sheet and run [bcl2fq.sh](../master/bcl2fq.sh).
 
 # 2. Run bcbio
 
