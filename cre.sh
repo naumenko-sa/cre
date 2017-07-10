@@ -41,12 +41,6 @@ function f_cleanup
     #validate bam files
     for f in *.bam;do	bam.validate.sh $f;done;
     
-    #split vcf to for uploading to phenomecentral
-    for sample in `cat samples.txt`
-    do 
-	bcftools view -c1 -Ov -s $sample -o $sample.vcf $family.vcf.gz
-    done
-
     # we don't need gemini databases for particular calling algorythms
     rm ${family}-freebayes.db
     rm ${family}-gatk-haplotype.db
@@ -73,6 +67,9 @@ function f_make_report
     #and just a rare one in the excel report
     cat ${family}-ensemble.db.txt | cut -f 23,24  | sed 1d | sed s/chr// > ${family}-ensemble.db.txt.positions
     bcftools view -R ${family}-ensemble.db.txt.positions -o ${family}.vcf.gz -O z ${family}-ensemble-annotated-decomposed.vcf.gz
+
+    #individual vcfs for uploading to phenome central
+    vcf.split_multi.sh $family.vcf.gz
 
     #decompose first for the old version of bcbio!
     #gemini.decompose.sh ${family}-freebayes.vcf.gz
