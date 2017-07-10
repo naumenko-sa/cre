@@ -10,4 +10,6 @@ then
     bam=$1
 fi
 
+#if file is trunkated, it would be the first error message in $bam.check
+
 picard ValidateSamFile I=$bam > $bam.check
