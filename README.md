@@ -82,6 +82,7 @@ we can discover a useful non-coding variant. No sense to filter them out during 
 * run [bcbio.prepare_family1.sh](../master/bcbio.prepare_family1.sh) [family]
 
 ## 1c. If you start with Illumina basespace.
+* use basespace-cli to dump bcl files to HPF.
 
 ## 1d. If you start with bcl files.
 * create a samples sheet and run [bcl2fq.sh](../master/bcl2fq.sh).
