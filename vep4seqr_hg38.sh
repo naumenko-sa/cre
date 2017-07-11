@@ -15,8 +15,8 @@ fi
 
 bname=`echo $vcf | sed s/.vcf.gz//`
 
-unset PERL5LIB && export PATH=/hpf/largeprojects/ccmbio/naumenko/tools/bcbio/anaconda/bin:$PATH && /home/naumenko/work/tools/bcbio/anaconda/bin/variant_effect_predictor.pl \
-    --everything --vcf --allele_number --no_stats --cache --offline --force_overwrite --cache_version 89 --assembly hg38 --tabix \
+unset PERL5LIB && export PATH=/hpf/largeprojects/ccmbio/naumenko/tools/bcbio/anaconda/bin:$PATH && /home/naumenko/work/tools/bcbio/anaconda/bin/vep \
+    --everything --vcf --allele_number --no_stats --cache --offline --force_overwrite --cache_version 89 --assembly GRCh38 --species homo_sapiens_merged \
     --plugin LoF,human_ancestor_fa:/hpf/largeprojects/ccmbio/naumenko/tools/bcbio/genomes/Hsapiens/hg38/variation/human_ancestor.fa.gz,filter_position:0.05,min_intron_size:15 \
     --plugin dbNSFP,/hpf/largeprojects/ccmbio/naumenko/tools/bcbio/genomes/Hsapiens/hg38/variation/dbNSFP.txt.gz,Polyphen2_HVAR_pred,CADD_phred,SIFT_pred,FATHMM_pred,MutationTaster_pred,MetaSVM_pred \
     -i $vcf -o $bname.vep.vcf.gz \

@@ -78,6 +78,8 @@ we can discover a useful non-coding variant. No sense to filter them out during 
 * aligner: bwa. Even staring with bam files, bwa is used. Sometimes input bam files aligned against older reference, or different (chr) naming scheme. It is better to have a bam file consistent with calls made.
 
 ## 1b. If you start with fastq files.
+* Rename fastq files in the format family_sample_1.fq.gz, family_sample_2.fq.gz and place them into family/input folder.
+* run [bcbio.prepare_family1.sh](../master/bcbio.prepare_family1.sh) [family]
 
 ## 1c. If you start with Illumina basespace.
 
