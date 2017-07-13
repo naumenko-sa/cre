@@ -171,3 +171,29 @@ vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 ## 4.6 Rscript ~/cre/[cre.R](../master/cre.R) [family] - creates report family.csv.
 
 # 5. List of all scripts
+
+* bcbio.array.pbs
+* bcbio.pbs
+* bcbio.prepare_families.sh
+* bcbio.prepare_family1.sh
+* bcbio.rename_old_names.sh
+* bcl2fastq.sh
+* cre.bam.validate.sh
+* cre.fixit.sh - fixes sample names
+* cre.gemini_load.sh loads vep-annotated vcf to gemini db.
+* cre.package.sh
+* cre.sh
+* gemini.gemini2txt.sh
+* gemini.refseq.sh
+* gemini.variant_impacts.sh
+* gemini.vep.refseq.sh
+* gemini.vep.sh
+* omim.sh
+* orphanet.sh
+* vcf.freebayes.getAO.sh
+* vcf.gatk.get_depth.sh
+* vcf.platypus.getNV.sh
+* vcf.samtools.get_depth.sh
+* vcf.split_multi.sh
+* vep4seqr_hg38.sh
+* vep4seqr.sh

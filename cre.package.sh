@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#package all reports to send as one archive
+#package all reports to send as one archive CHEO_DATE.tar.gz
 
 current_dir=`pwd`
 
