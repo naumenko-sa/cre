@@ -22,18 +22,23 @@ if match:
     report=0
     bam=0
     
+    errors = []
+    
     if os.path.isfile(report_path+'.csv'):
 	#print("Report exists")
 	report=1
     else:
-	print("Error: no report")
+	errors.append('Error: no report')
 	
     if os.path.isfile(report_path+'_'+sample_only+'.bam'):
 	#print("Bam exists")
 	bam=1
     else:
-	print("ERROR: no bam")
+	errors.append(' ERROR: no bam')
+	
     if (bam==1 and report==1):
-        print(os.getcwd()+"/"+family+"\t"+os.getcwd()+"/"+report_path+'.bam') 
+        print(sample+'\t'+os.getcwd()+"/"+family+"\t"+os.getcwd()+"/"+report_path+'.bam')
+    else:
+	print(sample+'\t'+' '.join(errors))
 else:
     print("Family ID is not starting with digital")
