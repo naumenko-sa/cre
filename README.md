@@ -169,3 +169,5 @@ vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 
 ```
 ## 4.6 Rscript ~/cre/[cre.R](../master/cre.R) [family] - creates report family.csv.
+
+# 5. List of all scripts
