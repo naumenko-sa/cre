@@ -20,7 +20,7 @@ do
     echo $sample","$sample","$family",,," >> $family.csv
 done < samples.txt
 
-bcbio_nextgen.py -w template ~/cre/bcbio.templates.exome.yaml $family.csv input/*
+bcbio_nextgen.py -w template ~/cre/cre.bcbio.templates.wes.yaml $family.csv input/*
 
 mkdir config
 mkdir work
