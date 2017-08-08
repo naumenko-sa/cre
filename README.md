@@ -79,7 +79,7 @@ we can discover a useful non-coding variant. No sense to filter them out during 
 
 ## 1b. If you start with fastq files.
 * Rename fastq files in the format family_sample_1.fq.gz, family_sample_2.fq.gz and place them into family/input folder.
-* run [bcbio.prepare_family1.sh](../master/bcbio.prepare_family1.sh) [family]
+* run [cre.prepare_bcbio_run.sh](../master/cre.prepare_bcbio_run.sh) [family]
 
 ## 1c. If you start with Illumina basespace.
 * use basespace-cli to dump bcl files to HPF.
@@ -175,7 +175,7 @@ vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 * bcbio.array.pbs
 * bcbio.pbs
 * bcbio.prepare_families.sh
-* bcbio.prepare_family1.sh
+* cre.prepare_bcbio_run.sh
 * bcbio.rename_old_names.sh
 * bcl2fastq.sh
 * cre.bam.validate.sh
