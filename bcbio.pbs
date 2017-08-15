@@ -20,6 +20,8 @@ then
 fi
 echo $project $threads
 
+cd $project/work
+
 bcbio_nextgen.py ../config/${project}.yaml -n $threads
 
 echo "END: " `date`;

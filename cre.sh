@@ -39,7 +39,7 @@ function f_cleanup
     for f in *ready.bam.bai;do mv $f `echo $f | sed s/"-ready"//`;done;
 
     #validate bam files
-    for f in *.bam;do	bam.validate.sh $f;done;
+    for f in *.bam;do	cre.bam.validate.sh $f;done;
     
     # we don't need gemini databases for particular calling algorythms
     rm ${family}-freebayes.db
