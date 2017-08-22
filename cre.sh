@@ -38,6 +38,12 @@ function f_cleanup
     for f in *ready.bam;do mv $f `echo $f | sed s/"-ready"//`;done;
     for f in *ready.bam.bai;do mv $f `echo $f | sed s/"-ready"//`;done;
 
+    #make bam files read only
+    for f in *.bam;do chmod 444 $f;done;
+
+    #calculate md5 sums
+    for f in *.bam;do md5sum $f > $f.md5;done;
+
     #validate bam files
     for f in *.bam;do	cre.bam.validate.sh $f;done;
     

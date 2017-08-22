@@ -5,6 +5,9 @@
 #PBS -d .
 #PBS -l vmem=20g,mem=20g
 
+# thorough validation:
+# https://gatkforums.broadinstitute.org/gatk/discussion/7571/errors-in-sam-bam-files-can-be-diagnosed-with-validatesamfile
+
 if [ -z $bam ]
 then
     bam=$1
