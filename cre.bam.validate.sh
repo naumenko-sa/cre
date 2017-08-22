@@ -7,6 +7,7 @@
 
 # thorough validation:
 # https://gatkforums.broadinstitute.org/gatk/discussion/7571/errors-in-sam-bam-files-can-be-diagnosed-with-validatesamfile
+# bam recovery: http://genome.sph.umich.edu/wiki/BamUtil:_convert#BAM_File_Recovery
 
 if [ -z $bam ]
 then
