@@ -18,3 +18,6 @@ fi
 #uses picard wrapper from bcbio
 
 picard ValidateSamFile I=$bam > $bam.check
+
+#tries to read and checks EOF
+samtools quickcheck -vvvv $bam  &> $bam.quickcheck
