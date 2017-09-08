@@ -32,9 +32,9 @@ fi
 
 bcbio_nextgen.py -w template $template $family.csv input/*
 
-mkdir config
-mkdir work
-
-cp $family/config/$family.yaml config
+mv $family/config .
+mv $family/work .
+rm $family.csv
+rmdir $family
 
 cd ..
