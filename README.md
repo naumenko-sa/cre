@@ -43,8 +43,8 @@ Thank you colleagues at [CCM](https://ccm.sickkids.ca/), for seminars and person
 
 # 1. Create a project (projects) to run with bcbio.
 
-## 1a. If you start with bam files.
-Suppose you have a WES trio, or a cohort of trios, each sample is a bam file. You may try NIST Ashkenazim trio: ftp://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/data/AshkenazimTrio (download OsloUniversityHospital exomes).
+## 1a. If you start with a cohort of bam files.
+Suppose you have a cohort of trios and individual samples, each sample represented by a bam file.
 Then create a file table.txt where each line is sample_name[tab]family_name[tab]file.bam, i.e.
 ```
 Ashkenazim_HG002	Ashkenazim	/data/Ashkenazim_HG002.bam
@@ -77,9 +77,10 @@ we can discover a useful non-coding variant. No sense to filter them out during 
 * effects_transcripts: all. We want all effects of a variant on all transcripts to be reported.
 * aligner: bwa. Even staring with bam files, bwa is used. Sometimes input bam files aligned against older reference, or different (chr) naming scheme. It is better to have a bam file consistent with calls made.
 
-## 1b. If you start with fastq files.
-* Rename fastq files in the format family_sample_1.fq.gz, family_sample_2.fq.gz and place them into family/input folder.
-* run [cre.prepare_bcbio_run.sh](../master/cre.prepare_bcbio_run.sh) [family]
+## 1b. If you start with fastq files or bam files for a single sample/single family. You may try NIST Ashkenazim trio: ftp://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/data/AshkenazimTrio (download OsloUniversityHospital exomes).
+* Rename fastq files in the format family_sample_1.fq.gz, family_sample_2.fq.gz, or family_sample.bam and place them into family/input folder.
+* run [cre.prepare_bcbio_run.sh](../master/cre.prepare_bcbio_run.sh) [family] [no_align]. By default, it uses the template with alignment, if you set $2, it will use another template - without alignment,
+calling only.
 
 ## 1c. If you start with Illumina basespace.
 * use basespace-cli to dump bcl files to HPF.

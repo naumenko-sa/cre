@@ -1,8 +1,10 @@
 #!/bin/bash
 
 # prepares family for bcbio run when input files are family_sample.bam or family_sample_1/2.fq.gz
-
 family=$1
+
+#if set $2=any_value, uses a template without alignment (mainly for rerunning)
+noalign=$2
 
 cd $family
 
@@ -20,7 +22,15 @@ do
     echo $sample","$sample","$family",,," >> $family.csv
 done < samples.txt
 
-bcbio_nextgen.py -w template ~/cre/cre.bcbio.templates.wes.yaml $family.csv input/*
+#default template
+template=~/cre/cre.bcbio.templates.wes.yaml
+
+if [ -n "$1" ]
+then
+    template=~/cre/cre.bcbio.templates.wes_noalign.yaml
+fi
+
+bcbio_nextgen.py -w template $template $family.csv input/*
 
 mkdir config
 mkdir work
