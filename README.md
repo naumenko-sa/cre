@@ -92,8 +92,8 @@ calling only.
 # 2. Run bcbio
 
 It really depends on your HPC job management system and policies. Our HPC uses torque. It is possible to run jobs from bcbio (it automatically submits jobs to the queue,
-and then those jobs communicate with each other via network - very cool). I've tried this (parallel execution) for some time. I was stuck with some problems, maybe HPC-related. 
-So I decided to keep it simple (remember KISS, keep it simple, stupid), and to run one multicore job on one node per family(project) using torque.
+and then those jobs communicate with each other via network). I've tried this (parallel execution) for some time. I was stuck with some problems, maybe HPC-related.
+So I decided to keep it simple, and to run one multicore job for one node per family(project) using torque.
 
 To run one project: [bcbio.pbs](../master/bcbio.pbs):
 ```

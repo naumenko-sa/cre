@@ -25,7 +25,7 @@ done < samples.txt
 #default template
 template=~/cre/cre.bcbio.templates.wes.yaml
 
-if [ -n "$1" ]
+if [ -n "$2" ]
 then
     template=~/cre/cre.bcbio.templates.wes_noalign.yaml
 fi
