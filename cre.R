@@ -531,15 +531,15 @@ annotate_w_care4rare = function(family,samples)
     
     if(exists("seen_in_c4r_counts"))
     {
-        variants = merge(variants,seen_in_c4r_counts,by.x = "superindex", by.y="superindex",all.x = T)
-        variants$Frequency_in_C4R = variants$counts
-        variants$counts=NULL
+        variants = merge(variants,seen_in_c4r_counts,by.x = "superindex", by.y="Position.Ref.Alt",all.x = T)
+        variants$Frequency_in_C4R = variants$Frequency
+        variants$Frequency=NULL
     }
     
     if(exists("seen_in_c4r_samples"))
     {
-        variants = merge(variants,seen_in_c4r_samples,by.x = "superindex", by.y="superindex",all.x = T)
-        variants$Seen_in_C4R_samples=variants$samples
+        variants = merge(variants,seen_in_c4r_samples,by.x = "superindex", by.y="Position.Ref.Alt",all.x = T)
+        variants$Seen_in_C4R_samples=variants$Samples
     }
     
     select_and_write2(variants,samples,family)
@@ -561,7 +561,7 @@ if (file.exists(seen_in_c4r_counts.txt))
 seen_in_c4r_samples.txt = paste0(reference_tables_path,"/seen_in_c4r_samples.txt")
 if (file.exists(seen_in_c4r_samples.txt))
 {
-    seen_in_c4r_samples = read.csv(seen_in_c4r_samples.txt, stringsAsFactors=F, sep=";")
+    seen_in_c4r_samples = read.delim(seen_in_c4r_samples.txt, stringsAsFactors=F)
 }
 
 # R substitutes "-" with "." in sample names in columns so fix this in samples.txt
