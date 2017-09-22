@@ -174,7 +174,7 @@ vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 
 # 5. How to create a database of variants
 
-- cre.database.prepare [input_dir] [output_dir] - creates per sample variant reports, copies all reports to one dir, and creates files with variants for summary reports and annotation with cre.R.
+- cre.database.sh [input_dir] [output_dir] - creates per sample variant reports, copies all reports to one dir, and creates files with variants for summary reports and annotation with cre.R.
 - cre.database.pull_gene.sh [database_prefix] [gene_name] - pull a gene
 
 # 6. List of all scripts

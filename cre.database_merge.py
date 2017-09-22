@@ -4,7 +4,7 @@ import csv
 import sys
 from collections import defaultdict
 
-fieldnames=['Position','Ref','Alt','Variation','Zygosity','Protein_change_ensembl','Gene','Conserved_in_29_mammals','Sift_score','Polyphen_score','Cadd_score']
+fieldnames=['Position','Ref','Alt','Variation','Zygosity','Protein_change_ensembl','Gene','Conserved_in_29_mammals','Sift_score','Polyphen_score','Cadd_score','Exac_maf']
 #Frequency','Samples']
 
 frequencies = defaultdict(list)
@@ -23,6 +23,7 @@ with open(sys.argv[1],'r') as f_csv:
 	    l = []
 	    for key in fieldnames:
 		l.append(row[key])
+	    l.append('"'+row['Info_refseq']+'"')
 	    annotations[superkey] = ','.join(l)
 	    ll = []
 	    ll.append(row['Sample'])
