@@ -22,7 +22,7 @@ germline variant calling pipeline.
     * mimTitles.txt
     * morbidmap.txt. 
     Put them into OMIM_DIR where you want.
-  * Preprocess OMIM with [omim.sh](../master/omim.sh). It creates two tables: omim.txt with omim description of diseases related to 3700 genes, and omim_inheritance.txt - the inheritance mode
+  * Preprocess OMIM with [cre.omim.sh](../master/cre.omim.sh). It creates two tables: omim.txt with omim description of diseases related to 3700 genes, and omim_inheritance.txt - the inheritance mode
   for genes in OMIM.
 ```
     cd OMIM_DIR
