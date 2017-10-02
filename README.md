@@ -28,11 +28,11 @@ germline variant calling pipeline.
     cd OMIM_DIR
     ~/cre/omim.sh
 ```
-* Install Orphanet (HPC or laptop) with [orphanet.sh](../master/orphanet.sh) ~ 3600 genes:
+* Install Orphanet (HPC or laptop) with [cre.orphanet.sh](../master/cre.orphanet.sh) ~ 3600 genes:
 ```
     cd ~/cre
     wget http://www.orphadata.org/data/xml/en_product6.xml
-    orphanet.sh
+    cre.orphanet.sh
 ```
 * [Optional, for now uses old scores from ~/cre/exac_scores.txt] Install EXaC scores.
 * [Optional, for now uses old table from ~/cre/imprinting.txt] Install imprinting annotation.
