@@ -43,7 +43,7 @@ may have changed in bcbio since you had run the project, and cre follows the lat
 ## 0.2 Credits
 
 This work was inspired by 
-* [bcbio](https://github.com/chapmanb/bcbio-nextgen/) and [gemini](https://github.com/arq5x/gemini) communities. Thank you all!
+* [bcbio](https://github.com/chapmanb/bcbio-nextgen/) and [gemini](https://github.com/arq5x/gemini) teams. Thank you all!
 * Kristin Kernohan from Children Hospital of Eastern Ontario (CHEO), who generated most ideas about the report contents. Thank you, Kristin, for all of the discussions!
 
 Thank you colleagues at [CCM](https://ccm.sickkids.ca/), for seminars and personal discussions.
@@ -186,7 +186,7 @@ vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 
 # 6. Coverage plots
 
-- cre.coverage.bamstats05.sh - calculate coverage
+- cre.coverage_prepare, cre.coverage.sh - calculate coverage
 - cheo.R - plot coverage pictures
 
 # 7. List of all scripts

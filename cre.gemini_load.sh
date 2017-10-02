@@ -27,6 +27,3 @@ rm $bname.tmp.vcf.gz
 #remove --passonly to load all variants
 #add   --skip-cadd to remove cadd
 gemini load --passonly --skip-gerp-bp -v $vcf -t VEP --cores 16 --tempdir . $bname.db
-
-
-
