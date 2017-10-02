@@ -1,5 +1,5 @@
 # cre
-Simple clinically oriented research exome - excel report generation using results from [bcbio variant2](https://bcbio-nextgen.readthedocs.io/en/latest/contents/pipelines.html#germline-variant-calling) 
+An excel report generator and accompanying scripts to process WES for clinical research in Mendelian diseases. Uses results from [bcbio variant2](https://bcbio-nextgen.readthedocs.io/en/latest/contents/pipelines.html#germline-variant-calling) 
 germline variant calling pipeline.
 
 #-1. TODO

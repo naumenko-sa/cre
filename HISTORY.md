@@ -1,4 +1,5 @@
-- 2017-09-22: added Info_refseq and Maf_exac to the database
+- 2017-10-02: added cre.coverage.bamstats05.sh to calculate coverage
+- 2017-09-22: added Info_refseq and Maf_exac to the database report
 - 2017-09-14: improved cre.database.sh: it creates databases for cre.R
 - 2017-07-13: added cre.package.sh. It packages reports to send.
 - 2017-07-07: added bam.validate.sh, it produces bam.check file with picard's validation status.
