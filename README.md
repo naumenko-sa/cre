@@ -174,10 +174,15 @@ vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 
 # 5. How to create a database of variants
 
-- cre.database.sh [input_dir] [output_dir] - creates per sample variant reports, copies all reports to one dir, and creates files with variants for summary reports and annotation with cre.R.
-- cre.database.pull_gene.sh [database_prefix] [gene_name] - pull a gene
+- cre.database.sh [input_dir] [output_dir] - creates sample-wise and variant-wise reports, which are necessary for annotation with cre.R.
+- cre.database.pull_gene.sh [database_prefix] [gene_name] - pull a gene report from the database.
 
-# 6. List of all scripts
+# 6. Coverage plots
+
+- cre.coverage.bamstats05.sh - calculate coverage
+- cheo.R - plot coverage pictures
+
+# 7. List of all scripts
 
 * bcbio.array.pbs
 * bcbio.pbs
@@ -186,6 +191,7 @@ vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 * bcbio.rename_old_names.sh
 * bcl2fastq.sh
 * cre.bam.validate.sh
+* cre.coverage.bamstats05.sh - calculate coverage
 * cre.fixit.sh - fixes sample names
 * cre.gemini_load.sh loads vep-annotated vcf to gemini db.
 * cre.package.sh
