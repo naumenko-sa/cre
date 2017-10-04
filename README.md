@@ -186,7 +186,8 @@ vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 
 # 6. Coverage plots
 
-- cre.coverage_prepare, cre.coverage.sh - calculate coverage
+- ~/bioscripts/genes.R - pull a bed file from Ensembl
+- ~/bioscripts/bam.coverage.bamstats05.sh - calculate coverage
 - cheo.R - plot coverage pictures
 
 # 7. List of all scripts
