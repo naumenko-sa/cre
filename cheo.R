@@ -188,7 +188,7 @@ coverage.muscle_genes = function ()
 coverage.all_genes = function ()
 {
     library("matrixStats")
-    setwd("~/Desktop/project_cheo/2017-04-05_NextSeq_coverage/all_genes/")
+    setwd("~/Desktop/work")
     samples = unlist(read.table("samples.txt", stringsAsFactors=F))
   
     #hopefully 1st sample has most genes
@@ -211,7 +211,11 @@ coverage.all_genes = function ()
     coverage[is.na(coverage)]=0  
     coverage$Mean = rowMeans(coverage)
     png("cheo.all_genes.coverage.png",res=300,width=5000,height=2000)
-    boxplot(coverage,las=2,cex.axis=0.8,main="Coverage in 60 samples of NextSeq across all protein coding genes, no outliers",outline = F)
+    boxplot(coverage,
+            las=2,
+            cex.axis=0.6,
+            main="Coverage in 12 samples of Validation1 and Validation2 runs across all protein coding genes, 
+            no outliers",outline = F)
     dev.off()
     
     
