@@ -13,6 +13,20 @@ then
     file=$1
 fi
 
+depth_threshold=$2
+
+severity_threshold=$3
+
+if [[ "$severity_threshold" == 'ALL' ]]
+then
+#used for RNA-seq = 20k variants in the report
+    severity_filter=""
+#use for WES = 1k variants in the report
+else
+    severity_filter="v.impact_severity<>'LOW' and "
+fi
+        
+
 sQuery="select 
 	i.variant_id,
 	i.gene,
@@ -35,9 +49,13 @@ sQuery="select
 	i.vep_canonical,
 	i.vep_ccds,
 	i.vep_hgvsc,
-	i.vep_hgvsp 
+	i.vep_hgvsp,
+	i.vep_maxentscan_alt,
+	i.vep_maxentscan_diff,
+	i.vep_maxentscan_ref,
+	i.vep_spliceregion
 	from variants v, variant_impacts i 
-	where v.impact_severity <> 'LOW' and v.max_aaf_all < 0.01 and v.variant_id=i.variant_id and (v.depth>=10 or v.depth='' or v.depth is null)"
+	where "$severity_filter"v.max_aaf_all < 0.01 and v.variant_id=i.variant_id and (v.depth>="$depth_threshold" or v.depth='' or v.depth is null)"
 
 echo $sQuery
 

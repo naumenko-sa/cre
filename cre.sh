@@ -8,6 +8,9 @@
 
 # parameters:
 # family = [family_id] (=folder_name,main result file should be family-ensemble.db)
+# cleanup= [0|1] default = 0
+# make_report=[0|1] default = 1
+# rnaseq=[0|1] default = 0
 
 #PBS -l walltime=10:00:00,nodes=1:ppn=1
 #PBS -joe .
@@ -60,8 +63,8 @@ function f_make_report
 {
     cd $family
 
-    gemini.gemini2txt.sh ${family}-ensemble.db
-    gemini.variant_impacts.sh ${family}-ensemble.db
+    cre.gemini2txt.sh ${family}-ensemble.db $depth_threshold $severity_filter
+    cre.gemini_variant_impacts.sh ${family}-ensemble.db $depth_threshold $severity_filter
 
     for f in *.vcf.gz;
     do
@@ -104,6 +107,18 @@ then
 fi
 
 echo $family
+
+if [ -z "$rnaseq" ];
+then
+    rnaseq=0
+fi
+
+export depth_threshold=10
+if [ "$rnaseq" -eq 1 ];
+then
+    export depth_threshold=5
+    export severity_filter=ALL
+fi
 
 #no cleanup by default
 if [ -z $cleanup ]
