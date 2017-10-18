@@ -250,16 +250,37 @@ create_report = function(family,samples)
     variants = merge(variants,pseudoautosomal,all.x=T)
     
     # Column 47 - splicing
-    variants = add_placeholder(variants,"Splicing")
+    variants = add_placeholder(variants,"Splicing","Splicing")
     for (i in 1:nrow(variants))
     {
 	v_id = variants[i,"Variant_id"]
-	splicing_impacts = subset(impacts,variant_id==v_id,select=c("vep_maxentscan_alt","vep_maxentscan_diff","vep_maxentscan_ref","vep_spliceregion"))
-	    
-	s_splicing_impacts=paste(splicing_impacts,collapse=":")
-		
-	variants[i,"Splicing"] = s_splicing_impacts
+	splicing_impacts = subset(impacts,variant_id==v_id,select=c("transcript","vep_maxentscan_alt","vep_maxentscan_diff","vep_maxentscan_ref","vep_spliceregion"))
+	
+	s_splicing_field=''
+	for(j in 1:nrow(splicing_impacts))
+	{
+	    if( splicing_impacts[j,"vep_spliceregion"] != '')
+	    {
+		s_impact = paste(splicing_impacts[j,"transcript"],splicing_impacts[j,"vep_maxentscan_alt"],splicing_impacts[j,"vep_maxentscan_diff"],splicing_impacts[j,"vep_maxentscan_ref"],
+			    splicing_impacts[j,"vep_spliceregion"],sep=":")
+	
+
+		if(s_splicing_field == '')
+		{
+		    s_splicing_field = s_impact
+		}
+		else
+		{
+		    s_splicing_field = paste(s_splicing_field,s_impact,sep=";")
+		}
+	    }
+	}
+	
+	variants[i,"Splicing"] = s_splicing_field
     }
+    
+    # Column 48: number of callers
+    # Column 49: genotypes of individual callers
     
     # replace -1 with 0
     for (field in c("EVS_maf_aa","EVS_maf_ea","EVS_maf_all","Maf_1000g","Exac_maf","Maf_all","Gnomad_het","Gnomad_hom_alt","Trio_coverage"))
