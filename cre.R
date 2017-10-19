@@ -283,7 +283,7 @@ create_report = function(family,samples)
     # Column 48: number of callers
     # Column 49: genotypes of individual callers
     variants = add_placeholder(variants,"Number_of_callers","Number_of_callers")
-    variants = add_placeholder(variants,"Genotypes_of_callers","Genotypes_of_callers")
+    #variants = add_placeholder(variants,"Genotypes_of_callers","Genotypes_of_callers")
     
     
     # replace -1 with 0
@@ -313,7 +313,7 @@ select_and_write = function(variants,samples,prefix)
                           "Exac_maf","Maf_all", "Exac_pLi_score","Exac_missense_score","Gnomad_het","Gnomad_hom_alt",
                           "Conserved_in_29_mammals","Sift_score","Polyphen_score","Cadd_score",
                           "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing",
-                          "Number_of_callers","Genotypes_of_callers"))]
+                          "Number_of_callers"))]
   
     write.table(variants,paste0(prefix,".txt"),quote=F,sep = ";",row.names=F)  
 }
@@ -329,9 +329,9 @@ select_and_write2 = function(variants,samples,prefix)
                                                         "Exac_maf","Maf_all", "Exac_pLi_score","Exac_missense_score","Gnomad_het","Gnomad_hom_alt",
                                                         "Conserved_in_29_mammals","Sift_score","Polyphen_score","Cadd_score",
                                                         "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing",
-                                                        "Number_of_callers","Genotypes_of_callers"))]
+                                                        "Number_of_callers"))]
   
-    write.csv(variants,paste0(prefix,".csv"),row.names = F)  
+    write.csv(variants,paste0(prefix,".csv"),row.names = F)
 }
 
 fix_column_name = function(column_name)
@@ -376,14 +376,15 @@ merge_reports = function(family,samples)
     {
         ensemble_table = read.delim(ensemble_table_file,stringsAsFactors = F)
         ensemble_table$superindex=with(ensemble_table,paste(paste0("chr",CHROM,":",POS),REF,ALT,sep='-'))
+        ensemble_table[c("CHROM","POS","REF","ALT")]=NULL
         for (i in 1:nrow(ensemble_table))
         {
             v_callers = strsplit(ensemble_table[i,"CALLERS"],",")[[1]]
             ensemble_table[i,"Number_of_callers"] = length(v_callers)
         }
+        ensemble_table["CALLERS"]=NULL
+        ensemble = merge(ensemble,ensemble_table,b.x="superindex",by.y="superindex",all.x=T)
     }
-    ensemble = merge(ensemble,gatk_table,by.x = "superindex", by.y="superindex",all.x = T)
-    
     
     gatk_file = paste0(family,"-gatk-haplotype-annotated-decomposed.table")
     if (file.exists(gatk_file))
