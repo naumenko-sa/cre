@@ -253,34 +253,38 @@ create_report = function(family,samples)
     variants = add_placeholder(variants,"Splicing","Splicing")
     for (i in 1:nrow(variants))
     {
-	v_id = variants[i,"Variant_id"]
-	splicing_impacts = subset(impacts,variant_id==v_id,select=c("transcript","vep_maxentscan_alt","vep_maxentscan_diff","vep_maxentscan_ref","vep_spliceregion"))
+	      v_id = variants[i,"Variant_id"]
+	      splicing_impacts = subset(impacts,variant_id==v_id,select=c("transcript","vep_maxentscan_alt",
+	                         "vep_maxentscan_diff","vep_maxentscan_ref","vep_spliceregion"))
 	
-	s_splicing_field=''
-	for(j in 1:nrow(splicing_impacts))
-	{
-	    if( splicing_impacts[j,"vep_spliceregion"] != '')
-	    {
-		s_impact = paste(splicing_impacts[j,"transcript"],splicing_impacts[j,"vep_maxentscan_alt"],splicing_impacts[j,"vep_maxentscan_diff"],splicing_impacts[j,"vep_maxentscan_ref"],
-			    splicing_impacts[j,"vep_spliceregion"],sep=":")
+	      s_splicing_field=''
+	      for(j in 1:nrow(splicing_impacts))
+	      {
+	          if( splicing_impacts[j,"vep_spliceregion"] != '')
+	          {
+		              s_impact = paste(splicing_impacts[j,"transcript"],splicing_impacts[j,"vep_maxentscan_alt"],
+		                       splicing_impacts[j,"vep_maxentscan_diff"],splicing_impacts[j,"vep_maxentscan_ref"],
+			                     splicing_impacts[j,"vep_spliceregion"],sep=":")
 	
-
-		if(s_splicing_field == '')
-		{
-		    s_splicing_field = s_impact
-		}
-		else
-		{
-		    s_splicing_field = paste(s_splicing_field,s_impact,sep=";")
-		}
-	    }
-	}
+		              if(s_splicing_field == '')
+		              {
+		                  s_splicing_field = s_impact
+		              }
+		              else
+		              {
+		                  s_splicing_field = paste(s_splicing_field,s_impact,sep=";")
+		              }
+	          }
+	      }
 	
-	variants[i,"Splicing"] = s_splicing_field
+	      variants[i,"Splicing"] = s_splicing_field
     }
     
     # Column 48: number of callers
     # Column 49: genotypes of individual callers
+    variants = add_placeholder(variants,"Number_of_callers","Number_of_callers")
+    variants = add_placeholder(variants,"Genotypes_of_callers","Genotypes_of_callers")
+    
     
     # replace -1 with 0
     for (field in c("EVS_maf_aa","EVS_maf_ea","EVS_maf_all","Maf_1000g","Exac_maf","Maf_all","Gnomad_het","Gnomad_hom_alt","Trio_coverage"))
@@ -308,7 +312,8 @@ select_and_write = function(variants,samples,prefix)
                           "Frequency_in_C4R","Seen_in_C4R_samples","rsIDs","Maf_1000g","EVS_maf_aa","EVS_maf_ea","EVS_maf_all",
                           "Exac_maf","Maf_all", "Exac_pLi_score","Exac_missense_score","Gnomad_het","Gnomad_hom_alt",
                           "Conserved_in_29_mammals","Sift_score","Polyphen_score","Cadd_score",
-                          "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing"))]
+                          "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing",
+                          "Number_of_callers","Genotypes_of_callers"))]
   
     write.table(variants,paste0(prefix,".txt"),quote=F,sep = ";",row.names=F)  
 }
@@ -323,9 +328,10 @@ select_and_write2 = function(variants,samples,prefix)
                                                         "Frequency_in_C4R","Seen_in_C4R_samples","rsIDs","Maf_1000g","EVS_maf_aa","EVS_maf_ea","EVS_maf_all",
                                                         "Exac_maf","Maf_all", "Exac_pLi_score","Exac_missense_score","Gnomad_het","Gnomad_hom_alt",
                                                         "Conserved_in_29_mammals","Sift_score","Polyphen_score","Cadd_score",
-                                                        "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing"))]
+                                                        "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing",
+                                                        "Number_of_callers","Genotypes_of_callers"))]
   
-  write.csv(variants,paste0(prefix,".csv"),row.names = F)  
+    write.csv(variants,paste0(prefix,".csv"),row.names = F)  
 }
 
 fix_column_name = function(column_name)
@@ -342,9 +348,9 @@ merge_reports = function(family,samples)
 {
     # test:
     # setwd("/home/sergey/Desktop/project_cheo/2016-11-09_rerun10")
-    # family = "166"
+    # family = "Ashkenazim"
     # mind the samples order: it will influence the Trio
-    # samples=c("166_3_5","166_4_10","166_4_8")
+    # samples=c("Ashkenazim_HG002","Ashkenazim_HG003","Ashkenazim_HG004")
   
     ensemble_file = paste0(family,".create_report.csv")
     
@@ -354,7 +360,7 @@ merge_reports = function(family,samples)
     for (i in 1:nrow(ensemble))
     {
         v_impacts = strsplit(ensemble[i,"Info"],",",fixed=T)[[1]]
-	for (impact in v_impacts)
+	      for (impact in v_impacts)
         {
             if (grepl(":NP_",impact,fixed = T))
             {
@@ -364,6 +370,20 @@ merge_reports = function(family,samples)
             }
         }
     }
+    
+    ensemble_table_file = paste0(family,".table")
+    if (file.exists(ensemble_table_file))
+    {
+        ensemble_table = read.delim(ensemble_table_file,stringsAsFactors = F)
+        ensemble_table$superindex=with(ensemble_table,paste(paste0("chr",CHROM,":",POS),REF,ALT,sep='-'))
+        for (i in 1:nrow(ensemble_table))
+        {
+            v_callers = strsplit(ensemble_table[i,"CALLERS"],",")[[1]]
+            ensemble_table[i,"Number_of_callers"] = length(v_callers)
+        }
+    }
+    ensemble = merge(ensemble,gatk_table,by.x = "superindex", by.y="superindex",all.x = T)
+    
     
     gatk_file = paste0(family,"-gatk-haplotype-annotated-decomposed.table")
     if (file.exists(gatk_file))
@@ -620,3 +640,4 @@ merge_reports(family,samples)
 annotate_w_care4rare(family,samples)
 
 setwd("..")
+
