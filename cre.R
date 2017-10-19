@@ -2,8 +2,8 @@
 
 add_placeholder=function(variants,column_name,placeholder)
 {
-   variants[,column_name]=with(variants,placeholder)
-   return(variants)
+    variants[,column_name]=with(variants,placeholder)
+    return(variants)
 }
 
 get_variants_from_file = function (filename)
@@ -250,7 +250,8 @@ create_report = function(family,samples)
     variants = merge(variants,pseudoautosomal,all.x=T)
     
     # Column 47 - splicing
-    variants = add_placeholder(variants,"Splicing","Splicing")
+    variants = add_placeholder(variants,"Splicing","NA")
+    
     for (i in 1:nrow(variants))
     {
 	      v_id = variants[i,"Variant_id"]
@@ -338,7 +339,7 @@ fix_column_name = function(column_name)
 {
     if(grepl("^[0-9]",column_name))
     {
-      column_name = paste0("X",column_name)
+        column_name = paste0("X",column_name)
     }
     return(column_name)
 }
@@ -383,7 +384,8 @@ merge_reports = function(family,samples)
             ensemble_table[i,"Number_of_callers"] = length(v_callers)
         }
         ensemble_table["CALLERS"]=NULL
-        ensemble = merge(ensemble,ensemble_table,b.x="superindex",by.y="superindex",all.x=T)
+        ensemble$Number_of_callers=NULL
+        ensemble = merge(ensemble,ensemble_table,by.x="superindex",by.y="superindex",all.x=T)
     }
     
     gatk_file = paste0(family,"-gatk-haplotype-annotated-decomposed.table")
