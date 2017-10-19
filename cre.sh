@@ -71,14 +71,17 @@ function f_make_report
 	tabix $f;
     done
 
-    #report filtered vcf for import in phenotips
-    #note that if there is a multiallelic SNP, with one rare allele and one frequent one, both will be reported in the VCF,
-    #and just a rare one in the excel report
+    # report filtered vcf for import in phenotips
+    # note that if there is a multiallelic SNP, with one rare allele and one frequent one, both will be reported in the VCF,
+    # and just a rare one in the excel report
     cat ${family}-ensemble.db.txt | cut -f 23,24  | sed 1d | sed s/chr// > ${family}-ensemble.db.txt.positions
     bcftools view -R ${family}-ensemble.db.txt.positions -o ${family}.vcf.gz -O z ${family}-ensemble-annotated-decomposed.vcf.gz
+    tabix $family.vcf.gz
 
     #individual vcfs for uploading to phenome central
     vcf.split_multi.sh $family.vcf.gz
+
+    vcf.ensemble.getCALLERS.sh $family.vcf.gz
 
     #decompose first for the old version of bcbio!
     #gemini.decompose.sh ${family}-freebayes.vcf.gz
