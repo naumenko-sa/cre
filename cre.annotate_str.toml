@@ -1,0 +1,5 @@
+[[annotation]]
+file="protein_coding_genes.bed.gz"
+columns = [4]
+names=["gene"]
+ops=["self"]
