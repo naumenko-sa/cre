@@ -2,6 +2,7 @@
 
 # vep annotation for import to seqr
 # https://github.com/macarthur-lab/seqr/blob/master/deploy/mac_osx/README.md#load-your-own-data
+# seqr does not support grch38
 
 #PBS -l walltime=23:00:00,nodes=1:ppn=1
 #PBS -joe .
@@ -13,7 +14,7 @@ then
     vcf=$1
 fi
 
-bname=`echo $vcf | sed s/.vcf.gz//`
+bname=`basename $vcf .vcf.gz//`
 
 unset PERL5LIB && export PATH=/hpf/largeprojects/ccmbio/naumenko/tools/bcbio/anaconda/bin:$PATH && /home/naumenko/work/tools/bcbio/anaconda/bin/vep \
     --everything --vcf --allele_number --no_stats --cache --offline --force_overwrite --cache_version 89 --assembly GRCh37 --tabix \

@@ -76,8 +76,14 @@ else
     severity_filter="and v.impact_severity<>'LOW'"
 fi
 
-sQuery=$sQuery"v.vep_hgvsc as Nucleotide_change_ensembl,v.vep_hgvsp as Protein_change_ensembl from variants v, gene_detailed g
-        where v.transcript=g.transcript and (v.gene=g.gene or g.gene is NULL) "$severity_filter" and v.max_aaf_all < 0.01 and (v.depth >= "$depth_threshold" or v.depth = '' or v.depth is null)"
+sQuery=$sQuery"v.vep_hgvsc as Nucleotide_change_ensembl,
+		v.vep_hgvsp as Protein_change_ensembl 
+		from variants v, gene_detailed g
+	        where 
+	        v.transcript=g.transcript and 
+	        (v.gene=g.gene or g.gene is NULL) "$severity_filter" and 
+	        v.max_aaf_all < 0.01 and 
+	        (v.depth >= "$depth_threshold" or v.depth = '' or v.depth is null)"
 
 echo $sQuery
 gemini query --header -q "$sQuery" $file > ${file}.txt;

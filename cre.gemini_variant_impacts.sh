@@ -49,13 +49,24 @@ sQuery="select
 	i.vep_canonical,
 	i.vep_ccds,
 	i.vep_hgvsc,
-	i.vep_hgvsp,
+	i.vep_hgvsp"
+
+#old runs before Oct2017 does not have maxentscanfields in the database
+if gemini db_info $1 | grep -q "maxentscan";
+then 
+    sQuery=$sQuery",
 	i.vep_maxentscan_alt,
 	i.vep_maxentscan_diff,
 	i.vep_maxentscan_ref,
 	i.vep_spliceregion
-	from variants v, variant_impacts i 
-	where "$severity_filter"v.max_aaf_all < 0.01 and v.variant_id=i.variant_id and (v.depth>="$depth_threshold" or v.depth='' or v.depth is null)"
+	"
+fi
+
+sQuery=$sQuery" from variants v, 
+		variant_impacts i 
+		where "$severity_filter"v.max_aaf_all < 0.01 and 
+		v.variant_id=i.variant_id and 
+		(v.depth>="$depth_threshold" or v.depth='' or v.depth is null)"
 
 echo $sQuery
 

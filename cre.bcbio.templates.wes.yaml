@@ -13,6 +13,7 @@ details:
     tools_on:
     - svplots
     - qualimap
+    - vep_splicesite_annotations
     variantcaller:
     - gatk-haplotype
     - samtools
