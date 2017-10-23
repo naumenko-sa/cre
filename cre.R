@@ -49,19 +49,6 @@ genotype2zygocity = function (genotype_str,ref)
 #output : family.ensemble.txt
 create_report = function(family,samples)
 {
-    #test1: 3 samples in a family
-    #family="166"
-    #samples=c("166_3_5","166_4_10","166_4_8")
- 
-    #test2: 1 sample in a familty
-    #family="NA12878-1"
-    #samples=c("NA12878.1")
-  
-    #test3: 
-    #setwd("~/Desktop/project_cheo/2017-01-30_dorin/1092R")
-    #family="1092R"
-    #samples = c("1092R_1613029","1092R_1613440","1092R_1613445")
-    
     file=paste0(family,"-ensemble.db.txt")
   
     variants = get_variants_from_file(file)
@@ -252,33 +239,40 @@ create_report = function(family,samples)
     # Column 47 - splicing
     variants = add_placeholder(variants,"Splicing","NA")
     
-    for (i in 1:nrow(variants))
+    #in older runs (before Nov2017) there are no splicing fields in the database
+    if ("vep_spliceregion" %in% impacts)
     {
-	      v_id = variants[i,"Variant_id"]
-	      splicing_impacts = subset(impacts,variant_id==v_id,select=c("transcript","vep_maxentscan_alt",
-	                         "vep_maxentscan_diff","vep_maxentscan_ref","vep_spliceregion"))
+        for (i in 1:nrow(variants))
+        {
+	          v_id = variants[i,"Variant_id"]
+	          splicing_impacts = subset(impacts,variant_id==v_id,
+	                             select=c("transcript","vep_maxentscan_alt",
+	                            "vep_maxentscan_diff","vep_maxentscan_ref",
+	                            "vep_spliceregion"))
 	
-	      s_splicing_field=''
-	      for(j in 1:nrow(splicing_impacts))
-	      {
-	          if( splicing_impacts[j,"vep_spliceregion"] != '')
+	          s_splicing_field='NA'
+	          for(j in 1:nrow(splicing_impacts))
 	          {
-		              s_impact = paste(splicing_impacts[j,"transcript"],splicing_impacts[j,"vep_maxentscan_alt"],
-		                       splicing_impacts[j,"vep_maxentscan_diff"],splicing_impacts[j,"vep_maxentscan_ref"],
-			                     splicing_impacts[j,"vep_spliceregion"],sep=":")
+	              if(splicing_impacts[j,"vep_spliceregion"] != '')
+	              {
+		                  s_impact = paste(splicing_impacts[j,"transcript"],
+		                                   splicing_impacts[j,"vep_maxentscan_alt"],
+		                                   splicing_impacts[j,"vep_maxentscan_diff"],
+		                                   splicing_impacts[j,"vep_maxentscan_ref"],
+			                                 splicing_impacts[j,"vep_spliceregion"],sep=":")
 	
-		              if(s_splicing_field == '')
-		              {
-		                  s_splicing_field = s_impact
-		              }
-		              else
-		              {
-		                  s_splicing_field = paste(s_splicing_field,s_impact,sep=";")
-		              }
+		                  if(s_splicing_field == 'NA')
+		                  {
+		                      s_splicing_field = s_impact
+		                  }
+		                  else
+		                  {
+		                      s_splicing_field = paste(s_splicing_field,s_impact,sep=";")
+		                  }
+	              }
 	          }
-	      }
-	
-	      variants[i,"Splicing"] = s_splicing_field
+	          variants[i,"Splicing"] = s_splicing_field
+        }
     }
     
     # Column 48: number of callers
@@ -347,14 +341,7 @@ fix_column_name = function(column_name)
 # merges ensembl, gatk-haplotype reports
 merge_reports = function(family,samples)
 {
-    # test:
-    # setwd("/home/sergey/Desktop/project_cheo/2016-11-09_rerun10")
-    # family = "Ashkenazim"
-    # mind the samples order: it will influence the Trio
-    # samples=c("Ashkenazim_HG002","Ashkenazim_HG003","Ashkenazim_HG004")
-  
     ensemble_file = paste0(family,".create_report.csv")
-    
     ensemble = read.csv(ensemble_file, stringsAsFactors=F)
     ensemble$superindex=with(ensemble,paste(Position,Ref,Alt,sep='-'))
     
@@ -627,11 +614,9 @@ if (file.exists(seen_in_c4r_samples.txt))
 args = commandArgs(trailingOnly = T)
 family = args[1]
 
-# DEBUG - replace with Ashkenazim trio
-# setwd("~/Desktop/project_cheo/2017-03-16_NextSeq/")
-# family="CHEO_0001"
-#setwd("~/Desktop/project_cheo/2017-05-18_Kristin_naked_vcf/")
-#family = "family2"
+# DEBUG
+# setwd("~/cluster/validation/nist_ashkenazim_trio/")
+# family="Ashkenazim"
 
 setwd(family)
 
