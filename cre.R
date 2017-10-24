@@ -199,6 +199,7 @@ create_report = function(family,samples)
     # Column 23 - Ensembl_transcript_id
     
     # Column 24 - AA_position
+    # changing separator from / to _ because otherwise excel converts it into date
     
     # Column 25 - Exon
     
@@ -397,7 +398,8 @@ merge_reports = function(family,samples)
             column = fix_column_name(sample)  
             column = paste0(column,".DP")
         
-            if (n_sample>1) prefix="/"
+	    #prefix changed to _ from / because otherwise excel converts the field into date
+            if (n_sample>1) prefix="_"
         
             ensemble$Trio_coverage = with(ensemble,paste0(Trio_coverage,prefix,get(column)))
       
@@ -456,7 +458,7 @@ merge_reports = function(family,samples)
                 for(sample in samples)
                 {
                     column = paste0(fix_column_name(sample),".DP")
-                    if (n_sample>1) prefix="/"
+                    if (n_sample>1) prefix="_"
                         ensemble[i,"Trio_coverage"] = paste(ensemble[i,"Trio_coverage"],ensemble[i,column],sep = prefix)
               
                     n_sample = n_sample+1
@@ -500,7 +502,7 @@ merge_reports = function(family,samples)
                 for(sample in samples)
                 {
                     column = paste0(fix_column_name(sample),".NR")
-                    if (n_sample>1) prefix="/"
+                    if (n_sample>1) prefix="_"
                     #sometimes freebayes has 10,10,10 for decomposed alleles
                     cov_value=strsplit(ensemble[i,column],",",fixed=T)[[1]][1]
                     ensemble[i,"Trio_coverage"] = paste(ensemble[i,"Trio_coverage"],cov_value,sep = prefix)
@@ -552,7 +554,7 @@ merge_reports = function(family,samples)
     {
         if (is.na(ensemble[i,"Depth"]))
         {
-            l=strsplit(ensemble[i,"Trio_coverage"],"/")[[1]]
+            l=strsplit(ensemble[i,"Trio_coverage"],"_")[[1]]
             ensemble[i,"Depth"]=sum(as.integer(l))
         }
         for (sample in samples)
