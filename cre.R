@@ -175,7 +175,7 @@ create_report = function(family,samples)
     omim = read.delim2(omim_file_name_local, stringsAsFactors=F)
     variants = merge(variants,omim,all.x=T)
 
-    variants$Omim_gene_description = with(variants,gsub("NA",0,Omim_gene_description,fixed=T))
+    variants$Omim_gene_description[is.na(variants$Omim_gene_description)] = 0
         
 
     # Column 20 - Omim_inheritance 
@@ -198,8 +198,7 @@ create_report = function(family,samples)
     orphanet = read.delim(orphanet_file_name, stringsAsFactors=F)  
     variants = merge(variants,orphanet,all.x=T)
     
-    variants$Orphanet = with(variants,gsub("NA",0,Orphanet,fixed=T))  
-            
+    variants$Orphanet[is.na(variants$Orphanet)] = 0        
     
     # Column 22 - Clinvar
     
@@ -207,8 +206,10 @@ create_report = function(family,samples)
     
     # Column 24 - AA_position
     # changing separator from / to _ because otherwise excel converts it into date
+    variants[,"AA_position"] = with(variants,gsub("/","_",AA_position),fixed=T)
     
     # Column 25 - Exon
+    variants[,"Exon"] = with(variants,gsub("/","_",Exon),fixed=T)
     
     # Column 26 - Pfam_domain
     
@@ -624,7 +625,7 @@ args = commandArgs(trailingOnly = T)
 family = args[1]
 
 # DEBUG
-# setwd("~/cluster/validation/nist_ashkenazim_trio/")
+# setwd("~/cluster1/validation/nist_ashkenazim_trio/")
 # family="Ashkenazim"
 
 setwd(family)
