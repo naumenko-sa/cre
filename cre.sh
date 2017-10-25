@@ -95,8 +95,7 @@ function f_make_report
 
     cd ..
 
-    #HPC-specific
-    module load R
+    # using Rscript from bcbio
     Rscript ~/cre/cre.R $family
     
     cd $family

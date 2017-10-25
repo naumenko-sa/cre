@@ -3,8 +3,9 @@
 # prepares family for bcbio run when input files are family_sample.bam or family_sample_1/2.fq.gz
 family=$1
 
-#if set $2=any_value, uses a template without alignment (mainly for rerunning)
-noalign=$2
+#$2=template type, no value - default WES, noalign - no alignment (for rerunning), fast - no realignment,recalibration, and only gatk
+template_type=$2
+echo $template_type
 
 cd $family
 
@@ -27,7 +28,14 @@ template=~/cre/cre.bcbio.templates.wes.yaml
 
 if [ -n "$2" ]
 then
-    template=~/cre/cre.bcbio.templates.wes_noalign.yaml
+    if [ $template_type == "noalign" ]
+    then
+	template=~/cre/cre.bcbio.templates.wes.noalign.yaml
+    elif [ $template_type == "fast" ]
+    then
+	echo fast
+	template=~/cre/cre.bcbio.templates.wes.fast.yaml
+    fi
 fi
 
 bcbio_nextgen.py -w template $template $family.csv input/*

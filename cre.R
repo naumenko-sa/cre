@@ -175,6 +175,9 @@ create_report = function(family,samples)
     omim = read.delim2(omim_file_name_local, stringsAsFactors=F)
     variants = merge(variants,omim,all.x=T)
 
+    variants$Omim_gene_description = with(variants,gsub("NA",0,Omim_gene_description,fixed=T))
+        
+
     # Column 20 - Omim_inheritance 
     omim_file_name = paste0(default_tables_path,"/omim_inheritance.txt")
     omim_file_name_local = paste0(reference_tables_path,"/omim_inheritance.txt")
@@ -183,6 +186,7 @@ create_report = function(family,samples)
     
     omim_inheritance = read.csv(omim_file_name, sep="",stringsAsFactors = F)
     variants = merge(variants,omim_inheritance,all.x=T)
+            
 
     # Column 21 - Orphanet
     # previous name - orphanet.deduplicated.txt
@@ -193,6 +197,9 @@ create_report = function(family,samples)
     
     orphanet = read.delim(orphanet_file_name, stringsAsFactors=F)  
     variants = merge(variants,orphanet,all.x=T)
+    
+    variants$Orphanet = with(variants,gsub("NA",0,Orphanet,fixed=T))  
+            
     
     # Column 22 - Clinvar
     
@@ -241,7 +248,7 @@ create_report = function(family,samples)
     variants = add_placeholder(variants,"Splicing","NA")
     
     #in older runs (before Nov2017) there are no splicing fields in the database
-    if ("vep_spliceregion" %in% impacts)
+    if ("vep_spliceregion" %in% colnames(impacts))
     {
         for (i in 1:nrow(variants))
         {
@@ -283,7 +290,7 @@ create_report = function(family,samples)
     
     
     # replace -1 with 0
-    for (field in c("EVS_maf_aa","EVS_maf_ea","EVS_maf_all","Maf_1000g","Exac_maf","Maf_all","Gnomad_het","Gnomad_hom_alt","Trio_coverage"))
+    for (field in c("EVS_maf_aa","EVS_maf_ea","EVS_maf_all","Maf_1000g","Gnomad_maf","Maf_all","Gnomad_het","Gnomad_hom_alt","Trio_coverage"))
     {
         variants[,field] = with(variants,gsub("-1","0",get(field),fixed=T))  
     }
@@ -306,7 +313,7 @@ select_and_write = function(variants,samples,prefix)
                         c("Trio_coverage","Ensembl_gene_id","Gene_description","Omim_gene_description","Omim_inheritance",
                           "Orphanet", "Clinvar","Ensembl_transcript_id","AA_position","Exon","Pfam_domain",
                           "Frequency_in_C4R","Seen_in_C4R_samples","rsIDs","Maf_1000g","EVS_maf_aa","EVS_maf_ea","EVS_maf_all",
-                          "Exac_maf","Maf_all", "Exac_pLi_score","Exac_missense_score","Gnomad_het","Gnomad_hom_alt",
+                          "Gnomad_maf","Maf_all", "Exac_pLi_score","Exac_missense_score","Gnomad_het","Gnomad_hom_alt",
                           "Conserved_in_29_mammals","Sift_score","Polyphen_score","Cadd_score",
                           "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing",
                           "Number_of_callers"))]
@@ -322,7 +329,7 @@ select_and_write2 = function(variants,samples,prefix)
                         paste0("Alt_depths.",samples),c("Trio_coverage","Ensembl_gene_id","Gene_description","Omim_gene_description","Omim_inheritance",
                                                         "Orphanet", "Clinvar","Ensembl_transcript_id","AA_position","Exon","Pfam_domain",
                                                         "Frequency_in_C4R","Seen_in_C4R_samples","rsIDs","Maf_1000g","EVS_maf_aa","EVS_maf_ea","EVS_maf_all",
-                                                        "Exac_maf","Maf_all", "Exac_pLi_score","Exac_missense_score","Gnomad_het","Gnomad_hom_alt",
+                                                        "Gnomad_maf","Maf_all", "Exac_pLi_score","Exac_missense_score","Gnomad_het","Gnomad_hom_alt",
                                                         "Conserved_in_29_mammals","Sift_score","Polyphen_score","Cadd_score",
                                                         "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing",
                                                         "Number_of_callers"))]

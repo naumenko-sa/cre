@@ -40,7 +40,7 @@ sQuery="select
         v.pfam_domain as Pfam_domain,
         v.rs_ids as rsIDs,
         v.aaf_1kg_all as Maf_1000g,
-        v.aaf_exac_all as Exac_maf,
+        v.aaf_gnomad_all as Gnomad_maf,
         v.max_aaf_all as Maf_all,
         v.gnomad_num_het as Gnomad_het,
         v.gnomad_num_hom_alt as Gnomad_hom_alt,
