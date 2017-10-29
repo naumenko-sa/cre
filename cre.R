@@ -249,37 +249,41 @@ create_report = function(family,samples)
     variants = add_placeholder(variants,"Splicing","NA")
     
     #in older runs (before Nov2017) there are no splicing fields in the database
+    # we report the max vep_maxentscan_diff (ref-alt) score for a gene over all isoforms
+    # https://github.com/Ensembl/VEP_plugins/blob/master/MaxEntScan.pm
+    # that means the lesser the score (more in the negative), the stronger is Alt splice signal
+    # diff = REF  - ALT
     if ("vep_spliceregion" %in% colnames(impacts))
     {
         for (i in 1:nrow(variants))
         {
 	          v_id = variants[i,"Variant_id"]
 	          splicing_impacts = subset(impacts,variant_id==v_id,
-	                             select=c("transcript","vep_maxentscan_alt",
-	                            "vep_maxentscan_diff","vep_maxentscan_ref",
-	                            "vep_spliceregion"))
+	                             select=c("vep_maxentscan_diff","vep_spliceregion"))
+	          splicing_impacts = subset(splicing_impacts, !is.na(vep_maxentscan_diff))
+	          splicing_impacts = unique(splicing_impacts[order(splicing_impacts$vep_maxentscan_diff),])
+	          # capture the absolute difference - very weak site, or very strong site
+	          # negative - strong alt, + weak alt.
 	
 	          s_splicing_field='NA'
-	          for(j in 1:nrow(splicing_impacts))
+	          
+	          if (nrow(splicing_impacts) > 0)
 	          {
-	              if(splicing_impacts[j,"vep_spliceregion"] != '')
-	              {
-		                  s_impact = paste(splicing_impacts[j,"transcript"],
-		                                   splicing_impacts[j,"vep_maxentscan_alt"],
-		                                   splicing_impacts[j,"vep_maxentscan_diff"],
-		                                   splicing_impacts[j,"vep_maxentscan_ref"],
-			                                 splicing_impacts[j,"vep_spliceregion"],sep=":")
-	
-		                  if(s_splicing_field == 'NA')
-		                  {
-		                      s_splicing_field = s_impact
-		                  }
-		                  else
-		                  {
-		                      s_splicing_field = paste(s_splicing_field,s_impact,sep=";")
-		                  }
-	              }
+	              strongest_alt_site = head(splicing_impacts,n=1)
+	            
+	              s_splicing_field = paste0(strongest_alt_site$vep_maxentscan_diff,":",
+	                                        strongest_alt_site$vep_spliceregion)
+	                                        
+	                                        
 	          }
+	          
+	          if (nrow(splicing_impacts) > 1)
+	          {
+	              weakest_alt_site = tail(splicing_impacts,n=1)
+	              s_splicing_field = paste0(s_splicing_field,";",weakest_alt_site$vep_maxentscan_diff,":",
+	                                        weakest_alt_site$vep_spliceregion)
+	          }
+	          
 	          variants[i,"Splicing"] = s_splicing_field
         }
     }
@@ -589,11 +593,15 @@ annotate_w_care4rare = function(family,samples)
         variants$Frequency=NULL
     }
     
+    variants$Frequency_in_C4R[is.na(variants$Frequency_in_C4R)] = 0        
+    
     if(exists("seen_in_c4r_samples"))
     {
         variants = merge(variants,seen_in_c4r_samples,by.x = "superindex", by.y="Position.Ref.Alt",all.x = T)
         variants$Seen_in_C4R_samples=variants$Samples
     }
+    
+    variants$Seen_in_C4R_samples[is.na(variants$Seen_in_C4R_samples)] = 0        
     
     select_and_write2(variants,samples,family)
 }
@@ -625,7 +633,7 @@ args = commandArgs(trailingOnly = T)
 family = args[1]
 
 # DEBUG
-# setwd("~/cluster1/validation/nist_ashkenazim_trio/")
+# setwd("~/cluster/validation/nist_ashkenazim_trio/")
 # family="Ashkenazim"
 
 setwd(family)
