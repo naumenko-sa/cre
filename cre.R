@@ -265,23 +265,19 @@ create_report = function(family,samples)
 	          # capture the absolute difference - very weak site, or very strong site
 	          # negative - strong alt, + weak alt.
 	
-	          s_splicing_field='NA'
+	          s_splicing_field=0
 	          
 	          if (nrow(splicing_impacts) > 0)
 	          {
 	              strongest_alt_site = head(splicing_impacts,n=1)
 	            
-	              s_splicing_field = paste0(strongest_alt_site$vep_maxentscan_diff,":",
-	                                        strongest_alt_site$vep_spliceregion)
-	                                        
-	                                        
+	              s_splicing_field = strongest_alt_site$vep_maxentscan_diff
 	          }
 	          
 	          if (nrow(splicing_impacts) > 1)
 	          {
 	              weakest_alt_site = tail(splicing_impacts,n=1)
-	              s_splicing_field = paste0(s_splicing_field,";",weakest_alt_site$vep_maxentscan_diff,":",
-	                                        weakest_alt_site$vep_spliceregion)
+	              s_splicing_field = paste0(s_splicing_field,";",weakest_alt_site$vep_maxentscan_diff)
 	          }
 	          
 	          variants[i,"Splicing"] = s_splicing_field
@@ -633,8 +629,8 @@ args = commandArgs(trailingOnly = T)
 family = args[1]
 
 # DEBUG
-# setwd("~/cluster/validation/nist_ashkenazim_trio/")
-# family="Ashkenazim"
+ setwd("~/cluster/validation/nist_ashkenazim_trio/")
+ family="Ashkenazim"
 
 setwd(family)
 
