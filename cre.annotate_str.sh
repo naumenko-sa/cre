@@ -2,7 +2,7 @@
 
 #use cre.annotate_str.sh vcf_from_lobstr.vcf
 
-bname=`echo $1 | sed s/.vcf//`
+bname=`basename $1 .vcf`
 
 cat $1 | grep "^#" > $bname.sorted.vcf
 #sometimes lobSTR gives you unsorted vcf for some reason

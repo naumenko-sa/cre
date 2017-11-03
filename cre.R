@@ -629,8 +629,8 @@ args = commandArgs(trailingOnly = T)
 family = args[1]
 
 # DEBUG
- setwd("~/cluster/validation/nist_ashkenazim_trio/")
- family="Ashkenazim"
+# setwd("~/cluster/validation/nist_ashkenazim_trio/")
+# family="Ashkenazim"
 
 setwd(family)
 
