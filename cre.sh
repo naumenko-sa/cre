@@ -10,14 +10,15 @@
 # family = [family_id] (=folder_name,main result file should be family-ensemble.db)
 # cleanup= [0|1] default = 0
 # make_report=[0|1] default = 1
-# rnaseq=[0|1] default = 0
+# type = [wes(default)-regular | wes.fast | rnaseq]
+
 
 #PBS -l walltime=10:00:00,nodes=1:ppn=1
 #PBS -joe .
 #PBS -d .
 #PBS -l vmem=20g,mem=20g
 
-
+# cleanup is different for wes.fast template - don't remove gatk db
 function f_cleanup
 {
 
@@ -50,6 +51,13 @@ function f_cleanup
     #validate bam files
     for f in *.bam;do	cre.bam.validate.sh $f;done;
     
+    if [ "$type" == "wes.fast" ]
+    then
+	cp ${family}-gatk-haplotype.db ${family}-ensemble.db
+	ln -s ${family}-gatk-haplotype-annotated-decomposed.vcf.gz ${family}-ensemble-annotated-decomposed.vcf.gz
+	ln -s ${family}-gatk-haplotype-annotated-decomposed.vcf.gz.tbi ${family}-ensemble-annotated-decomposed.vcf.gz.tbi
+    fi
+    
     # we don't need gemini databases for particular calling algorythms
     rm ${family}-freebayes.db
     rm ${family}-gatk-haplotype.db
@@ -62,6 +70,15 @@ function f_cleanup
 function f_make_report
 {
     cd $family
+
+    if [ "$type" == "rnaseq" ]
+    then
+	export depth_threshold=5
+	export severity_filter=ALL
+    else
+	export depth_threshold=10
+	export severity_filter=HIGHMED
+    fi
 
     cre.gemini2txt.sh ${family}-ensemble.db $depth_threshold $severity_filter
     cre.gemini_variant_impacts.sh ${family}-ensemble.db $depth_threshold $severity_filter
@@ -110,13 +127,14 @@ fi
 
 echo $family
 
-if [ -z "$rnaseq" ];
+if [ -z "$rnaseq" ]
 then
     rnaseq=0
 fi
 
 export depth_threshold=10
-if [ "$rnaseq" -eq 1 ];
+
+if [ "$type" == "rnaseq" ]
 then
     export depth_threshold=5
     export severity_filter=ALL
@@ -133,6 +151,7 @@ then
     f_cleanup
 fi
 
+#make report by default
 if [ -z $make_report ]
 then
     make_report=1

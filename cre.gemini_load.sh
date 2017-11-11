@@ -13,7 +13,7 @@ then
     vcf=$1
 fi
 
-bname=`echo $vcf | sed s/.vcf.gz//`
+bname=`basename $vcf .vcf.gz`
 
 #--skip-cadd if no cadd
 #remove GL chromosomes - sometimes they cause problems
