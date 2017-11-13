@@ -1,6 +1,6 @@
 #!/bin/bash
 
-bname=`basename $1 | .vcf.gz`
+bname=`basename $1 .vcf.gz`
 
 if [ -e $1 ]
 then
