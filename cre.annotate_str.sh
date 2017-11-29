@@ -14,6 +14,6 @@ tabix $bname.sorted.vcf.gz
 #there may be no gene
 vcfanno -base-path ~/cre/ ~/cre/cre.annotate_str.toml $bname.sorted.vcf.gz > $bname.annotated.vcf
 rm $bname.insertions.txt
-echo -e "CHR\tPOS\tREF\tALT\tGENE\tGENOTYPE\tINSERTION_LENGTH_BP" > $bname.insertions.txt
-cat $bname.annotated.vcf | grep -v "^#" | sed s/"gene="/"\t"/g | grep "0/1:" | awk '{print $1"\t"$2"\t"$4"\t"$5"\t"$9"\t"$NF}' | sed s/":.*"// | \
-    awk '{if (length($3)<length($4)) print $0"\t"length($4)-length($3);}' | sort -k7,7 -rn >> $bname.insertions.txt
+echo -e "CHR\tPOS\tREF\tALT\tGENE\tINSERTION_LENGTH_BP" > $bname.insertions.txt
+cat $bname.annotated.vcf | grep -v "^#" | sed s/"gene="/"\t"/g | awk '{print $1"\t"$2"\t"$4"\t"$5"\t"$9}' | awk '{if (length($3)<length($4)) print $0"\t"length($4)-length($3);}' | sort -k6,6 -rn | \
+    sed s/"GT.*STITCH"/NA/g >> $bname.insertions.txt

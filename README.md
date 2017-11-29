@@ -71,7 +71,7 @@ or use qsub, if you have a large cohort:
 qsub ~/cre/bcbio.prepare_families.sh	-v project_list=table.txt
 ```
 
-The script will prepare a folder for each project(family) using [bcbio.templates.exome.yaml](../master/bcbio.templates.exome.yaml) template.
+The script will prepare a folder for each project(family) using [bcbio.templates.wes.yaml](../master/bcbio.templates.wes.yaml) template.
 Using this template is important, because later the report will be produced from 4 callers.
 
 The details of the template:

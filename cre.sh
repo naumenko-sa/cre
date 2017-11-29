@@ -59,10 +59,10 @@ function f_cleanup
     fi
     
     # we don't need gemini databases for particular calling algorythms
-    rm ${family}-freebayes.db
-    rm ${family}-gatk-haplotype.db
-    rm ${family}-samtools.db
-    rm ${family}-platypus.db
+    #rm ${family}-freebayes.db
+    #rm ${family}-gatk-haplotype.db
+    #rm ${family}-samtools.db
+    #rm ${family}-platypus.db
 
     cd ..
 }
