@@ -153,7 +153,7 @@ get_muscle_genes_coordinates = function()
 
 coverage.muscle_genes = function ()
 {
-    setwd("~/Desktop/project_cheo/2017-04-05_NextSeq_coverage/")
+    setwd("~/Desktop/project_cheo/2017-12-15_coverage/metabolic/")
     samples = unlist(read.table("samples.txt", stringsAsFactors=F))
     
     coverage = read.delim(paste0(samples[1],".coverage"),header=T,stringsAsFactors = F)
@@ -171,13 +171,40 @@ coverage.muscle_genes = function ()
     row.names(coverage) = coverage$gene
     coverage$gene=NULL
     
-    png("cheo.muscular_genes.coverage.part1.png",res=300,width=5000,height=2000)
-    boxplot(t(coverage[1:60,]),las=2,cex.axis=0.8,main="Coverage in 60 samples of NextSeq for muscle gene panel,part 1")
+    title = "cheo.metabolic_genes.coverage"
+    n_genes = nrow(coverage)
+    
+    for(i in seq(1,ceiling(n_genes/100)))
+    {
+         start_index = (i-1)*100+1
+         end_index = i*100
+         
+         if (end_index > n_genes)
+           end_index = n_genes
+         
+         png(paste0(title,".part",i,".png"),res=300,width=5000,height=2000)
+         boxplot(t(coverage[start_index:end_index,]),las=2,cex.axis=0.8,
+                 main=paste0("Coverage in ",length(samples)," 135 samples of NextSeq for metabolic gene panel,part ",i))
+         dev.off()     
+         
+    }
+    
+    png("cheo.metabolic_genes.coverage.part2.png",res=300,width=5000,height=2000)
+    boxplot(t(coverage[101:200,]),las=2,cex.axis=0.8,main="Coverage in 135 samples of NextSeq for metabolic gene panel,part 2")
     dev.off()
     
-    png("cheo.muscular_genes.coverage.part2.png",res=300,width=5000,height=2000)
-    boxplot(t(coverage[61:118,]),las=2,cex.axis=0.8,main="Coverage in 60 samples of NextSeq for muscle gene panel,part 2")
+    png("cheo.metabolic_genes.coverage.part3.png",res=300,width=5000,height=2000)
+    boxplot(t(coverage[201:300,]),las=2,cex.axis=0.8,main="Coverage in 135 samples of NextSeq for metabolic gene panel,part 3")
     dev.off()
+    
+    png("cheo.metabolic_genes.coverage.part1.png",res=300,width=5000,height=2000)
+    boxplot(t(coverage[1:100,]),las=2,cex.axis=0.8,main="Coverage in 135 samples of NextSeq for metabolic gene panel,part 1")
+    dev.off()
+    
+    png("cheo.metabolic_genes.coverage.part1.png",res=300,width=5000,height=2000)
+    boxplot(t(coverage[1:100,]),las=2,cex.axis=0.8,main="Coverage in 135 samples of NextSeq for metabolic gene panel,part 1")
+    dev.off()
+    
 }
 
 #when looking at all genes, some samples may have no coverage
