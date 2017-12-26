@@ -56,14 +56,13 @@ function f_cleanup
 	cp ${family}-gatk-haplotype.db ${family}-ensemble.db
 	ln -s ${family}-gatk-haplotype-annotated-decomposed.vcf.gz ${family}-ensemble-annotated-decomposed.vcf.gz
 	ln -s ${family}-gatk-haplotype-annotated-decomposed.vcf.gz.tbi ${family}-ensemble-annotated-decomposed.vcf.gz.tbi
+    else
+	# we don't need gemini databases for particular calling algorythms
+	rm ${family}-freebayes.db
+	rm ${family}-gatk-haplotype.db
+	rm ${family}-samtools.db
+	rm ${family}-platypus.db
     fi
-    
-    # we don't need gemini databases for particular calling algorythms
-    #rm ${family}-freebayes.db
-    #rm ${family}-gatk-haplotype.db
-    #rm ${family}-samtools.db
-    #rm ${family}-platypus.db
-
     cd ..
 }
 
