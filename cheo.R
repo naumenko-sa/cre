@@ -151,7 +151,11 @@ get_muscle_genes_coordinates = function()
     write.table(muscular_exons,"cheo.muscular_exons.bed",sep="\t",quote=F,row.names=F,col.names=F)
 }
 
-coverage.muscle_genes = function ()
+# title = "cheo.omim_genes.coverage"
+# coverage.gene_panel(title)
+# plots coverage for every gene for all samples in samples.txt, each sample should have sample.coverage - output of
+# bam.coverage.bamstats05.sh
+coverage.gene_panel = function (title)
 {
     setwd("~/Desktop/work")
     samples = unlist(read.table("samples.txt", stringsAsFactors=F))
@@ -159,8 +163,7 @@ coverage.muscle_genes = function ()
     coverage = read.delim(paste0(samples[1],".coverage"),header=T,stringsAsFactors = F)
     coverage = coverage[,c("gene","mean")]
     colnames(coverage)[2]=samples[1]
-    
-    
+
     for (sample in tail(samples,-1))
     {
         sample_coverage = read.delim(paste0(sample,".coverage"),header=T,stringsAsFactors = F)
@@ -171,7 +174,6 @@ coverage.muscle_genes = function ()
     row.names(coverage) = coverage$gene
     coverage$gene=NULL
     
-    title = "cheo.metabolic_genes.coverage"
     n_genes = nrow(coverage)
     
     for(i in seq(1,ceiling(n_genes/100)))
@@ -184,9 +186,8 @@ coverage.muscle_genes = function ()
          
          png(paste0(title,".part",i,".png"),res=300,width=5000,height=2000)
          boxplot(t(coverage[start_index:end_index,]),las=2,cex.axis=0.8,
-                 main=paste0("Coverage in ",length(samples)," samples of NextSeq for metabolic gene panel,part ",i))
+                 main=paste0("Coverage in ",length(samples)," samples of NextSeq for ",title," gene panel,part ",i))
          dev.off()     
-         
     }
 }
 
