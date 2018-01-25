@@ -10,8 +10,7 @@
 # family = [family_id] (=folder_name,main result file should be family-ensemble.db)
 # cleanup= [0|1] default = 0
 # make_report=[0|1] default = 1
-# type = [wes(default)-regular | wes.fast | rnaseq]
-
+# type = [ wes.regular (default) | wes.synonymous | wes.fast | rnaseq ]
 
 #PBS -l walltime=10:00:00,nodes=1:ppn=1
 #PBS -joe .
@@ -73,6 +72,10 @@ function f_make_report
     if [ "$type" == "rnaseq" ]
     then
 	export depth_threshold=5
+	export severity_filter=ALL
+    elif [ "$type" == "wes.synonymous" ]
+    then
+	export depth_threshold=10
 	export severity_filter=ALL
     else
 	export depth_threshold=10

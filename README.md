@@ -199,6 +199,7 @@ vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 * bcbio.rename_old_names.sh
 * bcl2fastq.sh
 * cre.bam.validate.sh
+* cre.bcbio.upgrade.sh
 * cre.coverage.bamstats05.sh - calculate coverage
 * cre.fixit.sh - fixes sample names
 * cre.gemini_load.sh loads vep-annotated vcf to gemini db.
