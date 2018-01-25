@@ -198,6 +198,7 @@ coverage.gene_panel = function (title)
 # GM15262.coverage 14435
 coverage.all_genes = function ()
 {
+    title="Coverage in project 913 across all protein coding genes,no outliers"
     library("matrixStats")
     setwd("~/Desktop/work")
     samples = unlist(read.table("samples.txt", stringsAsFactors=F))
@@ -221,17 +222,34 @@ coverage.all_genes = function ()
   
     coverage[is.na(coverage)]=0  
     coverage$Mean = rowMeans(coverage)
-    png("cheo.all_genes.coverage.png",res=300,width=5000,height=2000)
+    png("coverage.png",res=300,width=5000,height=2000)
     boxplot(coverage,
-            las=2,
+            las=1,
             cex.axis=0.6,
-            main="Coverage in 12 samples of Validation1 and Validation2 runs across all protein coding genes, 
-            no outliers",outline = F)
+            main=title,outline = F)
     dev.off()
     
     
     meds=rbind(colnames(coverage),colMedians(as.matrix(coverage)))
     write.table(meds,"medians.txt",col.names = F, quote = F,row.names = F)
+}
+
+#%of bases covered more than 10x
+coverage.percent_more_than10x = function()
+{
+    setwd("~/Desktop/work")
+    samples = unlist(read.table("samples.txt", stringsAsFactors=F))
+  
+    for (sample in samples)
+    {
+        coverage = read.delim(paste0(sample,".coverage"),header=T,stringsAsFactors = F)
+        total_len = sum(coverage$length)
+    
+        coverage_10x = coverage[coverage$mean>10,]
+        len_10x = sum(coverage_10x$length)
+    
+        print(paste0(sample," ",len_10x/total_len))
+    }
 }
 
 omim_table_manipulation = function()
