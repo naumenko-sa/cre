@@ -11,6 +11,9 @@ details:
     - svplots
     - qualimap
     - vep_splicesite_annotations
+    - noalt_calling
+    tools_off:
+    - gatk4
     variantcaller:
     - gatk-haplotype
   analysis: variant2
