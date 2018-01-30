@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 #vep2gemini - loads vep annotated vcf file to gemini database 
 #based on  bcbio.log

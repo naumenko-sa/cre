@@ -52,7 +52,7 @@ function f_cleanup
     
     if [ "$type" == "wes.fast" ]
     then
-	cp ${family}-gatk-haplotype.db ${family}-ensemble.db
+	ln -s ${family}-gatk-haplotype.db ${family}-ensemble.db
 	ln -s ${family}-gatk-haplotype-annotated-decomposed.vcf.gz ${family}-ensemble-annotated-decomposed.vcf.gz
 	ln -s ${family}-gatk-haplotype-annotated-decomposed.vcf.gz.tbi ${family}-ensemble-annotated-decomposed.vcf.gz.tbi
     else
