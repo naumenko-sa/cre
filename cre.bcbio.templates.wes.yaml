@@ -22,7 +22,6 @@ details:
     - samtools
     - platypus
     - freebayes
-    vcfanno: [gemini]
   analysis: variant2
   description: '912R_A337376'
   files:

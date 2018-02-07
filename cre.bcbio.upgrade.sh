@@ -6,10 +6,10 @@
 #upgrade code to stable version
 #bcbio_nextgen.py upgrade -u stable
 #upgrade code to development
-bcbio_nextgen.py upgrade -u development
+#bcbio_nextgen.py upgrade -u development
 
 #upgrade tools
-#bcbio_nextgen.py upgrade -u skip --tools
+bcbio_nextgen.py upgrade -u skip --tools
 
 #check tools
 #bcbio_conda list | grep vep

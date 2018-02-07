@@ -19,11 +19,16 @@ for sample in samples:
 	    zygosity_field = 'Zygosity.'+sample
 	    #because R when building report substitutes - with . in column names
 	    zygosity_field = zygosity_field.replace("-",".")
-	    fieldnames=['Position','Ref','Alt','Variation',zygosity_field,'Protein_change_ensembl','Gene','Conserved_in_29_mammals','Sift_score','Polyphen_score','Cadd_score','Exac_maf']
+	    fieldnames=['Position','Ref','Alt','Variation',zygosity_field,'Protein_change_ensembl','Gene','Conserved_in_29_mammals','Sift_score','Polyphen_score','Cadd_score']
 	    for row in reader:
 		l = []
 		for key in fieldnames:
 		    l.append(row[key])
+		#some reports have Exac_maf, some Gnomad_maf
+		if ('Exac_maf' in row):
+		    l.append('"'+row['Exac_maf']+'"')
+		else:
+		    l.append('"'+row['Gnomad_maf']+'"')
 		#some reports generated earlier does not have Info_refseq - Info (ensembl) only
 		if ('Info_refseq' in row):
 		    l.append('"'+row['Info_refseq']+'"')
