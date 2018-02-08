@@ -12,6 +12,7 @@ do
     
     for family in *
     do
+	echo $family
 	cd $family
 	cre.database.py $family
 	mv *.c4r $2

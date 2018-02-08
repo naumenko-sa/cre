@@ -23,8 +23,8 @@ with open(sys.argv[1],'r') as f_csv:
 	    l = []
 	    for key in fieldnames:
 		l.append(row[key])
+	    l.append('"'+row['Gnomad_maf']+'"')
 	    l.append('"'+row['Info']+'"')
-	    l.append('"'+row['Maf_gnomad']+'"')
 	    annotations[superkey] = ','.join(l)
 	    ll = []
 	    ll.append(row['Sample'])
