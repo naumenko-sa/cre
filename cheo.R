@@ -1,73 +1,77 @@
 #https://cran.r-project.org/web/packages/VennDiagram/VennDiagram.pdf
-setwd("~/Desktop/project_cheo/variant_calls/omim")
-setwd("~/Desktop/project_cheo/variant_calls/omim/snps")
-setwd("~/Desktop/project_cheo/variant_calls/omim/indels")
-library("VennDiagram")
-venn.plot=draw.pairwise.venn(945+4958,132+4958,4958,
+
+pipeline_comparisons = function()
+{
+  
+    library("VennDiagram")
+    venn.plot=draw.pairwise.venn(945+4958,132+4958,4958,
               c("BCBIO","Jacek"),fill=c("blue","red"),lty="blank",
               cex = 2, cat.cex=2, cat.just = list(c(-1,-1),c(1,1)),
               ext.length = 0.3,  ext.line.lwd=2,
               ext.text = F, main="Sdf"
               )
-venn.plot=draw.pairwise.venn(46807953, 54328695, 44991414,
+    venn.plot=draw.pairwise.venn(46807953, 54328695, 44991414,
                              c("Nimblegen.capture","Agilent"),
                              fill=c("blue","red"),cex=2,cat.cex=2)
 
-venn.plot3=draw.triple.venn(54328695,46807953,65824553,
+    venn.plot3=draw.triple.venn(54328695,46807953,65824553,
                             39517373,43777891,44991414,
                             37679751,
                             c("Agilent","Nimblegen.capture","Nimblegen.empirical")
-)
+    )
 
-venn.plot3=draw.triple.venn(1,2,3,12,23,13,123,
-  c("Agilent","Nimblegen.capture","Nimblegen.empirical")
-)
+    venn.plot3=draw.triple.venn(1,2,3,12,23,13,123,
+      c("Agilent","Nimblegen.capture","Nimblegen.empirical")
+    )
 
-#example
-for (pipeline in c("genap","bcbio","jacek","cpipe"))
-{
-  for (sample in c("S1","S2","S4","S5","S6","S7","S8"))
-  {
-    agilent=unlist(read.table(paste0("S1.",pipeline,".agilent.omim.variants.indels")))
-    nimblegen=unlist(read.table(paste0("S1.",pipeline,".nimblegen.omim.variants.indels")))
-    #illumina=unlist(read.table(paste0("S1.",pipeline,".illumina.txt")))
+    #example
+    for (pipeline in c("genap","bcbio","jacek","cpipe"))
+    {
+        for (sample in c("S1","S2","S4","S5","S6","S7","S8"))
+        {
+            agilent=unlist(read.table(paste0("S1.",pipeline,".agilent.omim.variants.indels")))
+            nimblegen=unlist(read.table(paste0("S1.",pipeline,".nimblegen.omim.variants.indels")))
+            #illumina=unlist(read.table(paste0("S1.",pipeline,".illumina.txt")))
 
-    x=list(agilent,nimblegen)
-    names=list("Agilent","Nimblegen")
-    png(paste0(sample,".",pipeline,".png"))
-    grid.draw(venn.diagram(x,NULL,category.names=names))
-    dev.off()
-  }
-}
+            x=list(agilent,nimblegen)
+            names=list("Agilent","Nimblegen")
+            png(paste0(sample,".",pipeline,".png"))
+            grid.draw(venn.diagram(x,NULL,category.names=names))
+            dev.off()
+        }
+    }
 
-for (platform in c("agilent","nimblegen"))
-{
-  for (sample in c("S1","S2","S4","S5","S6","S7","S8"))
-  {
+    for (platform in c("agilent","nimblegen"))
+    {
+        for (sample in c("S1","S2","S4","S5","S6","S7","S8"))
+        {
     
-  #sample="S3"
-  #platform="illumina"
-  jacek=unlist(read.table(paste0(sample,".jacek.",platform,".omim.variants.indels")))
-  cpipe=unlist(read.table(paste0(sample,".cpipe.",platform,".omim.variants.indels")))
-  bcbio=unlist(read.table(paste0(sample,".bcbio.",platform,".omim.variants.indels")))
-  genap=unlist(read.table(paste0(sample,".genap.",platform,".omim.variants.indels")))
+        #sample="S3"
+        #platform="illumina"
+            jacek=unlist(read.table(paste0(sample,".jacek.",platform,".omim.variants.indels")))
+            cpipe=unlist(read.table(paste0(sample,".cpipe.",platform,".omim.variants.indels")))
+            bcbio=unlist(read.table(paste0(sample,".bcbio.",platform,".omim.variants.indels")))
+            genap=unlist(read.table(paste0(sample,".genap.",platform,".omim.variants.indels")))
 
-  x=list(jacek,cpipe,bcbio,genap)
-  names=list("jacek","cpipe","bcbio","genap")
+            x=list(jacek,cpipe,bcbio,genap)
+            names=list("jacek","cpipe","bcbio","genap")
 
-  png(paste0(sample,".",platform,".png"))
-  grid.draw(venn.diagram(x,NULL,category.names=names))
-  dev.off()
-  }
+            png(paste0(sample,".",platform,".png"))
+            grid.draw(venn.diagram(x,NULL,category.names=names))
+            dev.off()
+        }
+    }
+
 }
 
-# intersect bed files
-# http://davetang.org/muse/2013/01/02/iranges-and-genomicranges/
-source("http://bioconductor.org/biocLite.R")
-biocLite("GenomicRanges")
-library("GenomicRanges")
-setwd("coverage/nimblegen")
-capture=read.table("nimblegen.capture",header=F)
+intersect_bed_files = function()
+{
+    # http://davetang.org/muse/2013/01/02/iranges-and-genomicranges/
+  source("http://bioconductor.org/biocLite.R")
+  biocLite("GenomicRanges")
+  library("GenomicRanges")
+  setwd("coverage/nimblegen")
+  capture=read.table("nimblegen.capture",header=F)
 colnames(capture)=c('chr','start','end')
 capture.bed = with(capture, GRanges(chr, IRanges(start+1, end)))
 
@@ -94,61 +98,55 @@ names=list("omim","agilent","nimblegen","illumina")
 
 grid.draw(venn.diagram(x,NULL,category.names=names))
 
-#variants parameters
-type="snps"
-type="indels"
-for (platform in c("agilent","nimblegen"))
-{
-  for (sample in c("S1","S2","S4","S5","S6","S7","S8"))
-  {
-    
-    sample="S1"
-    platform="agilent"
-    cpipe.hom=read.table(paste0(sample,".cpipe.",platform,".omim.",type,".hom.AD"))
-    cpipe.het=read.table(paste0(sample,".cpipe.",platform,".omim.",type,".het.AD"))
-    
-    bcbio.hom=read.table(paste0(sample,".bcbio.",platform,".omim.",type,".hom.AD"))
-    bcbio.het=read.table(paste0(sample,".bcbio.",platform,".omim.",type,".het.AD"))
-    
-    genap.hom=read.table(paste0(sample,".genap.",platform,".omim.",type,".hom.AD"))
-    genap.het=read.table(paste0(sample,".genap.",platform,".omim.",type,".het.AD"))
-
-    genap.only = read.table("S1.genap.only.recode.vcf.AD")
-    v=c(genap.hom,genap.het,genap.only)
-    names=c("genap.hom","genap.het","genap.only")
-    
-    #indels
-    v=c(cpipe.het,bcbio.het,genap.het)
-    names=c("cpipe.het","bcbio.het","genap.het")
-    
-    png(paste0(sample,".",platform,".",type,".png"),width=1000)
-    boxplot(v,names=names)
-    dev.off()
-  }
 }
 
-setwd("~/cluster/dorin_test")
-b1=read.table("UNIQUE_to_BCBIO_1496461.vcf.AD")
-b2=read.table("UNIQUE_to_BCBIO_1496462.vcf.AD")
-b3=read.table("UNIQUE_to_BCBIO_1496463.vcf.AD")
-g1=read.table("UNIQUE_to_DNASEQ_1496461.vcf.AD")
-g2=read.table("UNIQUE_to_DNASEQ_1496462.vcf.AD")
-g3=read.table("UNIQUE_to_DNASEQ_1496463.vcf.AD")
 
-v=c(b1,b2,b3,g1,g2,g3)
-names=c("b1","b2","b3","g1","g2","g3")
-
-png(paste0(sample,".",platform,".",type,".png"),width=1000)
-boxplot(v,names=names)
-
-get_muscle_genes_coordinates = function()
+variants_parameter = function()
 {
-    setwd("~/Desktop/project_cheo/")
-    gene_list = unlist(read.table("cheo.muscular_genes", stringsAsFactors=F))
-    setwd("~/Desktop/reference_tables/")
-    all_exons = read.delim("protein_coding_genes.exons.bed", header=F, stringsAsFactors=F)
-    muscular_exons = all_exons[all_exons$V4 %in% gene_list,]
-    write.table(muscular_exons,"cheo.muscular_exons.bed",sep="\t",quote=F,row.names=F,col.names=F)
+    type="snps"
+    type="indels"
+    for (platform in c("agilent","nimblegen"))
+    {
+        for (sample in c("S1","S2","S4","S5","S6","S7","S8"))
+        {
+            sample="S1"
+            platform="agilent"
+            cpipe.hom=read.table(paste0(sample,".cpipe.",platform,".omim.",type,".hom.AD"))
+            cpipe.het=read.table(paste0(sample,".cpipe.",platform,".omim.",type,".het.AD"))
+    
+            bcbio.hom=read.table(paste0(sample,".bcbio.",platform,".omim.",type,".hom.AD"))
+            bcbio.het=read.table(paste0(sample,".bcbio.",platform,".omim.",type,".het.AD"))
+    
+            genap.hom=read.table(paste0(sample,".genap.",platform,".omim.",type,".hom.AD"))
+            genap.het=read.table(paste0(sample,".genap.",platform,".omim.",type,".het.AD"))
+
+            genap.only = read.table("S1.genap.only.recode.vcf.AD")
+            v=c(genap.hom,genap.het,genap.only)
+            names=c("genap.hom","genap.het","genap.only")
+    
+        #indels
+        v=c(cpipe.het,bcbio.het,genap.het)
+        names=c("cpipe.het","bcbio.het","genap.het")
+    
+        png(paste0(sample,".",platform,".",type,".png"),width=1000)
+        boxplot(v,names=names)
+        dev.off()
+      }
+    }
+
+      setwd("~/cluster/dorin_test")
+      b1=read.table("UNIQUE_to_BCBIO_1496461.vcf.AD")
+      b2=read.table("UNIQUE_to_BCBIO_1496462.vcf.AD")
+      b3=read.table("UNIQUE_to_BCBIO_1496463.vcf.AD")
+      g1=read.table("UNIQUE_to_DNASEQ_1496461.vcf.AD")
+      g2=read.table("UNIQUE_to_DNASEQ_1496462.vcf.AD")
+      g3=read.table("UNIQUE_to_DNASEQ_1496463.vcf.AD")
+
+      v=c(b1,b2,b3,g1,g2,g3)
+      names=c("b1","b2","b3","g1","g2","g3")
+
+      png(paste0(sample,".",platform,".",type,".png"),width=1000)
+      boxplot(v,names=names)
 }
 
 # title = "cheo.omim_genes.coverage"
@@ -157,18 +155,21 @@ get_muscle_genes_coordinates = function()
 # bam.coverage.bamstats05.sh
 coverage.gene_panel = function (title)
 {
+    #test
+    title = "test"
     setwd("~/Desktop/work")
-    samples = unlist(read.table("samples.txt", stringsAsFactors=F))
+    files = list.files(".","\\.coverage$")
+    #samples = unlist(read.table("samples.txt", stringsAsFactors=F))
     
-    coverage = read.delim(paste0(samples[1],".coverage"),header=T,stringsAsFactors = F)
-    coverage = coverage[,c("gene","mean")]
-    colnames(coverage)[2]=samples[1]
+    coverage = read.delim(files[1],header=T,stringsAsFactors = F)
+    coverage = coverage[,c("gene","avg")]
+    colnames(coverage)[2]=files[1]
 
-    for (sample in tail(samples,-1))
+    for (file in tail(files,-1))
     {
-        sample_coverage = read.delim(paste0(sample,".coverage"),header=T,stringsAsFactors = F)
-        sample_coverage = sample_coverage[,c("gene","mean")]
-        colnames(sample_coverage)[2]=sample
+        sample_coverage = read.delim(file,header=T,stringsAsFactors = F)
+        sample_coverage = sample_coverage[,c("gene","avg")]
+        colnames(sample_coverage)[2]=file
         coverage = cbind(coverage,sample_coverage[2])
     }
     row.names(coverage) = coverage$gene
@@ -186,8 +187,8 @@ coverage.gene_panel = function (title)
          
          png(paste0(title,".part",i,".png"),res=300,width=5000,height=2000)
          boxplot(t(coverage[start_index:end_index,]),las=2,cex.axis=0.8,
-                 main=paste0("Coverage in ",length(samples)," samples of NextSeq for ",title," gene panel,part ",i))
-         dev.off()     
+                 main=paste0("Coverage in ",length(files)," samples of NextSeq for ",title," gene panel,part ",i))
+         dev.off()
     }
 }
 
