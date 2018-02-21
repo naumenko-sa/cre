@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# extracts information about omim inheritance modes from genemap2.txt
+# extracts information about omim inheritance modes from https://www.cs.toronto.edu/~buske/cheo/
 
 import re
 from os.path import expanduser
@@ -30,15 +30,12 @@ for line in f1:
     genes[ar[0]] = ar[1]
 f1.close()
 
-#save non empty lines 
-#gene	inheritance
-f = open('omim_by_orion.txt','r')
+f = open('genemap2.txt','r')
 
 print 'Ensembl_gene_id Gene_name2 Omim_inheritance'
 
 for line in f:
-    ar = line.split('\t')
-    
+    #print line,
     match = re.search(r'ENSG[0-9]{11}',line)
     if match:
 	modes = []
