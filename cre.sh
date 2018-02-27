@@ -23,6 +23,10 @@ function f_cleanup
 
     # better to look for project-summary than hardcode the year
     # keep bam files for new samples
+    
+    if [ ! -d $family ];then
+	exit 1
+    fi
     cd $family
     result_dir=`find final -name project-summary.yaml | sed s/"\/project-summary.yaml"//`
     if [ -d $result_dir ];
