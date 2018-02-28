@@ -432,7 +432,11 @@ merge_reports = function(family,samples)
             for (sample in samples)
             {
                 field = paste0("Alt_depths.",sample)
-                ensemble[i,field]=strsplit(ensemble[i,field],",",fixed=T)[[1]][2]
+                #when combining reports from vcfs called elsewere there may be no AD field, just -1
+                if (grepl(",",ensemble[i,field]))
+                {
+            	    ensemble[i,field]=strsplit(ensemble[i,field],",",fixed=T)[[1]][2]
+            	}
             }
         }
     
