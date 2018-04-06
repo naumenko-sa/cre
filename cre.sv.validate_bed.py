@@ -1,3 +1,5 @@
+#!/usr/bin/env python2
+
 """ Calculates sensitivity and precision for 2 bed files, modified from bcbio.structural.validate
     $1 = bed file to evaluate
     $2 = truth set
@@ -8,7 +10,15 @@
 import csv
 import sys
 
+import pybedtools
+
 from bcbio.structural import validate
+
+def _test(caller, svtype, size_range, ensemble, truth, data):
+    efeats = pybedtools.BedTool(ensemble).sort().merge().saveas()
+    tfeats = pybedtools.BedTool(truth).sort().merge().saveas()
+    match = efeats.intersect(tfeats,u=True,r=0.5,R=0.5).sort().merge().saveas(),count()
+    print(match)
 
 data='ploidy'
 svtype = 'DEL'
@@ -22,6 +32,7 @@ with open(vcaller+".csv","w") as out_handle:
         dfwriter.writerow(["svtype", "size", "caller", "metric", "value", "label"])
         for size in validate.EVENT_SIZES:
             str_size = "%s-%s" % size
+#            _test(vcaller,svtype,size,sys.argv[1],sys.argv[2],data)
             evalout = validate._evaluate_one(vcaller,svtype,size,sys.argv[1],sys.argv[2],data)
             writer.writerow([svtype, str_size, vcaller,
                              evalout["sensitivity"]["label"], evalout["precision"]["label"]])
