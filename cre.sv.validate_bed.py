@@ -16,7 +16,7 @@ from bcbio.structural import validate
 
 
 EVENT_SIZES = [(50, 100), (100, 300), (300, 500), (500, 1000), (1000, 10000),
-               (10000, int(1e6))]
+               (10000, 100000), (100000,int(1e6))]
 
 def _test(caller, svtype, size_range, ensemble, truth, data):
     efeats = pybedtools.BedTool(ensemble).sort().merge().saveas()
@@ -37,7 +37,7 @@ with open(vcaller+".csv","w") as out_handle:
         for size in EVENT_SIZES:
             str_size = "%s-%s" % size
 #            _test(vcaller,svtype,size,sys.argv[1],sys.argv[2],data)
-            evalout = validate_evaluate_one(vcaller,svtype,size,sys.argv[1],sys.argv[2],data)
+            evalout = validate._evaluate_one(vcaller,svtype,size,sys.argv[1],sys.argv[2],data)
             writer.writerow([svtype, str_size, vcaller,
                              evalout["sensitivity"]["label"], evalout["precision"]["label"]])
             for metric in ["sensitivity", "precision"]:
