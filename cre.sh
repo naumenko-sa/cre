@@ -1,16 +1,17 @@
 #!/bin/bash
 
-# cleans up after bcbio - 
-# 	when running large cohort only the final folder is kept and only one ensemble gemini database: 2-3G per family
-# 	keeps bam files for new samples
-# prepares tables for report generation
-# generates report
+####################################################################################################
+#   keeps only important files from bcbio run: qc, vcf, gemini, bam
+#   creates csv report for small variants
+#   keeps bam files for new samples
+#   generates report
 
-# parameters:
-# family = [family_id] (=folder_name,main result file should be family-ensemble.db)
-# cleanup= [0|1] default = 0
-# make_report=[0|1] default = 1
-# type = [ wes.regular (default) | wes.synonymous | wes.fast | rnaseq ]
+#   parameters:
+# 	family = [family_id] (=folder_name,main result file should be family-ensemble.db,=project)
+# 	cleanup= [0|1] default = 0
+# 	make_report=[0|1] default = 1
+# 	type = [ wes.regular (default) | wes.synonymous | wes.fast | rnaseq | wgs ]
+####################################################################################################
 
 #PBS -l walltime=10:00:00,nodes=1:ppn=1
 #PBS -joe .
@@ -24,16 +25,26 @@ function f_cleanup
     # better to look for project-summary than hardcode the year
     # keep bam files for new samples
     
-    if [ ! -d $family ];then
+    if [ ! -d $family ]
+    then
 	exit 1
     fi
+    
     cd $family
     result_dir=`find final -name project-summary.yaml | sed s/"\/project-summary.yaml"//`
+    
     if [ -d $result_dir ];
     then
 	mv $result_dir/* .
 	mv final/*/*.bam .
 	mv final/*/*.bai .
+	
+	# keep sv calls
+	if [ "$type" == "wgs" ]
+	then
+	    mv final sv
+	fi
+	
         rm -rf final/
 	rm -rf work/
     fi
@@ -54,7 +65,7 @@ function f_cleanup
     #validate bam files
     for f in *.bam;do	cre.bam.validate.sh $f;done;
     
-    if [ "$type" == "wes.fast" ]
+    if [ "$type" == "wes.fast" ] || [ "$type" == "wgs" ]
     then
 	ln -s ${family}-gatk-haplotype.db ${family}-ensemble.db
 	ln -s ${family}-gatk-haplotype-annotated-decomposed.vcf.gz ${family}-ensemble-annotated-decomposed.vcf.gz
