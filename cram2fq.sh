@@ -8,6 +8,11 @@
 # reference should be decompressed and indexed: using one from bcbio
 # usually crams come with hg19 reference (chr), not GRCh37
 
+# parameters: cram = file.cram
+#	      sample = familyid_sampleid
+
+# input: file.cram
+# output: sample_1.fq.gz sample_2.fq.gz
 
 module load java
 
@@ -15,3 +20,9 @@ cramtools fastq -Xmx10g -F $sample --skip-md5-check \
 		-z \
 		-I $cram \
 		-R /hpf/largeprojects/ccmbio/naumenko/tools/bcbio/genomes/Hsapiens/hg19/seq/hg19.fa
+
+for f in *.fastq.gz
+do
+    bname=`basename $f .fastq.gz`
+    mv $f $bname.fq.gz
+done
