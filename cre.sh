@@ -88,7 +88,7 @@ function f_make_report
     then
 	export depth_threshold=5
 	export severity_filter=ALL
-    elif [ "$type" == "wes.synonymous" ]
+    elif [ "$type" == "wes.synonymous" ] || [ "$type" == "wgs" ]
     then
 	export depth_threshold=10
 	export severity_filter=ALL
