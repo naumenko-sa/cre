@@ -3,7 +3,12 @@
 # prepares family for bcbio run when input files are family_sample.bam or family_sample_1/2.fq.gz
 family=$1
 
-#$2 = template type, no value - default WES, noalign - no alignment (for rerunning), fast - no realignment,recalibration, and only gatk
+#$2 = template type, 
+# default = no value = default WES
+# noalign - no alignment (for rerunning), 
+# fast - no realignment,recalibration, and only gatk
+# validation = NA12878 validation
+
 template_type=$2
 echo $template_type
 
@@ -35,6 +40,9 @@ then
     then
 	echo fast
 	template=~/cre/cre.bcbio.templates.wes.fast.yaml
+    elif [ $template_type == "validation" ]
+	echo validation
+	template=~/cre/cre.bcbio.templates.wes.validation.yaml
     fi
 fi
 
