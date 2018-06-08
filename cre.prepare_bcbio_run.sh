@@ -41,6 +41,7 @@ then
 	echo fast
 	template=~/cre/cre.bcbio.templates.wes.fast.yaml
     elif [ $template_type == "validation" ]
+    then
 	echo validation
 	template=~/cre/cre.bcbio.templates.wes.validation.yaml
     fi
