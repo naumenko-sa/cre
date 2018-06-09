@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#submits bcbio project to the queue with n threads
-#adjust ppn and walltime depending on the project
-#experience is that the best combination for WES and SK HPC is 7cores/50G
+# submits bcbio project to the queue with n threads
+# adjust ppn and walltime depending on the project
+# experience is that the best combination for WES and SK HPC is 7cores/50G
 
 #PBS -l walltime=240:00:00,nodes=1:ppn=7
 #PBS -joe .
@@ -12,12 +12,18 @@
 echo "START: " `date`;
 hostname
 
-module load java/1.8.0_91
+#module load java/1.8.0_91
 
 if [ -z $threads ]
 then
     threads=7
 fi
+
+if [ -z project ]
+then
+    project=$1
+fi
+
 echo $project $threads
 
 cd $project/work
