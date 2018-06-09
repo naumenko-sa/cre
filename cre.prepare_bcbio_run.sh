@@ -40,7 +40,7 @@ then
     elif [ $template_type == "validation" ]
     then
 	template=~/cre/cre.bcbio.templates.wes.validation.yaml
-	variant_regions=region.bed
+	variant_regions=$3
     fi
 fi
 
