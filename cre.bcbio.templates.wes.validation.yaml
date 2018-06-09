@@ -1,6 +1,7 @@
 details:
 - algorithm:
     aligner: false
+    bam_clean: picard
     effects: vep
     effects_transcripts: all
     mark_duplicates: false
