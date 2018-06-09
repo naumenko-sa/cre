@@ -7,6 +7,7 @@ reference=`which gatk-launch | sed s/"bin\/gatk-launch"/"bcbio\/genomes\/Hsapien
 
 gatk-launch VariantsToTable \
     -R $reference -V $1 \
-     -F CHROM -F POS -F REF -F ALT -F CALLERS -o $bname.table
+    -F CHROM -F POS -F REF -F ALT -F CALLERS \
+    -O $bname.table
 
 #--allowMissingData 
