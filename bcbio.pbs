@@ -19,7 +19,7 @@ then
     threads=7
 fi
 
-if [ -z project ]
+if [ -z $project ]
 then
     project=$1
 fi
