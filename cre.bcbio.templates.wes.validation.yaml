@@ -4,8 +4,8 @@ details:
     effects: vep
     effects_transcripts: all
     mark_duplicates: true
-    realign: true
-    recalibrate: true
+    realign: false
+    recalibrate: false
     save_diskspace: true
     tools_on:
     - qualimap
