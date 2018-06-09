@@ -1,8 +1,12 @@
 #!/bin/bash
 
-bname=`echo $1 | sed s/.vcf.gz//`
+bname=`basename $1 .vcf.gz`
 
-gatk -R ~/work/tools/bcbio/genomes/Hsapiens/GRCh37/seq/GRCh37.fa -T VariantsToTable -V $1 \
+#find reference
+reference=`which gatk-launch | sed s/"bin\/gatk-launch"/"bcbio\/genomes\/Hsapiens\/GRCh37\/seq\/GRCh37.fa"/`
+
+gatk-launch VariantsToTable \
+    -R $reference -V $1 \
      -F CHROM -F POS -F REF -F ALT -F CALLERS -o $bname.table
 
 #--allowMissingData 
