@@ -20,6 +20,7 @@ details:
       numpass: 2
     validate: giab-NA12878/truth_small_variants.vcf.gz
     validate_regions: giab-NA12878/truth_regions.bed
+    variant_regions: /home/stud40/workshop/
   analysis: variant2
   description: 'gatk4_validation'
   files:

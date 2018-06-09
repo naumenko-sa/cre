@@ -23,10 +23,7 @@ ls | sed s/.bam// | sed s/.bai// | sed s/"_1.fq.gz"// | sed s/"_2.fq.gz"// | sor
 
 cd ..
 
-while read sample
-do
-    echo $sample","$sample","$family",,," >> $family.csv
-done < samples.txt
+variant_regions=""
 
 #default template
 template=~/cre/cre.bcbio.templates.wes.yaml
@@ -42,10 +39,16 @@ then
 	template=~/cre/cre.bcbio.templates.wes.fast.yaml
     elif [ $template_type == "validation" ]
     then
-	echo validation
 	template=~/cre/cre.bcbio.templates.wes.validation.yaml
+	variant_regions=region.bed
     fi
 fi
+
+while read sample
+do
+    echo $sample","$sample","$family",,,$variant_regions" >> $family.csv
+done < samples.txt
+
 
 bcbio_nextgen.py -w template $template $family.csv input/*
 
