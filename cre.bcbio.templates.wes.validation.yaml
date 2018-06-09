@@ -31,8 +31,8 @@ resources:
   default:
     cores: 1
     jvm_opts:
-    - -Xms750m
-    - -Xmx7000m
+    - -Xms75m
+    - -Xmx700m
     memory: 1G
 upload:
   dir: ../final
