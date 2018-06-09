@@ -1,12 +1,11 @@
 details:
 - algorithm:
-    aligner: false
-    bam_clean: picard
+    aligner: bwa
     effects: vep
     effects_transcripts: all
-    mark_duplicates: false
-    realign: false
-    recalibrate: false
+    mark_duplicates: true
+    realign: true
+    recalibrate: true
     save_diskspace: true
     tools_on:
     - qualimap
