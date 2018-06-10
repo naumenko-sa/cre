@@ -172,10 +172,12 @@ create_report = function(family,samples)
     
     if (file.exists(omim_file_name_local)) omim_file_name = omim_file_name_local
 
-  
-    omim = read.delim2(omim_file_name_local, stringsAsFactors=F)
-    variants = merge(variants,omim,all.x=T)
-    variants$Omim_gene_description[is.na(variants$Omim_gene_description)] = 0
+    if (file.exists(omim_file_name))
+    {
+	omim = read.delim2(omim_file_name, stringsAsFactors=F)
+	variants = merge(variants,omim,all.x=T)
+	variants$Omim_gene_description[is.na(variants$Omim_gene_description)] = 0
+    }
         
     # Column 20 - Omim_inheritance 
     omim_file_name = paste0(default_tables_path,"/omim_inheritance.txt")
@@ -183,8 +185,11 @@ create_report = function(family,samples)
     
     if (file.exists(omim_file_name_local)) omim_file_name = omim_file_name_local
     
-    omim_inheritance = read.csv(omim_file_name, sep="",stringsAsFactors = F)
-    variants = merge(variants,omim_inheritance,all.x=T)
+    if (file.exists(omim_file_name))
+    {
+	omim_inheritance = read.csv(omim_file_name, sep="",stringsAsFactors = F)
+	variants = merge(variants,omim_inheritance,all.x=T)
+    }
 
     # Column 21 - Orphanet
     # previous name - orphanet.deduplicated.txt
@@ -193,10 +198,13 @@ create_report = function(family,samples)
     
     if (file.exists(orphanet_file_name_local)) orphanet_file_name = orphanet_file_name_local
     
-    orphanet = read.delim(orphanet_file_name, stringsAsFactors=F)  
-    variants = merge(variants,orphanet,all.x=T)
+    if (file.exists(orphanet_file_name))
+    {
+	orphanet = read.delim(orphanet_file_name, stringsAsFactors=F)  
+	variants = merge(variants,orphanet,all.x=T)
     
-    variants$Orphanet[is.na(variants$Orphanet)] = 0        
+	variants$Orphanet[is.na(variants$Orphanet)] = 0
+    }
     
     # Column 22 - Clinvar
     
