@@ -307,7 +307,7 @@ create_report = function(family,samples)
         variants[,field] = with(variants,gsub("-1",NA,get(field),fixed=T))  
     }
 
-    print(colnames(variants))
+    print(sort(colnames(variants)))
     select_and_write2(variants,samples,paste0(family,".create_report"))
 }
 
