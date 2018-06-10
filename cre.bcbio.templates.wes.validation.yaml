@@ -1,6 +1,6 @@
 details:
 - algorithm:
-    aligner: bwa
+    aligner: false
     effects: vep
     effects_transcripts: all
     mark_duplicates: true
