@@ -18,8 +18,8 @@ cp ~/cre/bcbio.sample_sheet_header.csv $family.csv
 
 cd input
 
-#there should be no other files except input fq.gz or bams in the input dir
-ls | sed s/.bam// | sed s/.bai// | sed s/"_1.fq.gz"// | sed s/"_2.fq.gz"// | sort | uniq > ../samples.txt
+shopt -s extglob
+ls @(*.bam|*.gz) | sed s/.bam// | sed s/.bai// | sed s/"_1.fq.gz"// | sed s/"_2.fq.gz"// | sort | uniq > ../samples.txt
 
 cd ..
 
