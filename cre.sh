@@ -38,6 +38,8 @@ function f_cleanup
 	mv $result_dir/* .
 	mv final/*/*.bam .
 	mv final/*/*.bai .
+	# keep validation picture
+	mv final/*/*.png .
 	
 	# keep sv calls
 	if [ "$type" == "wgs" ]
