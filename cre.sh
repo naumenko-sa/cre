@@ -49,35 +49,37 @@ function f_cleanup
 	
         rm -rf final/
 	rm -rf work/
-    fi
-
-    #don't remove input files for new projects
-    #rm -rf input/
-
-    #rename bam files to match sample names
-    for f in *ready.bam;do mv $f `echo $f | sed s/"-ready"//`;done;
-    for f in *ready.bam.bai;do mv $f `echo $f | sed s/"-ready"//`;done;
-
-    #make bam files read only
-    for f in *.bam;do chmod 444 $f;done;
-
-    #calculate md5 sums
-    for f in *.bam;do md5sum $f > $f.md5;done;
-
-    #validate bam files
-    for f in *.bam;do	cre.bam.validate.sh $f;done;
     
-    if [ "$type" == "wes.fast" ] || [ "$type" == "wgs" ]
-    then
-	ln -s ${family}-gatk-haplotype.db ${family}-ensemble.db
-	ln -s ${family}-gatk-haplotype-annotated-decomposed.vcf.gz ${family}-ensemble-annotated-decomposed.vcf.gz
-	ln -s ${family}-gatk-haplotype-annotated-decomposed.vcf.gz.tbi ${family}-ensemble-annotated-decomposed.vcf.gz.tbi
-    else
-	# we don't need gemini databases for particular calling algorythms
-	rm ${family}-freebayes.db
-	rm ${family}-gatk-haplotype.db
-	rm ${family}-samtools.db
-	rm ${family}-platypus.db
+	#proceed only if there is a result dir
+
+        #don't remove input files for new projects
+	#rm -rf input/
+
+        #rename bam files to match sample names
+	for f in *ready.bam;do mv $f `echo $f | sed s/"-ready"//`;done;
+        for f in *ready.bam.bai;do mv $f `echo $f | sed s/"-ready"//`;done;
+
+	#make bam files read only
+        for f in *.bam;do chmod 444 $f;done;
+
+	#calculate md5 sums
+        for f in *.bam;do md5sum $f > $f.md5;done;
+
+	#validate bam files
+        for f in *.bam;do	cre.bam.validate.sh $f;done;
+    
+	if [ "$type" == "wes.fast" ] || [ "$type" == "wgs" ]
+	then
+	    ln -s ${family}-gatk-haplotype.db ${family}-ensemble.db
+	    ln -s ${family}-gatk-haplotype-annotated-decomposed.vcf.gz ${family}-ensemble-annotated-decomposed.vcf.gz
+	    ln -s ${family}-gatk-haplotype-annotated-decomposed.vcf.gz.tbi ${family}-ensemble-annotated-decomposed.vcf.gz.tbi
+	else
+	    # we don't need gemini databases for particular calling algorythms
+	    rm ${family}-freebayes.db
+	    rm ${family}-gatk-haplotype.db
+	    rm ${family}-samtools.db
+	    rm ${family}-platypus.db
+	fi
     fi
     cd ..
 }
