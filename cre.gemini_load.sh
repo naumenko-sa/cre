@@ -13,6 +13,11 @@ then
     vcf=$1
 fi
 
+if [ -z $threads ]
+then
+    threads=$2
+fi
+
 bname=`basename $vcf .vcf.gz`
 
 #--skip-cadd if no cadd
@@ -26,4 +31,4 @@ rm $bname.tmp.vcf.gz
 
 #remove --passonly to load all variants
 #add   --skip-cadd to remove cadd
-gemini load --passonly --skip-gerp-bp -v $vcf -t VEP --cores 16 --tempdir . $bname.db
+gemini load --passonly --skip-gerp-bp -v $vcf -t VEP --cores $threads --tempdir . $bname.db
