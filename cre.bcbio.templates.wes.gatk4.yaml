@@ -3,9 +3,6 @@ details:
     aligner: bwa
     effects: vep
     effects_transcripts: all
-    ensemble:
-      numpass: 2
-      use_filtered: false
     realign: true
     recalibrate: true
     mark_duplicates: true
@@ -17,6 +14,7 @@ details:
     - noalt_calling
     variantcaller:
     - gatk-haplotype
+    variant_regions: /somewhere/target.bed
   analysis: variant2
   description: '912R_A337376'
   files:
