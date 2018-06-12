@@ -25,11 +25,15 @@ function f_cleanup
     # better to look for project-summary than hardcode the year
     # keep bam files for new samples
     
-    if [ -z $family ] && [ ! -d $family ]
+    if [ -z $family ] 
+    #&& [ ! -d $family ]
     then
 	echo "Project folder does not exist. Exiting"
 	exit 1
     fi
+    
+    
+    exit 1
     
     cd $family
     result_dir=`find final -name project-summary.yaml | sed s/"\/project-summary.yaml"//`
