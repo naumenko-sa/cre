@@ -26,14 +26,10 @@ function f_cleanup
     # keep bam files for new samples
     
     if [ -z $family ] 
-    #&& [ ! -d $family ]
     then
-	echo "Project folder does not exist. Exiting"
+	echo "Project (family) folder does not exist. Exiting"
 	exit 1
     fi
-    
-    
-    exit 1
     
     cd $family
     result_dir=`find final -name project-summary.yaml | sed s/"\/project-summary.yaml"//`
