@@ -27,13 +27,16 @@ function f_cleanup
     
     if [ ! -d $family ]
     then
+	echo "Project folder does not exist. Exiting"
 	exit 1
     fi
     
     cd $family
     result_dir=`find final -name project-summary.yaml | sed s/"\/project-summary.yaml"//`
     
-    if [ -d $result_dir ];
+    echo $result_dir
+    
+    if [ -d $result_dir ]
     then
 	mv $result_dir/* .
 	mv final/*/*.bam .
