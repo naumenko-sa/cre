@@ -25,7 +25,7 @@ function f_cleanup
     # better to look for project-summary than hardcode the year
     # keep bam files for new samples
     
-    if [ ! -d $family ]
+    if [ -z $family ] && [! -d $family ]
     then
 	echo "Project folder does not exist. Exiting"
 	exit 1
