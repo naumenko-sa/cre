@@ -41,6 +41,10 @@ then
     then
 	template=~/cre/cre.bcbio.templates.wes.validation.yaml
 	variant_regions=$3
+    elif [ $template_type == "gatk4" ]
+    then
+	template=~/cre/cre.bcbio.templates.wes.gatk4.yaml
+	variant_regions=$3
     fi
 fi
 
