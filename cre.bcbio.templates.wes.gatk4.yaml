@@ -3,8 +3,8 @@ details:
     aligner: bwa
     effects: vep
     effects_transcripts: all
-    realign: true
-    recalibrate: true
+    realign: false
+    recalibrate: false
     mark_duplicates: true
     save_diskspace: true
     tools_on:
