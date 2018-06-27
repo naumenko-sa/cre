@@ -55,10 +55,8 @@ bname=`basename $vcf .vcf.gz`
 #    | sed '/^#/! s/;;/;/g' | bgzip -c > $bname.vepeffects.vcf.gz
 
 #find reference
-reference=`which gatk-launch | sed s/"bin\/gatk-launch"/"genomes\/Hsapiens\/GRCh37"/`
-bcbio_reference=`which gatk-launch | sed s/"bin\/gatk-launch"//`
+reference=`which bcbio_nextgen.py | sed s/"anaconda\/bin\/bcbio_nextgen.py"/"genomes\/Hsapiens\/GRCh37"/`
 vep_reference=$(readlink -f `which vep`| sed s/"\/vep"//)
-
 
 unset PERL5LIB && vep --vcf -o stdout \
     -i $vcf --fork 5 --species homo_sapiens --no_stats --cache --offline --dir ${reference}/vep --symbol --numbers --biotype --total_length \
