@@ -2,13 +2,10 @@
 
 bname=`basename $1 .vcf.gz`
 
-#find reference
-reference=`which gatk-launch | sed s/"bin\/gatk-launch"/"bcbio\/genomes\/Hsapiens\/GRCh37\/seq\/GRCh37.fa"/`
-
-if [ -e $1 ]
+if [ -e $1 ] && [ -e $2 ]
 then
     gatk-launch VariantsToTable \
-    -R $reference \
+    -R $2 \
     -V $1 \
     -F CHROM -F POS -F REF -F ALT -F DP -GF DP -GF AO \
     -O $bname.table

@@ -7,7 +7,7 @@
 #   generates report
 
 #   parameters:
-# 	family = [family_id] (=folder_name,main result file should be family-ensemble.db,=project)
+# 	family = [family_id] (=project=case=folder_name,main result file should be family-ensemble.db,=project)
 # 	cleanup= [0|1] default = 0
 # 	make_report=[0|1] default = 1
 # 	type = [ wes.regular (default) | wes.synonymous | wes.fast | rnaseq | wgs ]
@@ -122,17 +122,22 @@ function f_make_report
     #individual vcfs for uploading to phenome central
     vcf.split_multi.sh $family.vcf.gz
 
-    vcf.ensemble.getCALLERS.sh $family.vcf.gz
+    reference=$(readlink -f `which bcbio_nextgen.py`)
+    reference=`echo $reference | sed s/"anaconda\/bin\/bcbio_nextgen.py"/"genomes\/Hsapiens\/GRCh37\/seq\/GRCh37.fa"/`
+    
+    echo $reference
+
+    vcf.ensemble.getCALLERS.sh $family.vcf.gz $reference
 
     #decompose first for the old version of bcbio!
     #gemini.decompose.sh ${family}-freebayes.vcf.gz
-    vcf.freebayes.getAO.sh ${family}-freebayes-annotated-decomposed.vcf.gz
+    vcf.freebayes.getAO.sh ${family}-freebayes-annotated-decomposed.vcf.gz $reference
 
     #gemini.decompose.sh ${family}-gatk-haplotype.vcf.gz
-    vcf.gatk.get_depth.sh ${family}-gatk-haplotype-annotated-decomposed.vcf.gz
+    vcf.gatk.get_depth.sh ${family}-gatk-haplotype-annotated-decomposed.vcf.gz $reference
 
     #gemini.decompose.sh ${family}-platypus.vcf.gz
-    vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
+    vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz $reference
 
     cd ..
 

@@ -55,8 +55,8 @@ bname=`basename $vcf .vcf.gz`
 #    | sed '/^#/! s/;;/;/g' | bgzip -c > $bname.vepeffects.vcf.gz
 
 #find reference
-reference=`which gatk-launch | sed s/"bin\/gatk-launch"/"bcbio\/genomes\/Hsapiens\/GRCh37"/`
-bcbio_reference=`which gatk-launch | sed s/"bin\/gatk-launch"/"bcbio"/`
+reference=`which gatk-launch | sed s/"bin\/gatk-launch"/"genomes\/Hsapiens\/GRCh37"/`
+bcbio_reference=`which gatk-launch | sed s/"bin\/gatk-launch"//`
 vep_reference=$(readlink -f `which vep`| sed s/"\/vep"//)
 
 
