@@ -118,12 +118,9 @@ function f_make_report
     cat ${family}-ensemble.db.txt | cut -f 23,24  | sed 1d | sed s/chr// | sort -k1,1 -k2,2n > ${family}-ensemble.db.txt.positions
     # this may produce duplicate records if two positions from positions file overlap with a variant 
     # (there are 2 positions and 2 overlapping variants, first reported twice)
-    bgzip -d -c ${family}-ensemble-annotated-decomposed.vcf.gz | grep "^#" > $family.tmp.vcf
-    bcftools view -R ${family}-ensemble.db.txt.positions ${family}-ensemble-annotated-decomposed.vcf.gz | grep -v "^#" | sort | uniq >>  ${family}.tmp.vcf
-    bgzip -f $family.tmp.vcf
-    tabix $family.tmp.vcf.gz
-    bcftools sort -o $family.vcf.gz -Oz $family.tmp.vcf.gz
+    bcftools view -R ${family}-ensemble.db.txt.positions ${family}-ensemble-annotated-decomposed.vcf.gz | bcftools sort | vt uniq - -o $family.vcf.gz
     tabix $family.vcf.gz
+    
     rm $family.tmp.vcf.gz $family.tmp.vcf.gz.tbi
 
     #individual vcfs for uploading to phenome central
@@ -138,21 +135,35 @@ function f_make_report
 
     #decompose first for the old version of bcbio!
     #gemini.decompose.sh ${family}-freebayes.vcf.gz
-    vcf.freebayes.getAO.sh ${family}-freebayes-annotated-decomposed.vcf.gz $reference
+    fprefix=${family}-freebayes-annotated-decomposed
+    bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt uniq - -o $fprefix.subset.vcf.gz
+    tabix $fprefix.subset.vcf.gz
+    vcf.freebayes.getAO.sh $fprefix.subset.vcf.gz $reference
 
     #gemini.decompose.sh ${family}-gatk-haplotype.vcf.gz
-    vcf.gatk.get_depth.sh ${family}-gatk-haplotype-annotated-decomposed.vcf.gz $reference
+    fprefix=${family}-gatk-haplotype-annotated-decomposed
+    bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt uniq - -o $fprefix.subset.vcf.gz
+    tabix $fprefix.subset.vcf.gz
+    vcf.gatk.get_depth.sh $fprefix.subset.vcf.gz $reference
 
     #gemini.decompose.sh ${family}-platypus.vcf.gz
+    fprefix=${family}-platypus-annotated-decomposed.vcf.gz
+    bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt uniq - -o $fprefix.subset.vcf.gz
+    tabix $fprefix.subset.vcf.gz
     vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz $reference
 
     cd ..
 
     # using Rscript from bcbio
     Rscript ~/cre/cre.R $family
-    
+
     cd $family
     #rm $family.create_report.csv $family.merge_reports.csv
+    for vcaller in {freebayes,gatk-haplotype,platypus}
+    do
+	rm ${family}-${vcaller}-annotated-decomposed.subset.vcf.gz ${family}-${vcaller}-annotated-decomposed.subset.vcf.gz.tbi
+    done
+
     cd ..
 }
 

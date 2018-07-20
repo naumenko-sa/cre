@@ -1,6 +1,6 @@
 #!/bin/bash
 
-bname=`basename $1 .vcf.gz`
+bname=`basename $1 .subset.vcf.gz`
 
 if [ -e $1 ] && [ -e $2 ]
 then
