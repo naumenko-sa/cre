@@ -385,13 +385,13 @@ merge_reports = function(family,samples)
         {
             if(!is.na(ensemble_table[i,"CALLERS"]))
             {
-        	v_callers = strsplit(ensemble_table[i,"CALLERS"],",")[[1]]
-        	ensemble_table[i,"Number_of_callers"] = length(v_callers)
-    	    }
-    	    else
-    	    {
-    		ensemble_table[i,"Number_of_callers"] = NA
-    	    }
+        	      v_callers = strsplit(ensemble_table[i,"CALLERS"],",")[[1]]
+        	      ensemble_table[i,"Number_of_callers"] = length(v_callers)
+    	       }
+    	      else
+    	      {
+    		        ensemble_table[i,"Number_of_callers"] = NA
+    	      }
         }
         ensemble_table["CALLERS"]=NULL
         ensemble$Number_of_callers=NULL
