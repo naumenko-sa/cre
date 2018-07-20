@@ -116,7 +116,8 @@ function f_make_report
     # note that if there is a multiallelic SNP, with one rare allele and one frequent one, both will be reported in the VCF,
     # and just a rare one in the excel report
     cat ${family}-ensemble.db.txt | cut -f 23,24  | sed 1d | sed s/chr// | sort -k1,1 -k2,2n > ${family}-ensemble.db.txt.positions
-    bcftools view -R ${family}-ensemble.db.txt.positions ${family}-ensemble-annotated-decomposed.vcf.gz | bcftools sort -o ${family}.vcf.gz -Oz
+    #this may produce duplcate records if two positions from positions file overlap with a variant (there are 2 positions and 2 overlapping variants, first reported twice)
+    bcftools view -R ${family}-ensemble.db.txt.positions ${family}-ensemble-annotated-decomposed.vcf.gz | uniq | bcftools sort -o ${family}.vcf.gz -Oz
     tabix $family.vcf.gz
 
     #individual vcfs for uploading to phenome central
