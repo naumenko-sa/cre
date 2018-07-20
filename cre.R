@@ -395,7 +395,8 @@ merge_reports = function(family,samples)
         }
         ensemble_table["CALLERS"]=NULL
         ensemble$Number_of_callers=NULL
-        ensemble = merge(ensemble,ensemble_table,by.x="superindex",by.y="superindex",all.x=T)
+        #two variant callers called one genotype, two another - two genotypes, creates two records at the same site
+        ensemble = merge(ensemble,ensemble_table,by.x="superindex",by.y="superindex",all.x=T, all.y=F)
     }
     
     gatk_file = paste0(family,"-gatk-haplotype-annotated-decomposed.table")
@@ -405,7 +406,7 @@ merge_reports = function(family,samples)
         gatk$superindex=with(gatk,paste(paste0("chr",CHROM,":",POS),REF,ALT,sep='-'))
         gatk[c("CHROM","POS","REF","ALT")]=NULL
     
-        ensemble = merge(ensemble,gatk,by.x = "superindex", by.y="superindex",all.x = T)
+        ensemble = merge(ensemble,gatk,by.x = "superindex", by.y="superindex",all.x = T,all.y=F)
     
         ensemble$Depth = ensemble$DP
         n_sample = 1
@@ -459,7 +460,7 @@ merge_reports = function(family,samples)
         freebayes = read.delim(freebayes_file, stringsAsFactors=F)
         freebayes$superindex=with(freebayes,paste(paste0("chr",CHROM,":",POS),REF,ALT,sep='-'))
         freebayes[c("CHROM","POS","REF","ALT")]=NULL
-        ensemble = merge(ensemble,freebayes,by.x = "superindex", by.y="superindex",all.x = T)
+        ensemble = merge(ensemble,freebayes,by.x = "superindex", by.y="superindex",all.x = T,all.y=F)
     
         for (i in 1:nrow(ensemble))
         {
@@ -504,7 +505,7 @@ merge_reports = function(family,samples)
         platypus = read.delim(platypus_file, stringsAsFactors=F)
         platypus$superindex=with(platypus,paste(paste0("chr",CHROM,":",POS),REF,ALT,sep='-'))
         platypus[c("CHROM","POS","REF","ALT")]=NULL
-        ensemble = merge(ensemble,platypus,by.x = "superindex", by.y="superindex",all.x = T)
+        ensemble = merge(ensemble,platypus,by.x = "superindex", by.y="superindex", all.x = T, all.y = F)
     
         for (i in 1:nrow(ensemble))
         {
@@ -551,7 +552,7 @@ merge_reports = function(family,samples)
         samtools = read.delim(samtools_file, stringsAsFactors=F)
         samtools$superindex=with(samtools,paste(paste0("chr",CHROM,":",POS),REF,ALT,sep='-'))
         samtools[c("CHROM","POS","REF","ALT")]=NULL
-        ensemble = merge(ensemble,samtools,by.x = "superindex", by.y="superindex",all.x = T)
+        ensemble = merge(ensemble,samtools,by.x = "superindex", by.y="superindex",all.x = T, all.y=F)
       
         for (i in 1:nrow(ensemble))
         {
