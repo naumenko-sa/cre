@@ -147,10 +147,10 @@ function f_make_report
     vcf.gatk.get_depth.sh $fprefix.subset.vcf.gz $reference
 
     #gemini.decompose.sh ${family}-platypus.vcf.gz
-    fprefix=${family}-platypus-annotated-decomposed.vcf.gz
+    fprefix=${family}-platypus-annotated-decomposed
     bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt uniq - -o $fprefix.subset.vcf.gz
     tabix $fprefix.subset.vcf.gz
-    vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz $reference
+    vcf.platypus.getNV.sh $fprefix.subset.vcf.gz $reference
 
     cd ..
 
