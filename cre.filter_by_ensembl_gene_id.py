@@ -9,7 +9,7 @@ import re
 original_report = sys.argv[1]
 panel_report = original_report.replace("csv","panel.csv")
 
-gene_panel_file_name = sys.args[2]
+gene_panel_file_name = sys.argv[2]
 with open(gene_panel_file_name,'rb') as f_gene_panel:
     genes = f_gene_panel.readlines()
 f_gene_panel.close()
