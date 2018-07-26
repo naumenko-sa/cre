@@ -100,7 +100,7 @@ function f_make_report
 	export depth_threshold=10
 	export severity_filter=ALL
     else
-	export depth_threshold=10
+	export depth_threshold=5
 	export severity_filter=HIGHMED
     fi
 

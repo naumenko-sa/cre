@@ -27,6 +27,7 @@ with open(original_report,'rb') as f_original_report:
 	with open(panel_report,'w') as f_panel_report:
 
 	    f_panel_report.write('"'+'","'.join(header)+'"')
+	    f_panel_report.write('\n')
 	    for row in reader:
 		if (row['Ensembl_gene_id'] in genes):
 		    row['UCSC_Link'] = 'UCSC_Link' #a bug with quotes
