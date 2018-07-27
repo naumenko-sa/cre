@@ -15,7 +15,7 @@
 #bcbio_conda list | grep vep
 
 
-bcbio_nextgen.py upgrade  --data
+#bcbio_nextgen.py upgrade  --data
 #upgrade data - it upgrades gemini, cadd, rnaseq if they were installed before
 #bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget vep
 
@@ -25,6 +25,9 @@ bcbio_nextgen.py upgrade  --data
 #cadd
 #bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget cadd
 #--genomes hg38
+
+#gnomad
+bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget gnomad
 
 #rnaseq
 #bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget rnaseq
