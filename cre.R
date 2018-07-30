@@ -46,7 +46,7 @@ genotype2zygocity = function (genotype_str,ref)
       return(result)
 }
 
-#output : family.ensemble.txt
+# output : family.ensemble.txt
 create_report = function(family,samples)
 {
     file=paste0(family,"-ensemble.db.txt")
@@ -63,9 +63,9 @@ create_report = function(family,samples)
 
     # Column3 = GNOMAD_Link
     variants$GNOMAD_POS = with(variants,paste(Chrom,Pos,Ref,Alt,sep='-'))
-    sGNOMAD1="=HYPERLINK(\"http://gnomad.broadinstitute.org/variant/"
-    sGNOMAD2="\",\"GNOMAD_link"\)"
-    variants$GNOMAD_Link = with(variants,paste(sGNOMAD1,GNOMAD_POS,sGNOMAD2,sep='')
+    sGNOMAD1 = "=HYPERLINK(\"http://gnomad.broadinstitute.org/variant/"
+    sGNOMAD2 = "\",\"GNOMAD_link\")"
+    variants$GNOMAD_Link = with(variants,paste(sGNOMAD1,GNOMAD_POS,sGNOMAD2,sep=''))
 
     # Columns 3,4: Ref,Alt
 
