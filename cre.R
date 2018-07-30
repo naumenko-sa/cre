@@ -58,8 +58,14 @@ create_report = function(family,samples)
     
     #Column2 - UCSC link
     sUCSC1="=HYPERLINK(\"http://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&hgt.out3=10x&position="
-    sUCSC2="\",\"UCSC_link\""
-    variants$UCSC_Link=with(variants,paste(sUCSC1,Position,sUCSC2,")",sep=''))
+    sUCSC2="\",\"UCSC_link\")"
+    variants$UCSC_Link=with(variants,paste(sUCSC1,Position,sUCSC2,sep=''))
+
+    # Column3 = GNOMAD_Link
+    variants$GNOMAD_POS = with(variants,paste(Chrom,Pos,Ref,Alt,sep='-'))
+    sGNOMAD1="=HYPERLINK(\"http://gnomad.broadinstitute.org/variant/"
+    sGNOMAD2="\",\"GNOMAD_link"\)"
+    variants$GNOMAD_Link = with(variants,paste(sGNOMAD1,GNOMAD_POS,sGNOMAD2,sep='')
 
     # Columns 3,4: Ref,Alt
 
@@ -232,8 +238,11 @@ create_report = function(family,samples)
     exac_scores = read.delim(exac_scores_file, stringsAsFactors=F)
     variants = merge(variants,exac_scores,all.x=T)
 
-    # Column 38 - Gnomad_het
-    # Column 39 - Gnomad_hom_alt
+    # Column 39 - Gnomad_het
+    
+    # Column 40 - Exac het
+    
+    # Column 41 - Gnomad_hom_alt
     
     # Column 40 - Conserved in 29 mammals instead of phastcons
     #https://www.biostars.org/p/150152/
@@ -297,7 +306,7 @@ create_report = function(family,samples)
     
     
     # replace -1 with 0
-    for (field in c("EVS_maf_aa","EVS_maf_ea","EVS_maf_all","Maf_1000g","Gnomad_maf","Maf_all","Gnomad_het","Gnomad_hom_alt","Trio_coverage"))
+    for (field in c("EVS_maf_aa","EVS_maf_ea","EVS_maf_all","Maf_1000g","Gnomad_maf","Maf_all","Gnomad_het","Exac_het","Gnomad_hom_alt","Trio_coverage"))
     {
         variants[,field] = with(variants,gsub("-1","0",get(field),fixed=T))  
     }
@@ -314,14 +323,14 @@ create_report = function(family,samples)
 # column selection and order
 select_and_write = function(variants,samples,prefix)
 {
-    variants = variants[c(c("Position","UCSC_Link","Ref","Alt"),
+    variants = variants[c(c("Position","UCSC_Link","GNOMAD_Link","Ref","Alt"),
                         paste0("Zygosity.",samples),c("Gene"),
                         paste0("Burden.",samples),c("gts","Variation","Info","Protein_change_ensembl","Protein_change_refseq","Depth","Quality"),
                         paste0("Alt_depths.",samples),
                         c("Trio_coverage","Ensembl_gene_id","Gene_description","Omim_gene_description","Omim_inheritance",
                           "Orphanet", "Clinvar","Ensembl_transcript_id","AA_position","Exon","Pfam_domain",
                           "Frequency_in_C4R","Seen_in_C4R_samples","rsIDs","Maf_1000g","EVS_maf_aa","EVS_maf_ea","EVS_maf_all",
-                          "Gnomad_maf","Maf_all", "Exac_pLi_score","Exac_missense_score","Gnomad_het","Gnomad_hom_alt",
+                          "Gnomad_maf","Maf_all", "Exac_pLi_score","Exac_missense_score","Gnomad_het","Exac_het","Gnomad_hom_alt",
                           "Conserved_in_29_mammals","Sift_score","Polyphen_score","Cadd_score",
                           "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing",
                           "Number_of_callers"))]
@@ -332,12 +341,12 @@ select_and_write = function(variants,samples,prefix)
 # writes in CSV format
 select_and_write2 = function(variants,samples,prefix)
 {
-    variants = variants[c(c("Position","UCSC_Link","Ref","Alt"),paste0("Zygosity.",samples),c("Gene"),
+    variants = variants[c(c("Position","UCSC_Link","GNOMAD_Link","Ref","Alt"),paste0("Zygosity.",samples),c("Gene"),
                         paste0("Burden.",samples),c("gts","Variation","Info","Protein_change_ensembl","Protein_change_refseq","Depth","Quality"),
                         paste0("Alt_depths.",samples),c("Trio_coverage","Ensembl_gene_id","Gene_description","Omim_gene_description","Omim_inheritance",
                                                         "Orphanet", "Clinvar","Ensembl_transcript_id","AA_position","Exon","Pfam_domain",
                                                         "Frequency_in_C4R","Seen_in_C4R_samples","rsIDs","Maf_1000g","EVS_maf_aa","EVS_maf_ea","EVS_maf_all",
-                                                        "Gnomad_maf","Maf_all", "Exac_pLi_score","Exac_missense_score","Gnomad_het","Gnomad_hom_alt",
+                                                        "Gnomad_maf","Maf_all", "Exac_pLi_score","Exac_missense_score","Gnomad_het","Exac_het","Gnomad_hom_alt",
                                                         "Conserved_in_29_mammals","Sift_score","Polyphen_score","Cadd_score",
                                                         "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing",
                                                         "Number_of_callers"))]

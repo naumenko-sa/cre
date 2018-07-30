@@ -43,6 +43,7 @@ sQuery="select
         v.aaf_gnomad_all as Gnomad_maf,
         v.max_aaf_all as Maf_all,
         v.gnomad_num_het as Gnomad_het,
+        v.exac_num_het as Exac_het,
         v.gnomad_num_hom_alt as Gnomad_hom_alt,
         v.sift_score as Sift_score,
         v.polyphen_score as Polyphen_score,
