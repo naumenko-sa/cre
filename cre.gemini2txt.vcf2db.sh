@@ -8,7 +8,6 @@
 
 # vcf2db changes:
 # - gene_detailed table is absent - no ensemble_gene_id
-# - no depth in variants
 # - pfam_domain went to domains
 
 #PBS -l walltime=1:00:00,nodes=1:ppn=1
@@ -30,10 +29,11 @@ echo $severity_threshold
 gemini query -q "select name from samples" $file > samples.txt
 
 sQuery="select
-	v.variant_id as Variant_id,
+	    v.variant_id as Variant_id,
         v.ref as Ref,
         v.alt as Alt,
         v.impact as Variation,
+        v.dp as Depth
         v.qual as Quality,
         v.gene as Gene,
         v.clinvar_sig as Clinvar,
@@ -43,21 +43,22 @@ sQuery="select
         v.domains as Pfam_domain,
         v.rs_ids as rsIDs,
         v.af_1kg_all as Maf_1000g,
-        v.aaf_gnomad_all as Gnomad_maf,
-        v.max_aaf_all as Maf_all,
-        v.gnomad_num_het as Gnomad_het,
-        v.exac_num_het as Exac_het,
-        v.gnomad_num_hom_alt as Gnomad_hom_alt,
+        v.gnomad_af as Gnomad_maf,
+        v.max_aaf_all as Maf_all, 
+        v.gnomad_ac_male + v.gnomad_ac_female as Gnomad_het,
+        v.gnomad_hom as Gnomad_hom_alt,
+        v.num_exac_het as Exac_het,
+        v.num_exac_hom as Exac_hom,
         v.sift_score as Sift_score,
         v.polyphen_score as Polyphen_score,
         v.cadd_scaled as Cadd_score,gts,
         v.chrom as Chrom,
         v.start+1 as Pos,
         v.aa_change as AA_change,
-        v.vep_hgvsc as Codon_change,
-        v.aaf_esp_aa as EVS_maf_aa,
-        v.aaf_esp_ea as EVS_maf_ea,
-        v.aaf_esp_all as EVS_maf_all,
+        v.hgvsc as Codon_change,
+        v.af_esp_aa as EVS_maf_aa,
+        v.af_esp_ea as EVS_maf_ea,
+        v.af_esp_all as EVS_maf_all,
         v.is_conserved as Conserved_in_29_mammals,"
 
 while read sample;

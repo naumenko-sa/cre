@@ -1,5 +1,12 @@
-#https://cran.r-project.org/web/packages/VennDiagram/VennDiagram.pdf
+wgs_report_test = function()
+{
+    setwd("~/Desktop/work/wgs_report/")
+    test = read.csv("180_79585.sv.csv")
+}
 
+
+
+#https://cran.r-project.org/web/packages/VennDiagram/VennDiagram.pdf
 pipeline_comparisons = function()
 {
   
