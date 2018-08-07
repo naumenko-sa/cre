@@ -10,7 +10,7 @@
 # 	family = [family_id] (=project=case=folder_name,main result file should be family-ensemble.db,=project)
 # 	cleanup= [0|1] default = 0
 # 	make_report=[0|1] default = 1
-# 	type = [ wes.regular (default) | wes.synonymous | wes.fast | rnaseq | wgs ]
+# 	type = [ wes.regular (default) | wes.synonymous | wes.fast | rnaseq | wgs | vcf2db (new wes/wgs report with gemini loaded by vcf2db)]
 ####################################################################################################
 
 #PBS -l walltime=20:00:00,nodes=1:ppn=1
@@ -104,8 +104,13 @@ function f_make_report
 	export severity_filter=HIGHMED
     fi
 
-    cre.gemini2txt.sh ${family}-ensemble.db $depth_threshold $severity_filter
-    cre.gemini_variant_impacts.sh ${family}-ensemble.db $depth_threshold $severity_filter
+    if [ "$type" == "vcfanno" ]
+    then
+	cre.gemini2txt.vcfanno.sh ${family}-ensemble.db $depth_threshold $severity_filter
+    else
+	cre.gemini2txt.sh ${family}-ensemble.db $depth_threshold $severity_filter
+	cre.gemini_variant_impacts.sh ${family}-ensemble.db $depth_threshold $severity_filter
+    fi
 
     for f in *.vcf.gz;
     do
