@@ -1,6 +1,5 @@
 #!/bin/bash
-
-# submits bcbio project to the queue with n threads
+# submits bcbio project(=case=family) to the queue with n threads
 # adjust ppn and walltime depending on the project
 # experience is that the best combination for WES and SK HPC is 7cores/50G
 
@@ -9,25 +8,26 @@
 #PBS -d .
 #PBS -l vmem=50g,mem=50g
 
-echo "START: " `date`;
-hostname
-
-#module load java/1.8.0_91
+echo "START: " `date`
+echo "NODE: " `hostname`
 
 if [ -z $threads ]
 then
     threads=7
 fi
 
+#to run toy examples in tutorials without queue
 if [ -z $project ]
 then
     project=$1
 fi
 
-echo $project $threads
+echo "Running bcbio for " $project " with " $threads
 
 cd $project/work
 
 bcbio_nextgen.py ../config/${project}.yaml -n $threads
 
-echo "END: " `date`;
+cd ../../
+
+echo "END: " `date`
