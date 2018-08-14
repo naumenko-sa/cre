@@ -104,9 +104,10 @@ function f_make_report
 	export severity_filter=HIGHMED
     fi
 
-    if [ "$type" == "vcfanno" ]
+    if [ "$type" == "vcf2db" ]
     then
-	cre.gemini2txt.vcfanno.sh ${family}-ensemble.db $depth_threshold $severity_filter
+	cre.gemini2txt.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter
+	cre.gemini.variant_impacts.vcf2db.sh $depth_threshold $severity_filter
     else
 	cre.gemini2txt.sh ${family}-ensemble.db $depth_threshold $severity_filter
 	cre.gemini_variant_impacts.sh ${family}-ensemble.db $depth_threshold $severity_filter
