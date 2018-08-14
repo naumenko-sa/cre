@@ -50,7 +50,7 @@ sQuery="select
         gnomad_num_hom_alt as Gnomad_hom_alt,
         sift_score as Sift_score,
         polyphen_score as Polyphen_score,
-        cadd_phred as Cadd_score,gts,
+        cadd_phred as Cadd_score,
         chrom as Chrom,
         start+1 as Pos,
         aa_change as AA_change,
