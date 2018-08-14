@@ -6,9 +6,7 @@
 
 #  example call: cre.gemini2txt.sh S28-ensemble.db 5 ALL
 
-# vcf2db changes:
-# - gene_detailed table is absent - no ensemble_gene_id
-# - pfam_domain went to domains
+#  when using vcfanno/vcfdb loader some fields are different
 
 #PBS -l walltime=1:00:00,nodes=1:ppn=1
 #PBS -joe .
@@ -29,37 +27,38 @@ echo $severity_threshold
 gemini query -q "select name from samples" $file > samples.txt
 
 sQuery="select
-	    v.variant_id as Variant_id,
-        v.ref as Ref,
-        v.alt as Alt,
-        v.impact as Variation,
-        v.dp as Depth
-        v.qual as Quality,
-        v.gene as Gene,
-        v.clinvar_sig as Clinvar,
-        v.transcript as Ensembl_transcript_id,
-        v.aa_length as AA_position,
-        v.exon as Exon,
-        v.domains as Pfam_domain,
-        v.rs_ids as rsIDs,
-        v.af_1kg_all as Maf_1000g,
-        v.gnomad_af as Gnomad_maf,
-        v.max_aaf_all as Maf_all, 
-        v.gnomad_ac_male + v.gnomad_ac_female as Gnomad_het,
-        v.gnomad_hom as Gnomad_hom_alt,
-        v.num_exac_het as Exac_het,
-        v.num_exac_hom as Exac_hom,
-        v.sift_score as Sift_score,
-        v.polyphen_score as Polyphen_score,
-        v.cadd_scaled as Cadd_score,gts,
-        v.chrom as Chrom,
-        v.start+1 as Pos,
-        v.aa_change as AA_change,
-        v.hgvsc as Codon_change,
-        v.af_esp_aa as EVS_maf_aa,
-        v.af_esp_ea as EVS_maf_ea,
-        v.af_esp_all as EVS_maf_all,
-        v.is_conserved as Conserved_in_29_mammals,"
+        variant_id as Variant_id,
+        ref as Ref,
+        alt as Alt,
+        impact as Variation,
+        dp as Depth,
+        qual as Quality,
+        gene as Gene,
+        ensembl_geneid as Ensembl_gene_id,
+        clinvar_sig as Clinvar,
+        transcript as Ensembl_transcript_id,
+        aa_length as AA_position,
+        exon as Exon,
+        domain as Pfam_domain,
+        rs_ids as rsIDs,
+        af_1kg_all as Maf_1000g,
+        gnomad_af as Gnomad_maf,
+        max_aaf_all as Maf_all_gemini,
+        gnomad_ac_female as Gnomad_het_female,
+        gnomad_ac_male as Gnomad_ac_male,
+        num_exac_het as Exac_het,
+        gnomad_num_hom_alt as Gnomad_hom_alt,
+        sift_score as Sift_score,
+        polyphen_score as Polyphen_score,
+        cadd_phred as Cadd_score,gts,
+        chrom as Chrom,
+        start+1 as Pos,
+        aa_change as AA_change,
+        hgvsc as Codon_change,
+        af_esp_aa as EVS_maf_aa,
+        af_esp_ea as EVS_maf_ea,
+        af_esp_all as EVS_maf_all,
+        phylop20way_mammalian as Conserved_in_20_mammals,"
 
 while read sample;
 do
@@ -72,23 +71,22 @@ done < samples.txt
 # https://groups.google.com/forum/#!topic/gemini-variation/U3uEvWCzuQo
 # v.depth = 'None' see https://github.com/chapmanb/bcbio-nextgen/issues/1894
 
-if [[ "$severity_threshold" == 'ALL' ]]
+if [[ "$severity_threshold" == "ALL" ]]
 then
 #used for RNA-seq = 20k variants in the report
     severity_filter=""
 #use for WES = 1k variants in the report
 else
-    severity_filter="and v.impact_severity<>'LOW'"
+    severity_filter=" and v.impact_severity<>'LOW' "
 fi
 
-sQuery=$sQuery"v.vep_hgvsc as Nucleotide_change_ensembl,
-		v.vep_hgvsp as Protein_change_ensembl 
-		from variants v, gene_detailed g
-	        where 
-	    	    v.transcript=g.transcript and 
-	    	    "$severity_filter" and 
-	    	    v.max_aaf_all < 0.01 and 
-	        (v.depth >= "$depth_threshold" or v.depth = '' or v.depth is null)"
+sQuery=$sQuery"hgvsc as Nucleotide_change_ensembl,
+		hgvsp as Protein_change_ensembl
+		from variants
+        where
+	        (dp >= "$depth_threshold" or dp = '' or dp is null)"
+            "$severity_filter" and 
+	        max_aaf_all < 0.01 and
 
 echo $sQuery
-gemini query --header -q "$sQuery" $file > ${file}.txt;
+gemini query --header -q "$sQuery" $file > ${file}.txt
