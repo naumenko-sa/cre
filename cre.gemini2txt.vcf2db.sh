@@ -45,7 +45,7 @@ sQuery="select \
         gnomad_af as Gnomad_maf,\
         max_aaf_all as Maf_all_gemini,\
         gnomad_ac_female as Gnomad_het_female,\
-        gnomad_ac_male as Gnomad_ac_male,\
+        gnomad_ac_male as Gnomad_het_male,\
         num_exac_het as Exac_het,\
         gnomad_hom as Gnomad_hom_alt,\
         sift_score as Sift_score,\
