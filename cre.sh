@@ -106,8 +106,8 @@ function f_make_report
 
     if [ "$type" == "vcf2db" ]
     then
-	cre.gemini2txt.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter
-	cre.gemini.variant_impacts.vcf2db.sh $depth_threshold $severity_filter
+	cre.gemini2txt.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter > $family.variants.txt
+	cre.gemini.variant_impacts.vcf2db.sh $depth_threshold $severity_filter > $family.variant_impacts.txt
     else
 	cre.gemini2txt.sh ${family}-ensemble.db $depth_threshold $severity_filter
 	cre.gemini_variant_impacts.sh ${family}-ensemble.db $depth_threshold $severity_filter
@@ -161,7 +161,12 @@ function f_make_report
     cd ..
 
     # using Rscript from bcbio
-    Rscript ~/cre/cre.R $family
+    if [ "$type" == "vcf2db" ]
+    then
+	Rscript ~/cre/cre.vcf2db.R $family
+    else
+	Rscript ~/cre/cre.R $family
+    fi
 
     cd $family
     #rm $family.create_report.csv $family.merge_reports.csv

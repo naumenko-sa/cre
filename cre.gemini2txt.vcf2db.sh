@@ -22,7 +22,7 @@ fi
 depth_threshold=$2
 
 severity_threshold=$3
-echo $severity_threshold
+#echo $severity_threshold
 
 gemini query -q "select name from samples" $file > samples.txt
 
@@ -89,6 +89,6 @@ sQuery=$sQuery"hgvsc as Nucleotide_change_ensembl,\
 	        (dp >= "$depth_threshold" or dp = '' or dp is null) "$severity_filter" and \
 	        (max_aaf_all < 0.01 and gnomad_af < 0.01)"
 
-echo $sQuery
+#echo $sQuery
 
-gemini query --header -q "$sQuery" $file > ${file}.txt
+gemini query --header -q "$sQuery" $file

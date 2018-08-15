@@ -27,49 +27,49 @@ else
 fi
         
 
-sQuery="select 
-	i.variant_id,
-	i.gene,
-	i.transcript,
-	i.is_exonic,
-	i.is_coding,
-	i.is_lof,
-	i.exon,
-	i.codon_change,
-	i.aa_change,
-	i.aa_length,
-	i.biotype,
-	i.impact,
-	i.impact_so,
-	i.impact_severity,
-	i.polyphen_pred,
-	i.polyphen_score,
-	i.sift_pred,
-	i.sift_score,
-	i.ccds,
-	i.hgvsc,
-	i.hgvsp,
-	i.source,
-	lof,
-	lof_info"
+sQuery="select \
+	i.variant_id,\
+	i.gene,\
+	i.transcript,\
+	i.is_exonic,\
+	i.is_coding,\
+	i.is_lof,\
+	i.exon,\
+	i.codon_change,\
+	i.aa_change,\
+	i.aa_length,\
+	i.biotype,\
+	i.impact,\
+	i.impact_so,\
+	i.impact_severity,\
+	i.polyphen_pred,\
+	i.polyphen_score,\
+	i.sift_pred,\
+	i.sift_score,\
+	i.ccds,\
+	i.hgvsc,\
+	i.hgvsp,\
+	i.source,\
+	i.lof,\
+	i.lof_info"
 
 #old runs before Oct2017 does not have maxentscanfields in the database
 if gemini db_info $1 | grep -q "maxentscan";
 then 
-    sQuery=$sQuery",
-	i.maxentscan_alt,
-	i.maxentscan_diff,
-	i.maxentscan_ref,
-	i.spliceregion
-	"
+    sQuery=$sQuery",\
+	i.maxentscan_alt,\
+	i.maxentscan_diff,\
+	i.maxentscan_ref,\
+	i.spliceregion"
 fi
 
-sQuery=$sQuery" from variants v, 
-		variant_impacts i 
-		where "$severity_filter"(v.max_aaf_all < 0.01 and gnomad_af < 0.01) and 
-		v.variant_id=i.variant_id and 
-		(v.depth>="$depth_threshold" or v.depth='' or v.depth is null)"
+sQuery=$sQuery" from variants v,\
+		variant_impacts i \
+		where "$severity_filter"(v.max_aaf_all < 0.01 and v.gnomad_af < 0.01) and \
+		v.variant_id=i.variant_id and \
+		(v.dp>="$depth_threshold" or v.dp='' or v.dp is null)"
 
-echo $sQuery
+#echo $sQuery
 
-gemini query --header -q "$sQuery" $file > ${file}.impacts.txt
+gemini query --header -q "$sQuery" $file
+
