@@ -15,7 +15,7 @@ echo "START: " `date`;
 
 hostname
 
-module load java/1.8.0_91
+#module load java/1.8.0_91
 project=`cat projects.txt | head -n $PBS_ARRAYID | tail -n1`
 
 cd ${project}/work
