@@ -46,25 +46,27 @@ sQuery="select
 	i.polyphen_score,
 	i.sift_pred,
 	i.sift_score,
-	i.vep_canonical,
-	i.vep_ccds,
-	i.vep_hgvsc,
-	i.vep_hgvsp"
+	i.ccds,
+	i.hgvsc,
+	i.hgvsp,
+	i.source,
+	lof,
+	lof_info"
 
 #old runs before Oct2017 does not have maxentscanfields in the database
 if gemini db_info $1 | grep -q "maxentscan";
 then 
     sQuery=$sQuery",
-	i.vep_maxentscan_alt,
-	i.vep_maxentscan_diff,
-	i.vep_maxentscan_ref,
-	i.vep_spliceregion
+	i.maxentscan_alt,
+	i.maxentscan_diff,
+	i.maxentscan_ref,
+	i.spliceregion
 	"
 fi
 
 sQuery=$sQuery" from variants v, 
 		variant_impacts i 
-		where "$severity_filter"v.max_aaf_all < 0.01 and 
+		where "$severity_filter"(v.max_aaf_all < 0.01 and gnomad_af < 0.01) and 
 		v.variant_id=i.variant_id and 
 		(v.depth>="$depth_threshold" or v.depth='' or v.depth is null)"
 

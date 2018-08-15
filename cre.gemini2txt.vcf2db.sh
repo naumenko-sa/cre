@@ -87,7 +87,7 @@ sQuery=$sQuery"hgvsc as Nucleotide_change_ensembl,\
 		from variants \
         where \
 	        (dp >= "$depth_threshold" or dp = '' or dp is null) "$severity_filter" and \
-	        (max_aaf_all < 0.01 or gnomad_af < 0.01)"
+	        (max_aaf_all < 0.01 and gnomad_af < 0.01)"
 
 echo $sQuery
 
