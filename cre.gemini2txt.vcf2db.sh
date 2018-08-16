@@ -58,7 +58,8 @@ sQuery="select \
         af_esp_aa as EVS_maf_aa,\
         af_esp_ea as EVS_maf_ea,\
         af_esp_all as EVS_maf_all,\
-        phylop20way_mammalian as Conserved_in_20_mammals,"
+        phylop20way_mammalian as Conserved_in_20_mammals,
+        gts,"
 
 while read sample;
 do
