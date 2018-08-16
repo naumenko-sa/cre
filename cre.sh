@@ -107,7 +107,7 @@ function f_make_report
     if [ "$type" == "vcf2db" ]
     then
 	cre.gemini2txt.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter > $family.variants.txt
-	cre.gemini.variant_impacts.vcf2db.sh $depth_threshold $severity_filter > $family.variant_impacts.txt
+	cre.gemini.variant_impacts.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter > $family.variant_impacts.txt
     else
 	cre.gemini2txt.sh ${family}-ensemble.db $depth_threshold $severity_filter
 	cre.gemini_variant_impacts.sh ${family}-ensemble.db $depth_threshold $severity_filter
@@ -121,10 +121,16 @@ function f_make_report
     # report filtered vcf for import in phenotips
     # note that if there is a multiallelic SNP, with one rare allele and one frequent one, both will be reported in the VCF,
     # and just a rare one in the excel report
-    cat ${family}-ensemble.db.txt | cut -f 23,24  | sed 1d | sed s/chr// | sort -k1,1 -k2,2n > ${family}-ensemble.db.txt.positions
+    if [ "$type" == "vcf2db" ]
+    then
+	cat $family.variants.txt | cut -f 25,26 | sed 1d | sed s/chr// | sort -k1,1 -k2,2n > ${family}-ensemble.db.txt.positions
+    else
+	cat ${family}-ensemble.db.txt | cut -f 23,24  | sed 1d | sed s/chr// | sort -k1,1 -k2,2n > ${family}-ensemble.db.txt.positions
+    fi
+
     # this may produce duplicate records if two positions from positions file overlap with a variant 
     # (there are 2 positions and 2 overlapping variants, first reported twice)
-    bcftools view -R ${family}-ensemble.db.txt.positions ${family}-ensemble-annotated-decomposed.vcf.gz | bcftools sort | vt uniq - -o $family.vcf.gz
+    bcftools view -R ${family}-ensemble.db.txt.positions ${family}-ensemble-annotated-decomposed.vcf.gz | bcftools sort | vt uniq - | vt rminfo -t CSQ,Interpro_domain,MutPred_Top5features,MutationTaster_AAE - -o $family.vcf.gz
     tabix $family.vcf.gz
     
     rm $family.tmp.vcf.gz $family.tmp.vcf.gz.tbi
@@ -170,10 +176,10 @@ function f_make_report
 
     cd $family
     #rm $family.create_report.csv $family.merge_reports.csv
-    for vcaller in {freebayes,gatk-haplotype,platypus}
-    do
-	rm ${family}-${vcaller}-annotated-decomposed.subset.vcf.gz ${family}-${vcaller}-annotated-decomposed.subset.vcf.gz.tbi
-    done
+    #for vcaller in {freebayes,gatk-haplotype,platypus}
+    #do
+#	rm ${family}-${vcaller}-annotated-decomposed.subset.vcf.gz ${family}-${vcaller}-annotated-decomposed.subset.vcf.gz.tbi
+#    done
 
     cd ..
 }
