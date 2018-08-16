@@ -65,7 +65,7 @@ fi
 
 sQuery=$sQuery" from variants v,\
 		variant_impacts i \
-		where "$severity_filter"(v.max_aaf_all < 0.01 and v.gnomad_af < 0.01) and \
+		where "$severity_filter"(v.max_aaf_all < 0.01 and v.gnomad_af_gs < 0.01) and \
 		v.variant_id=i.variant_id and \
 		(v.dp>="$depth_threshold" or v.dp='' or v.dp is null)"
 

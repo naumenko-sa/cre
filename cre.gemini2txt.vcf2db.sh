@@ -42,12 +42,12 @@ sQuery="select \
         domains as Protein_domains,\
         rs_ids as rsIDs,\
         af_1kg_all as Maf_1000g,\
-        gnomad_af as Gnomad_maf,\
+        gnomad_af as Gnomad_maf_es,\
         max_aaf_all as Maf_all_gemini,\
-        gnomad_ac_female as Gnomad_het_female,\
-        gnomad_ac_male as Gnomad_het_male,\
+        gnomad_ac_gs as Gnomad_het_female,\
+        gnomad_af_gs as Gnomad_maf_gs,\
         num_exac_het as Exac_het,\
-        gnomad_hom as Gnomad_hom_alt,\
+        gnomad_hom_gs as Gnomad_hom_gs,\
         sift_score as Sift_score,\
         polyphen_score as Polyphen_score,\
         cadd_phred as Cadd_score,\
@@ -88,7 +88,7 @@ sQuery=$sQuery"hgvsc as Nucleotide_change_ensembl,\
 		from variants \
         where \
 	        (dp >= "$depth_threshold" or dp = '' or dp is null) "$severity_filter" and \
-	        (max_aaf_all < 0.01 and gnomad_af < 0.01)"
+	        (max_aaf_all < 0.01 and gnomad_af_gs < 0.01)"
 
 #echo $sQuery
 
