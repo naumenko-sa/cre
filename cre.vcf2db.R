@@ -340,7 +340,7 @@ select_and_write = function(variants,samples,prefix)
                         paste0("Burden.",samples),c("gts","Variation","Info","Protein_change_ensembl","Protein_change_refseq","Depth","Quality"),
                         paste0("Alt_depths.",samples),
                         c("Trio_coverage","Ensembl_gene_id","Gene_description","Omim_gene_description","Omim_inheritance",
-                          "Orphanet", "Clinvar","Ensembl_transcript_id","AA_position","Exon","Pfam_domain",
+                          "Orphanet", "Clinvar","Ensembl_transcript_id","AA_position","Exon","Protein_domains",
                           "Frequency_in_C4R","Seen_in_C4R_samples","rsIDs","Maf_1000g","EVS_maf_aa","EVS_maf_ea","EVS_maf_all",
                           "Gnomad_maf","Maf_all", "Exac_pLi_score","Exac_missense_score","Gnomad_het","Exac_het","Gnomad_hom_alt",
                           "Conserved_in_20_mammals","Sift_score","Polyphen_score","Cadd_score",
@@ -353,15 +353,19 @@ select_and_write = function(variants,samples,prefix)
 # writes in CSV format
 select_and_write2 = function(variants,samples,prefix)
 {
-    variants = variants[c(c("Position","UCSC_Link","GNOMAD_Link","Ref","Alt"),paste0("Zygosity.",samples),c("Gene"),
-                        paste0("Burden.",samples),c("gts","Variation","Info","Protein_change_ensembl","Protein_change_refseq","Depth","Quality"),
-                        paste0("Alt_depths.",samples),c("Trio_coverage","Ensembl_gene_id","Gene_description","Omim_gene_description","Omim_inheritance",
-                                                        "Orphanet", "Clinvar","Ensembl_transcript_id","AA_position","Exon","Protein_domains",
-                                                        "Frequency_in_C4R","Seen_in_C4R_samples","rsIDs","Maf_1000g","EVS_maf_aa","EVS_maf_ea","EVS_maf_all",
-                                                        "Gnomad_maf","Maf_all", "Exac_pLi_score","Exac_missense_score","Gnomad_het_female","Gnomad_het_male",
-                                                        "Exac_het","Gnomad_hom_alt","Conserved_in_20_mammals","Sift_score","Polyphen_score","Cadd_score",
-                                                        "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing",
-                                                        "Number_of_callers"))]
+    variants = variants[c(c("Position","UCSC_Link","GNOMAD_Link","Ref","Alt"),
+                          paste0("Zygosity.",samples),
+                          c("Gene"),
+                          paste0("Burden.",samples),
+                          c("gts","Variation","Info","Protein_change_ensembl","Protein_change_refseq","Depth","Quality"),
+                          paste0("Alt_depths.",samples),
+                          c("Trio_coverage","Ensembl_gene_id","Gene_description","Omim_gene_description","Omim_inheritance",
+                            "Orphanet", "Clinvar","Ensembl_transcript_id","AA_position","Exon","Protein_domains",
+                            "Frequency_in_C4R","Seen_in_C4R_samples","rsIDs","Maf_1000g","EVS_maf_aa","EVS_maf_ea","EVS_maf_all",
+                            "Gnomad_maf","Maf_all", "Exac_pLi_score","Exac_missense_score","Gnomad_het_female","Gnomad_het_male",
+                            "Exac_het","Gnomad_hom_alt","Conserved_in_20_mammals","Sift_score","Polyphen_score","Cadd_score",
+                            "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing",
+                            "Number_of_callers"))]
   
     write.csv(variants,paste0(prefix,".csv"),row.names = F)
 }

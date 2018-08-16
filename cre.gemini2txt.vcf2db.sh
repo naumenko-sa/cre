@@ -39,7 +39,7 @@ sQuery="select \
         transcript as Ensembl_transcript_id,\
         aa_length as AA_position,\
         exon as Exon,\
-        domains as Proteins_domains,\
+        domains as Protein_domains,\
         rs_ids as rsIDs,\
         af_1kg_all as Maf_1000g,\
         gnomad_af as Gnomad_maf,\
