@@ -96,11 +96,11 @@ create_report = function(family,samples)
     
     # Column6 - Gene
     
-    # Column8 - gts
+    # Column9 = gts
     
-    # Column9 - Variation
+    # Column10 = Variation
     
-    # Column 10 -  Info
+    # Column11 =  Info
     variants = add_placeholder(variants,"Info","Info")
     
     impact_file=paste0(family,".variant_impacts.txt")
@@ -124,14 +124,14 @@ create_report = function(family,samples)
         variants[i,"Info"] = s_impacts
     }
     
-    # Column 11 - Protein_change_ensembl
+    # Column12 = Protein_change_ensembl
     
-    # Column 12 - Protein_change_refseq
+    # Column13 - Protein_change_refseq
     variants = add_placeholder(variants,"Protein_change_refseq","NA")
     
-    # Columns 13,14 - Depth, Qual_depth
+    # Columns 14,15 - Depth, Quality
 
-    # Column 15 - Alt_depth - from v.gt_alt_depth
+    # Column 16 - Alt_depth - from v.gt_alt_depths
     # when multiple callers used, AD is not set and fixed in merge_reports function
     for(sample in samples)
     {
@@ -139,7 +139,7 @@ create_report = function(family,samples)
         setnames(variants, paste0("gt_alt_depths.",sample),new_name)
     }
 
-    # Column 16 - Trio_coverage - fixed in merge_reports function
+    # Column 17 - Trio_coverage - fixed in merge_reports function
     variants = add_placeholder(variants,"Trio_coverage","")
     n_sample = 1
     prefix = ""
@@ -163,13 +163,13 @@ create_report = function(family,samples)
         n_sample = n_sample+1
     }
     
-    # Column 17 - Ensembl_gene_id
+    # Column18 = Ensembl_gene_id
 
-    # Column 18 - Gene_description
+    # Column19 = Gene_description
     gene_descriptions = read.delim2(paste0(default_tables_path,"/ensembl_w_description.txt"), stringsAsFactors=F)
     variants = merge(variants,gene_descriptions,by.x = "Ensembl_gene_id",by.y = "ensembl_gene_id",all.x=T)
     
-    # Column 19 - Omim_gene_description - from omim text file
+    # Column20 - Omim_gene_description - from omim text file
     # omim.forannotation2 previously
     # I use my copy of omim first, then look into cre, because I don't want to distribute omim
     # through my github.
@@ -185,7 +185,7 @@ create_report = function(family,samples)
 	    variants$Omim_gene_description[is.na(variants$Omim_gene_description)] = 0
     }
         
-    # Column 20 - Omim_inheritance 
+    # Column21 - Omim_inheritance 
     omim_inheritance_file_name = paste0(default_tables_path,"/omim_inheritance.txt")
     omim_inheritance_file_name_local = paste0(reference_tables_path,"/omim_inheritance.txt")
     
@@ -193,11 +193,11 @@ create_report = function(family,samples)
     
     if (file.exists(omim_inheritance_file_name))
     {
-	omim_inheritance = read.csv(omim_inheritance_file_name, sep="",stringsAsFactors = F)
-	variants = merge(variants,omim_inheritance,all.x=T)
+	    omim_inheritance = read.csv(omim_inheritance_file_name, sep="",stringsAsFactors = F)
+	    variants = merge(variants,omim_inheritance,all.x=T)
     }
 
-    # Column 21 - Orphanet
+    # Column 22 = Orphanet
     # previous name - orphanet.deduplicated.txt
     orphanet_file_name = paste0(default_tables_path,"/orphanet.txt")
     orphanet_file_name_local = paste0(reference_tables_path,"/orphanet.txt")
@@ -206,61 +206,74 @@ create_report = function(family,samples)
     
     if (file.exists(orphanet_file_name))
     {
-	orphanet = read.delim(orphanet_file_name, stringsAsFactors=F)  
-	variants = merge(variants,orphanet,all.x=T)
+	    orphanet = read.delim(orphanet_file_name, stringsAsFactors=F)  
+	    variants = merge(variants,orphanet,all.x=T)
     
-	variants$Orphanet[is.na(variants$Orphanet)] = 0
+	    variants$Orphanet[is.na(variants$Orphanet)] = 0
     }
     
-    # Column 22 - Clinvar
+    # Column 23 - Clinvar
     
-    # Column 23 - Ensembl_transcript_id
+    # Column 24 - Ensembl_transcript_id
     
-    # Column 24 - AA_position
+    # Column 25 - AA_position
     # changing separator from / to _ because otherwise excel converts it into date
     variants[,"AA_position"] = with(variants,gsub("/","_",AA_position),fixed=T)
     
-    # Column 25 - Exon
+    # Column 26 - Exon
     variants[,"Exon"] = with(variants,gsub("/","_",Exon),fixed=T)
     
-    # Column 26 - Pfam_domain
+    # Column 27 - Protein_domains
     
-    # Column 27, 28 = Frequency_in_C4R, Seen_in_C4R_samples
+    # Column 28, 29 = Frequency_in_C4R, Seen_in_C4R_samples
     variants = add_placeholder(variants,"Frequency_in_C4R","Frequency_in_C4R")
     variants = add_placeholder(variants,"Seen_in_C4R_samples","Seen_in_C4R_samples")
 
-    # Column 29 - rsIds
+    # Column 30 - rsIds
 
-    # Columns 30-35 - population frequencies
+    # population frequencies
+    # Column31 = Maf_1000g
+    # Column32 = Evs_maf_aa
+    # Column33 = Evs_maf_ea
+    # Column34 = Evs_maf_all
+    # Column35 = Gnomad_maf
+    # Column36 = Maf_all
+    variants = add_placeholder(variants,"Maf_all","Maf_all")
+    variants$Maf_all = ifelse(variants$Maf_all_gemini < variants$Gnomad_maf,variants$Maf_all_gemini,variants$Gnomad_maf)
 
-    # Columns 36-37, Exac scores
+    # Exac scores
+    # Column37 = Exac_pLi_score
+    # Column38 = Exac_missense_score
     exac_scores_file = paste0(default_tables_path,"/exac_scores.txt")
     exac_scores = read.delim(exac_scores_file, stringsAsFactors=F)
     variants = merge(variants,exac_scores,all.x=T)
 
-    # Column 39 - Gnomad_het
+    # Column39 = Gnomad_het_female
+    # Column40 = Gnomad_het_male
     
-    # Column 40 - Exac het
+    # Column41 = Exac_het
     
-    # Column 41 - Gnomad_hom_alt
+    # Column42 = Gnomad_hom_alt
     
-    # Column 40 - Conserved in 29 mammals instead of phastcons
-    #https://www.biostars.org/p/150152/
-
-    # Column 41-42-43: sift,polyphen,cadd scores
-
+    # Column43 - Conserved_in_20_mammals
     
-    # Columns 44,45 - imprinting
+    # pathogenicity scores
+    # Column44 = sift
+    # Column45 = polyphen
+    # Column46 = cadd scores
+    
+    # Column47 = Imprinting_status
+    # Column48 = Imprinting_expressed_allele
     imprinting_file_name = paste0(default_tables_path,"/imprinting.txt")
     imprinting = read.delim(imprinting_file_name, stringsAsFactors=F)
     variants = merge(variants,imprinting,all.x=T)
     
-    # Column 46 - pseudoautosomal
+    # Column 49 - pseudoautosomal
     pseudoautosomal_file_name = paste0(default_tables_path,"/pseudoautosomal.txt")
     pseudoautosomal = read.delim(pseudoautosomal_file_name, stringsAsFactors=F)
     variants = merge(variants,pseudoautosomal,all.x=T)
     
-    # Column 47 - splicing
+    # Column 50 - splicing
     variants = add_placeholder(variants,"Splicing","NA")
     
     #in older runs (before Nov2017) there are no splicing fields in the database
@@ -299,20 +312,15 @@ create_report = function(family,samples)
         }
     }
     
-    # Column 48: number of callers
-    # Column 49: genotypes of individual callers
+    # Column 51: number of callers
     variants = add_placeholder(variants,"Number_of_callers","Number_of_callers")
-    #variants = add_placeholder(variants,"Genotypes_of_callers","Genotypes_of_callers")
-    
-    variants = add_placeholder(variants,"Maf_all","Maf_all")
-    variants$Maf_all = ifelse(variants$Maf_all_gemini < variants$Gnomad_maf,variants$Maf_all_gemini,variants$Gnomad_maf)
-    
     
     # replace -1 with 0
     for (field in c("EVS_maf_aa","EVS_maf_ea","EVS_maf_all","Maf_1000g","Gnomad_maf","Maf_all","Gnomad_het_male","Gnomad_het_female",
                     "Exac_het","Gnomad_hom_alt","Trio_coverage"))
     {
-        variants[,field] = with(variants,gsub("-1","0",get(field),fixed=T))  
+        variants[,field] = with(variants,gsub("-1","0",get(field),fixed=T))
+        variants[,field] = with(variants,gsub("None","0",get(field),fixed=T))
     }
 
     for (field in c(paste0("Alt_depths.",samples)))
@@ -335,7 +343,7 @@ select_and_write = function(variants,samples,prefix)
                           "Orphanet", "Clinvar","Ensembl_transcript_id","AA_position","Exon","Pfam_domain",
                           "Frequency_in_C4R","Seen_in_C4R_samples","rsIDs","Maf_1000g","EVS_maf_aa","EVS_maf_ea","EVS_maf_all",
                           "Gnomad_maf","Maf_all", "Exac_pLi_score","Exac_missense_score","Gnomad_het","Exac_het","Gnomad_hom_alt",
-                          "Conserved_in_29_mammals","Sift_score","Polyphen_score","Cadd_score",
+                          "Conserved_in_20_mammals","Sift_score","Polyphen_score","Cadd_score",
                           "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing",
                           "Number_of_callers"))]
   
@@ -348,10 +356,10 @@ select_and_write2 = function(variants,samples,prefix)
     variants = variants[c(c("Position","UCSC_Link","GNOMAD_Link","Ref","Alt"),paste0("Zygosity.",samples),c("Gene"),
                         paste0("Burden.",samples),c("gts","Variation","Info","Protein_change_ensembl","Protein_change_refseq","Depth","Quality"),
                         paste0("Alt_depths.",samples),c("Trio_coverage","Ensembl_gene_id","Gene_description","Omim_gene_description","Omim_inheritance",
-                                                        "Orphanet", "Clinvar","Ensembl_transcript_id","AA_position","Exon","Pfam_domain",
+                                                        "Orphanet", "Clinvar","Ensembl_transcript_id","AA_position","Exon","Protein_domains",
                                                         "Frequency_in_C4R","Seen_in_C4R_samples","rsIDs","Maf_1000g","EVS_maf_aa","EVS_maf_ea","EVS_maf_all",
-                                                        "Gnomad_maf","Maf_all", "Exac_pLi_score","Exac_missense_score","Gnomad_het","Exac_het","Gnomad_hom_alt",
-                                                        "Conserved_in_29_mammals","Sift_score","Polyphen_score","Cadd_score",
+                                                        "Gnomad_maf","Maf_all", "Exac_pLi_score","Exac_missense_score","Gnomad_het_female","Gnomad_het_male",
+                                                        "Exac_het","Gnomad_hom_alt","Conserved_in_20_mammals","Sift_score","Polyphen_score","Cadd_score",
                                                         "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing",
                                                         "Number_of_callers"))]
   
