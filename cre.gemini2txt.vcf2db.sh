@@ -41,13 +41,14 @@ sQuery="select \
         exon as Exon,\
         domains as Protein_domains,\
         rs_ids as rsIDs,\
-        af_1kg_all as Maf_1000g,\
-        gnomad_af as Gnomad_maf_es,\
-        max_aaf_all as Maf_all_gemini,\
-        gnomad_ac_gs as Gnomad_ac_gs,\
+        af_1kg as Af_1000g,\
+        gnomad_af_es as Gnomad_af_es,\
         gnomad_af_gs as Gnomad_maf_gs,\
-        num_exac_het as Exac_het,\
+        max_af as Max_af,\
+        gnomad_ac_gs as Gnomad_ac_gs,\
         gnomad_hom_gs as Gnomad_hom_gs,\
+        gnomad_ac_es as Gnomad_ac_gs,\        
+        gnomad_hom_es as Gnomad_hom_gs,\
         sift_score as Sift_score,\
         polyphen_score as Polyphen_score,\
         cadd_phred as Cadd_score,\
@@ -55,9 +56,9 @@ sQuery="select \
         start+1 as Pos,\
         aa_change as AA_change,\
         hgvsc as Codon_change,\
-        af_esp_aa as EVS_maf_aa,\
-        af_esp_ea as EVS_maf_ea,\
-        af_esp_all as EVS_maf_all,\
+        af_esp_aa as Evs_af_aa,\
+        af_esp_ea as Evs_af_ea,\
+        af_esp_all as Evs_af_all,\
         phylop20way_mammalian as Conserved_in_20_mammals,
         gts,"
 
