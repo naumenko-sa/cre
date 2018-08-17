@@ -236,24 +236,22 @@ create_report = function(family,samples)
     # Column32 = Evs_maf_aa
     # Column33 = Evs_maf_ea
     # Column34 = Evs_maf_all
-    # Column35 = Gnomad_maf
-    # Column36 = Maf_all
+    # Column35 = Gnomad_maf_es
+    # Column36 = Gnomad_maf_gs
+    # Column37 = Maf_all
     variants = add_placeholder(variants,"Maf_all","Maf_all")
-    variants$Maf_all = ifelse(variants$Maf_all_gemini < variants$Gnomad_maf,variants$Maf_all_gemini,variants$Gnomad_maf)
+    variants$Maf_all = ifelse(variants$Maf_all_gemini < variants$Gnomad_maf_gs,variants$Maf_all_gemini,variants$Gnomad_maf_gs)
 
     # Exac scores
-    # Column37 = Exac_pLi_score
-    # Column38 = Exac_missense_score
+    # Column38 = Exac_pLi_score
+    # Column39 = Exac_missense_score
     exac_scores_file = paste0(default_tables_path,"/exac_scores.txt")
     exac_scores = read.delim(exac_scores_file, stringsAsFactors=F)
     variants = merge(variants,exac_scores,all.x=T)
 
-    # Column39 = Gnomad_het_female
-    # Column40 = Gnomad_het_male
-    
+    # Column40 = Gnomad_ac_gs
     # Column41 = Exac_het
-    
-    # Column42 = Gnomad_hom_alt
+    # Column42 = Gnomad_hom_gs
     
     # Column43 - Conserved_in_20_mammals
     
@@ -268,12 +266,12 @@ create_report = function(family,samples)
     imprinting = read.delim(imprinting_file_name, stringsAsFactors=F)
     variants = merge(variants,imprinting,all.x=T)
     
-    # Column 49 - pseudoautosomal
+    # Column49 - pseudoautosomal
     pseudoautosomal_file_name = paste0(default_tables_path,"/pseudoautosomal.txt")
     pseudoautosomal = read.delim(pseudoautosomal_file_name, stringsAsFactors=F)
     variants = merge(variants,pseudoautosomal,all.x=T)
     
-    # Column 50 - splicing
+    # Column50 - splicing
     variants = add_placeholder(variants,"Splicing","NA")
     
     #in older runs (before Nov2017) there are no splicing fields in the database
@@ -316,8 +314,8 @@ create_report = function(family,samples)
     variants = add_placeholder(variants,"Number_of_callers","Number_of_callers")
     
     # replace -1 with 0
-    for (field in c("EVS_maf_aa","EVS_maf_ea","EVS_maf_all","Maf_1000g","Gnomad_maf","Maf_all","Gnomad_het_male","Gnomad_het_female",
-                    "Exac_het","Gnomad_hom_alt","Trio_coverage"))
+    for (field in c("EVS_maf_aa","EVS_maf_ea","EVS_maf_all","Maf_1000g","Gnomad_maf_es","Gnomad_maf_gs",
+                    "Maf_all","Gnomad_ac_gs","Exac_het","Gnomad_hom_gs","Trio_coverage"))
     {
         variants[,field] = with(variants,gsub("-1","0",get(field),fixed=T))
         variants[,field] = with(variants,gsub("None","0",get(field),fixed=T))
@@ -342,7 +340,7 @@ select_and_write = function(variants,samples,prefix)
                         c("Trio_coverage","Ensembl_gene_id","Gene_description","Omim_gene_description","Omim_inheritance",
                           "Orphanet", "Clinvar","Ensembl_transcript_id","AA_position","Exon","Protein_domains",
                           "Frequency_in_C4R","Seen_in_C4R_samples","rsIDs","Maf_1000g","EVS_maf_aa","EVS_maf_ea","EVS_maf_all",
-                          "Gnomad_maf","Maf_all", "Exac_pLi_score","Exac_missense_score","Gnomad_het","Exac_het","Gnomad_hom_alt",
+                          "Gnomad_maf_es","Gnomad_maf_gs","Maf_all", "Exac_pLi_score","Exac_missense_score","Gnomad_het","Exac_het","Gnomad_hom_alt",
                           "Conserved_in_20_mammals","Sift_score","Polyphen_score","Cadd_score",
                           "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing",
                           "Number_of_callers"))]
@@ -362,8 +360,9 @@ select_and_write2 = function(variants,samples,prefix)
                           c("Trio_coverage","Ensembl_gene_id","Gene_description","Omim_gene_description","Omim_inheritance",
                             "Orphanet", "Clinvar","Ensembl_transcript_id","AA_position","Exon","Protein_domains",
                             "Frequency_in_C4R","Seen_in_C4R_samples","rsIDs","Maf_1000g","EVS_maf_aa","EVS_maf_ea","EVS_maf_all",
-                            "Gnomad_maf","Maf_all", "Exac_pLi_score","Exac_missense_score","Gnomad_het_female","Gnomad_het_male",
-                            "Exac_het","Gnomad_hom_alt","Conserved_in_20_mammals","Sift_score","Polyphen_score","Cadd_score",
+                            "Gnomad_maf_es","Gnomad_maf_gs","Maf_all","Gnomad_ac_gs",
+                            "Exac_het","Gnomad_hom_gs","Exac_pLi_score","Exac_missense_score",
+                            "Conserved_in_20_mammals","Sift_score","Polyphen_score","Cadd_score",
                             "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing",
                             "Number_of_callers"))]
   
