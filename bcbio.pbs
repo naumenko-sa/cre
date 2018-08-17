@@ -22,7 +22,7 @@ then
     project=$1
 fi
 
-echo "Running bcbio for " $project " with " $threads
+echo "Running bcbio for " $project " with " $threads " threads"
 
 cd $project/work
 
