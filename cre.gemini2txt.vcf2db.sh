@@ -43,7 +43,7 @@ sQuery="select \
         rs_ids as rsIDs,\
         af_1kg as Af_1000g,\
         gnomad_af_es as Gnomad_af_es,\
-        gnomad_af_gs as Gnomad_maf_gs,\
+        gnomad_af_gs as Gnomad_af_gs,\
         max_af as Max_af,\
         gnomad_ac_gs as Gnomad_ac_gs,\
         gnomad_hom_gs as Gnomad_hom_gs,\

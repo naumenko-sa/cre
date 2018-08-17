@@ -239,9 +239,7 @@ create_report = function(family,samples)
     # Column35 = Gnomad_maf_es
     # Column36 = Gnomad_maf_gs
     # Column37 = Maf_all
-    variants = add_placeholder(variants,"Maf_all","Maf_all")
-    variants$Maf_all = ifelse(variants$Maf_all_gemini < variants$Gnomad_maf_gs,variants$Maf_all_gemini,variants$Gnomad_maf_gs)
-
+    
     # Exac scores
     # Column38 = Exac_pLi_score
     # Column39 = Exac_missense_score
