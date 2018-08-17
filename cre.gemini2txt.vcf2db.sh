@@ -46,8 +46,8 @@ sQuery="select \
         gnomad_af_gs as Gnomad_af_gs,\
         max_af as Max_af,\
         gnomad_ac_gs as Gnomad_ac_gs,\
-        gnomad_hom_gs as Gnomad_hom_gs,\
         gnomad_ac_es as Gnomad_ac_es,\
+        gnomad_hom_gs as Gnomad_hom_gs,\
         gnomad_hom_es as Gnomad_hom_es,\
         sift_score as Sift_score,\
         polyphen_score as Polyphen_score,\
@@ -88,8 +88,7 @@ sQuery=$sQuery"hgvsc as Nucleotide_change_ensembl,\
 		hgvsp as Protein_change_ensembl \
 		from variants \
         where \
-	        (dp >= "$depth_threshold" or dp = '' or dp is null) "$severity_filter" and \
-	        (max_aaf_all < 0.01 and gnomad_af_gs < 0.01)"
+	        (dp >= "$depth_threshold" or dp = '' or dp is null) "$severity_filter" and max_a < 0.01"
 
 #echo $sQuery
 

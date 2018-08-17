@@ -232,13 +232,13 @@ create_report = function(family,samples)
     # Column 30 - rsIds
 
     # population frequencies
-    # Column31 = Maf_1000g
-    # Column32 = Evs_maf_aa
-    # Column33 = Evs_maf_ea
-    # Column34 = Evs_maf_all
-    # Column35 = Gnomad_maf_es
-    # Column36 = Gnomad_maf_gs
-    # Column37 = Maf_all
+    # Column31 = Af_1000g
+    # Column32 = Evs_af_aa
+    # Column33 = Evs_af_ea
+    # Column34 = Evs_af_all
+    # Column35 = Gnomad_af_es
+    # Column36 = Gnomad_af_gs
+    # Column37 = Max_af
     
     # Exac scores
     # Column38 = Exac_pLi_score
@@ -248,28 +248,29 @@ create_report = function(family,samples)
     variants = merge(variants,exac_scores,all.x=T)
 
     # Column40 = Gnomad_ac_gs
-    # Column41 = Exac_het
+    # Column41 = Gnomad_ac_es
     # Column42 = Gnomad_hom_gs
+    # Column43 = Gnomad_hom_es
     
-    # Column43 - Conserved_in_20_mammals
+    # Column44 - Conserved_in_20_mammals
     
     # pathogenicity scores
-    # Column44 = sift
-    # Column45 = polyphen
-    # Column46 = cadd scores
+    # Column45 = sift
+    # Column46 = polyphen
+    # Column47 = cadd scores
     
-    # Column47 = Imprinting_status
-    # Column48 = Imprinting_expressed_allele
+    # Column48 = Imprinting_status
+    # Column49 = Imprinting_expressed_allele
     imprinting_file_name = paste0(default_tables_path,"/imprinting.txt")
     imprinting = read.delim(imprinting_file_name, stringsAsFactors=F)
     variants = merge(variants,imprinting,all.x=T)
     
-    # Column49 - pseudoautosomal
+    # Column50 - pseudoautosomal
     pseudoautosomal_file_name = paste0(default_tables_path,"/pseudoautosomal.txt")
     pseudoautosomal = read.delim(pseudoautosomal_file_name, stringsAsFactors=F)
     variants = merge(variants,pseudoautosomal,all.x=T)
     
-    # Column50 - splicing
+    # Column51 - splicing
     variants = add_placeholder(variants,"Splicing","NA")
     
     #in older runs (before Nov2017) there are no splicing fields in the database
@@ -308,12 +309,12 @@ create_report = function(family,samples)
         }
     }
     
-    # Column 51: number of callers
+    # Column 52: number of callers
     variants = add_placeholder(variants,"Number_of_callers","Number_of_callers")
     
     # replace -1 with 0
-    for (field in c("EVS_maf_aa","EVS_maf_ea","EVS_maf_all","Maf_1000g","Gnomad_maf_es","Gnomad_maf_gs",
-                    "Maf_all","Gnomad_ac_gs","Exac_het","Gnomad_hom_gs","Trio_coverage"))
+    for (field in c("Evs_af_aa","Evs_af_ea","Evs_af_all","Af_1000g","Gnomad_af_es","Gnomad_af_gs",
+                    "Max_af","Gnomad_ac_gs","Gnomad_ac_es","Gnomad_hom_gs","Gnomad_hom_es","Trio_coverage"))
     {
         variants[,field] = with(variants,gsub("-1","0",get(field),fixed=T))
         variants[,field] = with(variants,gsub("None","0",get(field),fixed=T))
@@ -357,9 +358,9 @@ select_and_write2 = function(variants,samples,prefix)
                           paste0("Alt_depths.",samples),
                           c("Trio_coverage","Ensembl_gene_id","Gene_description","Omim_gene_description","Omim_inheritance",
                             "Orphanet", "Clinvar","Ensembl_transcript_id","AA_position","Exon","Protein_domains",
-                            "Frequency_in_C4R","Seen_in_C4R_samples","rsIDs","Maf_1000g","EVS_maf_aa","EVS_maf_ea","EVS_maf_all",
-                            "Gnomad_maf_es","Gnomad_maf_gs","Maf_all","Gnomad_ac_gs",
-                            "Exac_het","Gnomad_hom_gs","Exac_pLi_score","Exac_missense_score",
+                            "Frequency_in_C4R","Seen_in_C4R_samples","rsIDs","Af_1000g","Evs_af_aa","Evs_af_ea","Evs_af_all",
+                            "Gnomad_af_es","Gnomad_af_gs","Max_af","Gnomad_ac_gs",
+                            "Gnomad_ac_es","Gnomad_hom_gs","Gnomad_hom_es","Exac_pLi_score","Exac_missense_score",
                             "Conserved_in_20_mammals","Sift_score","Polyphen_score","Cadd_score",
                             "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing",
                             "Number_of_callers"))]
