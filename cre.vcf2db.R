@@ -51,7 +51,12 @@ create_report = function(family,samples)
 {
     file = paste0(family,".variants.txt")
     variants = get_variants_from_file(file)
-
+    
+    #temporarily due to https://github.com/quinlan-lab/vcf2db/issues/48
+    transcripts_genes = read.csv("~/cre/data/genes.transcripts.csv")
+    variants$Ensembl_gene_id=NULL
+    variants = merge(variants,transcripts_genes,by.x='Ensembl_transcript_id',by.y="Ensembl_transcript_id",all.x=T)
+    
     #Column1 - Position
     variants$Position=with(variants,paste(Chrom,Pos,sep=':'))
     
@@ -111,20 +116,28 @@ create_report = function(family,samples)
         #debug: i=1  
         v_id = variants[i,"Variant_id"]
         gene = variants[i,"Gene"]
-        gene_impacts = subset(impacts,variant_id==v_id,select=c("exon","hgvsc","hgvsp"))
+        gene_impacts = subset(impacts, variant_id==v_id & is_coding == 1,select=c("exon","hgvsc","hgvsp"))
         gene_impacts$gene = rep(gene,nrow(gene_impacts))
         
         gene_impacts$exon[gene_impacts$exon=='']='NA'
         
         gene_impacts = gene_impacts[c("gene","exon","hgvsc","hgvsp")]
         
-        v_impacts = paste0(gene_impacts$gene,":exon",gene_impacts$exon,":",gene_impacts$vep_hgvsc,":",gene_impacts$vep_hgvsp)
-        s_impacts = paste(v_impacts,collapse=",")
+        if (nrow(gene_impacts)>0)
+        {
+            v_impacts = paste0(gene_impacts$gene,":exon",gene_impacts$exon,":",gene_impacts$hgvsc,":",gene_impacts$hgvsp)
+            s_impacts = paste(v_impacts,collapse=",")
+        }
+        else
+        {
+            s_impacts = 'NA'    
+        }
       
         variants[i,"Info"] = s_impacts
     }
     
     # Column12 = Protein_change_ensembl
+    variants$Protein_change_ensembl[variants$Protein_change_ensembl=='']='NA'
     
     # Column13 - Protein_change_refseq
     variants = add_placeholder(variants,"Protein_change_refseq","NA")
