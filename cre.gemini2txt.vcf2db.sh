@@ -85,7 +85,8 @@ fi
 #max_aaf_all frequency is from gemini.conf and does not include gnomad WGS frequencing, gnomad WES only
 #gnomad_af includes gnomad WGS
 sQuery=$sQuery"hgvsc as Nucleotide_change_ensembl,\
-		hgvsp as Protein_change_ensembl \
+		hgvsp as Protein_change_ensembl,\
+        old_multiallelic as Old_multiallelic
 		from variants \
         where \
 	        (dp >= "$depth_threshold" or dp = '' or dp is null) "$severity_filter" and max_af < 0.01"

@@ -199,14 +199,14 @@ create_report = function(family,samples)
     }
         
     # Column21 - Omim_inheritance 
-    omim_inheritance_file_name = paste0(default_tables_path,"/omim_inheritance.txt")
-    omim_inheritance_file_name_local = paste0(reference_tables_path,"/omim_inheritance.txt")
+    omim_inheritance_file_name = paste0(default_tables_path,"/omim.inheritance.csv")
+    omim_inheritance_file_name_local = paste0(reference_tables_path,"/omim.inheritance.csv")
     
     if (file.exists(omim_inheritance_file_name_local)) omim_inheritance_file_name = omim_inheritance_file_name_local
     
     if (file.exists(omim_inheritance_file_name))
     {
-	    omim_inheritance = read.csv(omim_inheritance_file_name, sep="",stringsAsFactors = F)
+	    omim_inheritance = read.csv(omim_inheritance_file_name,stringsAsFactors = F)
 	    variants = merge(variants,omim_inheritance,all.x=T)
     }
 
@@ -400,7 +400,7 @@ merge_reports = function(family,samples)
     for (i in 1:nrow(ensemble))
     {
         v_impacts = strsplit(ensemble[i,"Info"],",",fixed=T)[[1]]
-	      for (impact in v_impacts)
+	    for (impact in v_impacts)
         {
             if (grepl(":NP_",impact,fixed = T))
             {
@@ -415,7 +415,7 @@ merge_reports = function(family,samples)
     if (file.exists(ensemble_table_file))
     {
         ensemble_table = read.delim(ensemble_table_file,stringsAsFactors = F)
-        ensemble_table$superindex=with(ensemble_table,paste(paste0("chr",CHROM,":",POS),REF,ALT,sep='-'))
+        ensemble_table$superindex=with(ensemble_table,paste(paste0(CHROM,":",POS),REF,ALT,sep='-'))
         ensemble_table[c("CHROM","POS","REF","ALT")]=NULL
         for (i in 1:nrow(ensemble_table))
         {
@@ -439,7 +439,7 @@ merge_reports = function(family,samples)
     if (file.exists(gatk_file))
     {
         gatk = read.delim(gatk_file, stringsAsFactors=F)
-        gatk$superindex=with(gatk,paste(paste0("chr",CHROM,":",POS),REF,ALT,sep='-'))
+        gatk$superindex=with(gatk,paste(paste0(CHROM,":",POS),REF,ALT,sep='-'))
         gatk[c("CHROM","POS","REF","ALT")]=NULL
     
         ensemble = merge(ensemble,gatk,by.x = "superindex", by.y="superindex",all.x = T,all.y=F)
@@ -494,7 +494,7 @@ merge_reports = function(family,samples)
     if(file.exists(freebayes_file))
     {
         freebayes = read.delim(freebayes_file, stringsAsFactors=F)
-        freebayes$superindex=with(freebayes,paste(paste0("chr",CHROM,":",POS),REF,ALT,sep='-'))
+        freebayes$superindex=with(freebayes,paste(paste0(CHROM,":",POS),REF,ALT,sep='-'))
         freebayes[c("CHROM","POS","REF","ALT")]=NULL
         ensemble = merge(ensemble,freebayes,by.x = "superindex", by.y="superindex",all.x = T,all.y=F)
     
@@ -539,7 +539,7 @@ merge_reports = function(family,samples)
     if(file.exists(platypus_file))
     {
         platypus = read.delim(platypus_file, stringsAsFactors=F)
-        platypus$superindex=with(platypus,paste(paste0("chr",CHROM,":",POS),REF,ALT,sep='-'))
+        platypus$superindex=with(platypus,paste(paste0(CHROM,":",POS),REF,ALT,sep='-'))
         platypus[c("CHROM","POS","REF","ALT")]=NULL
         ensemble = merge(ensemble,platypus,by.x = "superindex", by.y="superindex", all.x = T, all.y = F)
     
@@ -586,7 +586,7 @@ merge_reports = function(family,samples)
     if(file.exists(samtools_file))
     {
         samtools = read.delim(samtools_file, stringsAsFactors=F)
-        samtools$superindex=with(samtools,paste(paste0("chr",CHROM,":",POS),REF,ALT,sep='-'))
+        samtools$superindex=with(samtools,paste(paste0(CHROM,":",POS),REF,ALT,sep='-'))
         samtools[c("CHROM","POS","REF","ALT")]=NULL
         ensemble = merge(ensemble,samtools,by.x = "superindex", by.y="superindex",all.x = T, all.y=F)
       
@@ -661,7 +661,7 @@ library(stringr)
 library(data.table)
 library(plyr)
 
-default_tables_path="~/cre"
+default_tables_path="~/cre/data"
 reference_tables_path = "~/Desktop/reference_tables"
 
 #load c4r information
