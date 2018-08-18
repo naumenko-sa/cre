@@ -325,6 +325,9 @@ create_report = function(family,samples)
     # Column 52: number of callers
     variants = add_placeholder(variants,"Number_of_callers","Number_of_callers")
     
+    # Column 53: Old multiallelic
+    variants$Old_multiallelic[variants$Old_multiallelic=="None"]="NA"
+        
     # replace -1 with 0
     for (field in c("Evs_af_aa","Evs_af_ea","Evs_af_all","Af_1000g","Gnomad_af_es","Gnomad_af_gs",
                     "Max_af","Gnomad_ac_gs","Gnomad_ac_es","Gnomad_hom_gs","Gnomad_hom_es","Trio_coverage"))
@@ -376,7 +379,7 @@ select_and_write2 = function(variants,samples,prefix)
                             "Gnomad_ac_es","Gnomad_hom_gs","Gnomad_hom_es","Exac_pLi_score","Exac_missense_score",
                             "Conserved_in_20_mammals","Sift_score","Polyphen_score","Cadd_score",
                             "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing",
-                            "Number_of_callers"))]
+                            "Number_of_callers","Old_multiallelic"))]
   
     write.csv(variants,paste0(prefix,".csv"),row.names = F)
 }

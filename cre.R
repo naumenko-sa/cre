@@ -638,12 +638,12 @@ default_tables_path="~/cre"
 reference_tables_path = "~/Desktop/reference_tables"
 
 #load c4r information
-seen_in_c4r_counts.txt = paste0(reference_tables_path,"/seen_in_c4r_counts.txt")
+seen_in_c4r_counts.txt = paste0(reference_tables_path,"/seen_in_c4r_counts.txt.chr")
 if (file.exists(seen_in_c4r_counts.txt))
 {
     seen_in_c4r_counts = read.delim(seen_in_c4r_counts.txt, stringsAsFactors=F)
 }
-seen_in_c4r_samples.txt = paste0(reference_tables_path,"/seen_in_c4r_samples.txt")
+seen_in_c4r_samples.txt = paste0(reference_tables_path,"/seen_in_c4r_samples.txt.chr")
 if (file.exists(seen_in_c4r_samples.txt))
 {
     seen_in_c4r_samples = read.delim(seen_in_c4r_samples.txt, stringsAsFactors=F)

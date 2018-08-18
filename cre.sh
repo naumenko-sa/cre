@@ -123,9 +123,9 @@ function f_make_report
     # and just a rare one in the excel report
     if [ "$type" == "vcf2db" ]
     then
-	cat $family.variants.txt | cut -f 25,26 | sed 1d | sed s/chr// | sort -k1,1 -k2,2n > ${family}-ensemble.db.txt.positions
+        cat $family.variants.txt | cut -f 26,27 | sed 1d | sed s/chr// | sort -k1,1 -k2,2n > ${family}-ensemble.db.txt.positions
     else
-	cat ${family}-ensemble.db.txt | cut -f 23,24  | sed 1d | sed s/chr// | sort -k1,1 -k2,2n > ${family}-ensemble.db.txt.positions
+        cat ${family}-ensemble.db.txt | cut -f 23,24  | sed 1d | sed s/chr// | sort -k1,1 -k2,2n > ${family}-ensemble.db.txt.positions
     fi
 
     # this may produce duplicate records if two positions from positions file overlap with a variant 
