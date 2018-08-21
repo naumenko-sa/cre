@@ -1,0 +1,10 @@
+#PED format pedigree
+#
+#fam-id/ind-id/pat-id/mat-id: 0=unknown
+#sex: 1=male; 2=female; 0=unknown
+#phenotype: -9=missing, 0=missing; 1=unaffected; 2=affected
+#
+#fam-id ind-id  pat-id  mat-id  sex     phen
+1       NA12878 NA12891 NA12892 2       0 
+1       NA12891 0       0       1       0
+1       NA12892 0       0       2       0

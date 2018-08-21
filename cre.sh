@@ -10,8 +10,9 @@
 # 	family = [family_id] (=project=case=folder_name,main result file should be family-ensemble.db,=project)
 # 	cleanup= [0|1] default = 0
 # 	make_report=[0|1] default = 1
-# 	type = [ wes.regular (default) | wes.synonymous | wes.fast | rnaseq | wgs | vcf2db (new wes/wgs report with gemini loaded by vcf2db)]
+# 	type = [ wes.regular (default) | wes.synonymous | wes.fast | rnaseq | wgs ]
 #	max_af = af filter, default = 0.01
+#	loader [ default = gemini | vcf2db ] - load used to create gemini database
 ####################################################################################################
 
 #PBS -l walltime=20:00:00,nodes=1:ppn=1
@@ -105,13 +106,13 @@ function f_make_report
 	export severity_filter=HIGHMED
     fi
 
-    if [ "$type" == "vcf2db" ]
+    if [ "$loader" == "vcf2db" ]
     then
-	cre.gemini2txt.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter > $family.variants.txt
-	cre.gemini.variant_impacts.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter > $family.variant_impacts.txt
+	cre.gemini2txt.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variants.txt
+	cre.gemini.variant_impacts.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variant_impacts.txt
     else
 	cre.gemini2txt.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af
-	cre.gemini_variant_impacts.sh ${family}-ensemble.db $depth_threshold $severity_filter $maf_af
+	cre.gemini_variant_impacts.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af
     fi
 
     for f in *.vcf.gz;
@@ -122,7 +123,7 @@ function f_make_report
     # report filtered vcf for import in phenotips
     # note that if there is a multiallelic SNP, with one rare allele and one frequent one, both will be reported in the VCF,
     # and just a rare one in the excel report
-    if [ "$type" == "vcf2db" ]
+    if [ "$loader" == "vcf2db" ]
     then
         cat $family.variants.txt | cut -f 26,27 | sed 1d | sed s/chr// | sort -k1,1 -k2,2n > ${family}-ensemble.db.txt.positions
     else
@@ -168,7 +169,7 @@ function f_make_report
     cd ..
 
     # using Rscript from bcbio
-    if [ "$type" == "vcf2db" ]
+    if [ "$loader" == "vcf2db" ]
     then
 	Rscript ~/cre/cre.vcf2db.R $family
     else

@@ -89,7 +89,7 @@ sQuery=$sQuery"hgvsc as Nucleotide_change_ensembl,\
         old_multiallelic as Old_multiallelic
 		from variants \
         where \
-	        (dp >= "$depth_threshold" or dp = '' or dp is null) "$severity_filter" and max_af < 0.01"
+	        (dp >= "$depth_threshold" or dp = '' or dp is null) "$severity_filter" and max_af <= "$max_af
 
 #echo $sQuery
 
