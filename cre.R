@@ -166,7 +166,7 @@ create_report = function(family,samples)
     # Column 17 - Ensembl_gene_id
 
     # Column 18 - Gene_description
-    gene_descriptions = read.delim2(paste0(default_tables_path,"/ensembl_w_description.txt"), stringsAsFactors=F)
+    gene_descriptions = read.delim2(paste0(default_tables_path,"/data/ensembl_w_description.txt"), stringsAsFactors=F)
     variants = merge(variants,gene_descriptions,by.x = "Ensembl_gene_id",by.y = "ensembl_gene_id",all.x=T)
     
     # Column 19 - Omim_gene_description - from omim text file
@@ -234,7 +234,7 @@ create_report = function(family,samples)
     # Columns 30-35 - population frequencies
 
     # Columns 36-37, Exac scores
-    exac_scores_file = paste0(default_tables_path,"/exac_scores.txt")
+    exac_scores_file = paste0(default_tables_path,"/data/exac_scores.txt")
     exac_scores = read.delim(exac_scores_file, stringsAsFactors=F)
     variants = merge(variants,exac_scores,all.x=T)
 
@@ -251,12 +251,12 @@ create_report = function(family,samples)
 
     
     # Columns 44,45 - imprinting
-    imprinting_file_name = paste0(default_tables_path,"/imprinting.txt")
+    imprinting_file_name = paste0(default_tables_path,"/data/imprinting.txt")
     imprinting = read.delim(imprinting_file_name, stringsAsFactors=F)
     variants = merge(variants,imprinting,all.x=T)
     
     # Column 46 - pseudoautosomal
-    pseudoautosomal_file_name = paste0(default_tables_path,"/pseudoautosomal.txt")
+    pseudoautosomal_file_name = paste0(default_tables_path,"/data/pseudoautosomal.txt")
     pseudoautosomal = read.delim(pseudoautosomal_file_name, stringsAsFactors=F)
     variants = merge(variants,pseudoautosomal,all.x=T)
     

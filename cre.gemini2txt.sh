@@ -83,7 +83,7 @@ sQuery=$sQuery"v.vep_hgvsc as Nucleotide_change_ensembl,
 	        where 
 	        v.transcript=g.transcript and 
 	        (v.gene=g.gene or g.gene is NULL) "$severity_filter" and 
-	        v.max_aaf_all < 0.01 and 
+	        v.max_aaf_all <= "$max_af" and 
 	        (v.depth >= "$depth_threshold" or v.depth = '' or v.depth is null)"
 
 echo $sQuery

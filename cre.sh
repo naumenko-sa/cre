@@ -11,6 +11,7 @@
 # 	cleanup= [0|1] default = 0
 # 	make_report=[0|1] default = 1
 # 	type = [ wes.regular (default) | wes.synonymous | wes.fast | rnaseq | wgs | vcf2db (new wes/wgs report with gemini loaded by vcf2db)]
+#	max_af = af filter, default = 0.01
 ####################################################################################################
 
 #PBS -l walltime=20:00:00,nodes=1:ppn=1
@@ -109,8 +110,8 @@ function f_make_report
 	cre.gemini2txt.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter > $family.variants.txt
 	cre.gemini.variant_impacts.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter > $family.variant_impacts.txt
     else
-	cre.gemini2txt.sh ${family}-ensemble.db $depth_threshold $severity_filter
-	cre.gemini_variant_impacts.sh ${family}-ensemble.db $depth_threshold $severity_filter
+	cre.gemini2txt.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af
+	cre.gemini_variant_impacts.sh ${family}-ensemble.db $depth_threshold $severity_filter $maf_af
     fi
 
     for f in *.vcf.gz;
@@ -125,7 +126,7 @@ function f_make_report
     then
         cat $family.variants.txt | cut -f 26,27 | sed 1d | sed s/chr// | sort -k1,1 -k2,2n > ${family}-ensemble.db.txt.positions
     else
-        cat ${family}-ensemble.db.txt | cut -f 23,24  | sed 1d | sed s/chr// | sort -k1,1 -k2,2n > ${family}-ensemble.db.txt.positions
+        cat ${family}-ensemble.db.txt | cut -f 24,25  | sed 1d | sed s/chr// | sort -k1,1 -k2,2n > ${family}-ensemble.db.txt.positions
     fi
 
     # this may produce duplicate records if two positions from positions file overlap with a variant 
@@ -220,6 +221,12 @@ if [ -z $make_report ]
 then
     make_report=1
 fi 
+
+if [ -z $max_af ]
+then
+    max_af=0.01
+fi
+export max_af
 
 if [ $make_report -eq 1 ]
 then
