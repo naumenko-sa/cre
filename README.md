@@ -1,7 +1,7 @@
 # cre
 Excel variant report generator and scripts to process WES data (cram/bam/fastq -> variant calls -> annotated variant calls -> prioritized variants -> excel report). Uses results from [bcbio variant2](https://bcbio-nextgen.readthedocs.io/en/latest/contents/pipelines.html#germline-variant-calling) germline variant calling pipeline.
 
-# 0. Prerequisites
+# 0. Installation
 
   1. Install **Bcbio**.
 
@@ -9,11 +9,11 @@ Excel variant report generator and scripts to process WES data (cram/bam/fastq -
   
   2. Clone **cre** to ~/cre and add it to PATH.  
   3. Install R and packages: stringr,data.table,plyr.
-  4. (Optional) Install OMIM.
+  4. (Optional) Install/update OMIM.
 
   By default CRE uses [cre/data/omim.txt](../master/data/omim.txt) and [cre/data/omim.inheritance.csv](../master/data/omim.inheritance.csv).
 
-  * Goto https://omim.org/downloads/ and request the latest database. It makes sense to renew it once a year.
+  * Goto https://omim.org/downloads/ and request the latest database.
   * In a couple of days you will receive: genemap2.txt, genemap.txt, mim2gene.txt, mimTitles.percent.txt, mimTitles.txt, morbidmap.txt. 
   * Preprocess OMIM with [cre.omim.sh](../master/cre.omim.sh). 
   ```
@@ -24,90 +24,66 @@ Excel variant report generator and scripts to process WES data (cram/bam/fastq -
     
     * I recommend using improved inheritance table from [https://www.cs.toronto.edu/~buske/cheo/](https://www.cs.toronto.edu/~buske/cheo/). Download the second file with inheritance mappings. It references genes by gene name (symbol) rather than by Ensembl_id which is a requirement for CRE. Most gene names (symbols) could be mapped automatically with Ensembl biomart [genes.R](https://github.com/naumenko-sa/bioscripts/blob/master/genes.R), but some genes (not many) might need manual curation to assign the correct ENSEMBL_ID.
 
-  5. (Optional) Install Orphanet.
+  5. (Optional) Install/update Orphanet.
 ```
     cd ~/cre/data
     wget http://www.orphadata.org/data/xml/en_product6.xml
     cre.orphanet.sh
 ```
   Orphanet provides descriptions for ~3600 genes:. By default CRE uses [orphanet.txt](../master/data/orphanet.txt)
-  6. (Optional), for now uses old scores from ~/cre/exac_scores.txt] Install EXaC scores.
-  7. (Optional), for now uses old table from ~/cre/imprinting.txt] Install imprinting annotation.
+
+  6. (Optional) Install Gene-level Exac scores.
+
+  By default using [~/cre/data/exac_scores.txt](../master/data/exac_scores.txt)
+  
+  7. (Optional) Install impriting annotation.
+  By default using [~/cre/data/imprinting.txt](../master/data/imprinting.txt).
 
 
-If you already have bcbio project results, you may start from step 3. However, note that resulting file names
-may have changed in bcbio since you had run the project, and cre follows the latest naming scheme, like project-ensemble-annotated-decomposed.vcf.gz.
+# 1. Creating bcbio project
 
-# 1. Create a project (projects) to run with bcbio.
+* Prepare input files: family_sample_1.fq.gz, family_sample_2.fq.gz, or family_sample.bam and place them into family/input folder.
+* There might be many samples in a family(project).
+* TEST: NIST Ashkenazim trio: ftp://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/data/AshkenazimTrio (download OsloUniversityHospital exomes).
+* run [cre.prepare_bcbio_run.sh](../master/cre.prepare_bcbio_run.sh) [family].
 
-## 1a. If you start with a cohort of samples/families.
-Suppose you have a cohort of trios and individual samples, each sample represented by a bam file.
-Then create a file table.txt where each line is sample_name[tab]family_name[tab]file.bam, i.e.
-```
-Ashkenazim_HG002	Ashkenazim	/data/Ashkenazim_HG002.bam
-Ashkenazim_HG003	Ashkenazim	/data/Ashkenazim_HG003.bam
-Ashkenazim_HG004	Ashkenazim	/data/Ashkenazim_HG004.bam
-CH0517	1004	/somewhere/1004_CH0517.bam
-CH0518	1004	/somewhere/1004_CH0518.bam
-CH0519	1004	/somewhere/1004_CH0519.bam
-CH0133	1013	/somewhere/1013_CH0133.bam
-CH0135	1013	/somewhere/1013_CH0135.bam
-CH0136	1013	/somewhere/1013_CH0136.bam
-```
-
-Then run [bcbio.prepare_families.sh](../master/bcbio.prepare_families.sh) [table.txt] 
-or use qsub, if you have a large cohort:
-```
-qsub ~/cre/bcbio.prepare_families.sh	-v project_list=table.txt
-```
-
-The script will prepare a folder for each project(family) using [bcbio.templates.wes.yaml](../master/bcbio.templates.wes.yaml) template.
-Using this template is important, because later the report will be produced from 4 callers.
-
-The details of the template:
-* 4 callers, the order is important, because variant metrics in ensemble calling (like AD) are picked up from the first caller in the list first
-* ensemble calling
-* realignment and recalibration. I know that there is no much sense in it for precision/sensitivity, but people are still asking for realignment and recalibration.
-* no bed file. Let callers call every variant which has coverage, we will filter poorly covered variants later. Modern exome capture kits are so perfect, that
+By default it uses [bcbio.templates.wes.yaml](../master/bcbio.templates.wes.yaml) config with following features:
+  * 4 callers, the order is important, because variant metrics in ensemble calling (like AD) are picked up from the first caller in the list (gatk)
+  * ensemble calling
+  * realignment and recalibration. There is no much gain in precision/sensitivity with RR, but to make bam files consistent with other projects it is on here. Actually, realignment helps samtools to call indels better.
+  * no bed file. Let callers call every variant which has coverage, we will filter poorly covered variants later. Modern exome capture kits are so perfect, that
 we can discover a useful non-coding variant. No sense to filter them out during that stage.
-* effects: VEP. There is a holywar VEP/snpEff/Annovar. My choice is VEP. You will see later both Ensembl and Refseq in the report, so no reason for using Annovar.
-* effects_transcripts: all. We want all effects of a variant on all transcripts to be reported.
-* aligner: bwa. Even staring with bam files, bwa is used. Sometimes input bam files aligned against older reference, or different (chr) naming scheme. It is better to have a bam file consistent with calls made.
+  * effects: VEP. There is a holywar VEP/snpEff/Annovar. My choice is VEP. You will see later both Ensembl and Refseq in the report, so no reason for using Annovar.
+  * effects_transcripts: all. We want all effects of a variant on all transcripts to be reported.
+  * aligner: bwa. Even staring with bam files, bwa is used. Sometimes input bam files aligned against older reference, or different (chr) naming scheme. It is better to have a bam file consistent with calls made.
+  * custom annotation [cre.vcfanno.conf](../master/cre.vcfanno.conf) using data sources installed in bcbio.
+  * creates gemini database with vcf2db
 
-## 1b. If you start with a single sample/family.
-Supporse you have fastq files or bam files for a single sample/single family. You may try NIST Ashkenazim trio: ftp://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/data/AshkenazimTrio (download OsloUniversityHospital exomes).
-* Rename fastq files in the format family_sample_1.fq.gz, family_sample_2.fq.gz, or family_sample.bam and place them into family/input folder.
-* run [cre.prepare_bcbio_run.sh](../master/cre.prepare_bcbio_run.sh) [family] [no_align]. By default, it uses the template with alignment, if you set $2, it will use another template - without alignment,
-calling only.
+## 1a. Input files are in Illumina basespace.
+* use basespace-cli to dump bcl files to HPC, then do 1b.
 
-## 1c. If you start with Illumina basespace.
-* use basespace-cli to dump bcl files to HPF.
+## 1b. Input is Illumina run (bcl files).
+* create a sample sheet and run [bcl2fq.sh](../master/bcl2fq.sh).
 
-## 1d. If you start with bcl files.
-* create a samples sheet and run [bcl2fq.sh](../master/bcl2fq.sh).
+## 1c. Input is cram file.
+* Run [cram2fq.sh](../master/cram2.fq). 
+* I would suggest to avoid crams when possible. A damaged bam file could be recovered with [cre.bam_recovery.sh](../master/cre.bam_recovery.sh), but nothing could be done for cram.
 
-# 2. Run bcbio
+# 2. Running bcbio
 
-It really depends on your HPC job management system and policies. Our HPC uses torque. It is possible to run jobs from bcbio (it automatically submits jobs to the queue,
-and then those jobs communicate with each other via network). I've tried this (parallel execution) for some time. I was stuck with some problems, maybe HPC-related.
-So I decided to keep it simple, and to run one multicore job for one node per family(project) using torque.
-
-To run one project: [bcbio.pbs](../master/bcbio.pbs):
+* Running a single project
 ```
-cd [project_name]/work
-qsub ~/cre/bcbio.pbs -v project=[project_name],[threads=[number_of_threads]]
+qsub ~/cre/bcbio.pbs -v project=[project_name]
 ```
 Project should have a folder project_name in the current directory.
 
-To run many project (N) as job array: [bcbio.array.pbs](../master.bcbio.array.pbs) - requires projects.txt (list of project=list of folders)
-in the current directory and folders for projects.
+* Running multiple projects
 ```
 qsub -t 1-N ~/cre/bcbio.array.pbs
 ```
-Use a number instead of N, i.e. 100. I'm using 5 cores x 50G of RAM per project. It is HPC-specific. Our policies encourage submitting small jobs.
-I can wait for 2-5 days for a project when working with cohorts. Faster processing is possible using more memory and cores, or with bcbio parallel execution.
+Current directory should have a list of projects in projects.txt.
 
-# 3.clean project directory  and create family.csv report for import to excel
+# 3.clean project directory  and create project.csv report
 [cre.sh](../master/cre.sh) [family]
 or 
 ```
@@ -119,19 +95,6 @@ If you want to do one of those steps:
 qsub cre.sh -v family=[family],cleanup=0,make_report=1
 ```
 
-If you run a large cohort, some families maybe finished while some are still running.
-To delete unnecessary filed, cleanup finished projects:
-```
-mkdir ready4report
-for f in `cat all_dirs.txt`;do if [ -d ${f}/final/ ];then mv $f ready4report/;fi;done;
-
-```
-And then run cre for them:
-```
-cd ready4report
-ls | grep -v projects.txt > projects.txt
-for f in `cat projects.txt`;do qsub ~/cre/cre.sh -v family=$f;done;
-```
 
 What it does.
 During the cleanup step:
@@ -214,6 +177,6 @@ vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 
 This work was inspired by 
 * [bcbio](https://github.com/chapmanb/bcbio-nextgen/) and [gemini](https://github.com/arq5x/gemini) teams. Thank you all!
-* Kristin Kernohan from Children Hospital of Eastern Ontario (CHEO), who generated most ideas about the report contents. Thank you, Kristin, for all of the discussions!
+* Kristin Kernohan from Children's Hospital of Eastern Ontario (CHEO), who generated most ideas about the report contents. Thank you, Kristin, for all of the discussions!
 
 Thank you colleagues at [CCM](https://ccm.sickkids.ca/), for seminars and personal discussions.
