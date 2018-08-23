@@ -11,15 +11,17 @@ Excel variant report generator and scripts to process WES data (cram/bam/fastq -
   3. Install R and packages: stringr,data.table,plyr.
   4. (Optional) Install/update OMIM.
 
-  By default CRE uses [cre/data/omim.txt](../master/data/omim.txt) and [cre/data/omim.inheritance.csv](../master/data/omim.inheritance.csv).
+    By default CRE uses [cre/data/omim.txt](../master/data/omim.txt) and [cre/data/omim.inheritance.csv](../master/data/omim.inheritance.csv).
 
   * Goto https://omim.org/downloads/ and request the latest database.
   * In a couple of days you will receive: genemap2.txt, genemap.txt, mim2gene.txt, mimTitles.percent.txt, mimTitles.txt, morbidmap.txt. 
   * Preprocess OMIM with [cre.omim.sh](../master/cre.omim.sh). 
+  
   ```
       cd OMIM_DIR
       ~/cre/omim.sh
   ```
+  
     It creates two tables: omim.txt with omim description of diseases related to 3700 genes, and omim_inheritance.txt with inheritance modes for genes in OMIM. 
     
     * I recommend using improved inheritance table from [https://www.cs.toronto.edu/~buske/cheo/](https://www.cs.toronto.edu/~buske/cheo/). Download the second file with inheritance mappings. It references genes by gene name (symbol) rather than by Ensembl_id which is a requirement for CRE. Most gene names (symbols) could be mapped automatically with Ensembl biomart [genes.R](https://github.com/naumenko-sa/bioscripts/blob/master/genes.R), but some genes (not many) might need manual curation to assign the correct ENSEMBL_ID.
