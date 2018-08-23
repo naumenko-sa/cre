@@ -3,8 +3,9 @@ Excel variant report generator and scripts to process WES data (cram/bam/fastq -
 
 # 0. Prerequisites
 
-## a * Install **Bcbio** (HPC or server) and add it to PATH. bcbio installs many other useful tools and datasets through bioconda and cloudbiolinux.
-* Clone **cre** to ~/cre and add it to the PATH (HPC).
+##1) Install **Bcbio**.
+Use HPC or server. Add bcbio PATH. bcbio installs many other useful tools and datasets through bioconda and cloudbiolinux.
+##2) Clone **cre** to ~/cre and add it to PATH (HPC).
 * Install R and packages: stringr,data.table,plyr (HPC or laptop, if you'd like to use it for the report generation).
 * Install OMIM (HPC or laptop).
   * Goto https://omim.org/downloads/ and request the latest database. It makes sense to renew it once a year.
