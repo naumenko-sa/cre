@@ -85,31 +85,25 @@ qsub -t 1-N ~/cre/bcbio.array.pbs
 ```
 Current directory should have a list of projects in projects.txt.
 
-# 3.clean project directory  and create project.csv report
-[cre.sh](../master/cre.sh) [family]
-or 
-```
-qsub cre.sh -v family=[family]
-```
+# 3.Cleaning project directory and creating project.csv report
+[cre.sh](../master/cre.sh) [family] or qsub cre.sh -v family=[family]```
+
 by default it does both cleanup and make_report steps.
 If you want to do one of those steps:
 ```
 qsub cre.sh -v family=[family],cleanup=0,make_report=1
 ```
+  During the cleanup step:
+  * moves project results and sample bam files to family dir
+  * removes work and final dirs from bcbio project
+  * removes gemini databases for individual callers (we need only ensemble gemini database)
 
-
-What it does.
-During the cleanup step:
-* moves project results and sample bam files to family dir
-* removes work and final dirs from bcbio project
-* removes gemini databases for individual callers (we need only ensemble gemini database)
-
-During the report generation step:
-* dumps variants from gemini database to tab text file
-* dumps variant impacts from gemini database to tab text file
-* annotates variants with refseq in addition to ensembl
-* gets coverage from GATK Haplotype calls, freebayes, and platypus
-* build excel report based on gemini variants table, variant impacts, coverage information and some other fields.
+  During the report generation step:
+  * dumps variants from gemini database to tab text file
+  * dumps variant impacts from gemini database to tab text file
+  * annotates variants with refseq in addition to ensembl
+  * gets coverage from GATK Haplotype calls, freebayes, and platypus
+  * build excel report based on gemini variants table, variant impacts, coverage information and some other fields.
 
 # 4. Step 3 in detail
 

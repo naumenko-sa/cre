@@ -4,10 +4,9 @@
 #   keeps only important files from bcbio run: qc, vcf, gemini, bam
 #   creates csv report for small variants
 #   keeps bam files for new samples
-#   generates report
 
 #   parameters:
-# 	family = [family_id] (=project=case=folder_name,main result file should be family-ensemble.db,=project)
+# 	family = [family_id] (=project_id=case_id=folder_name, main result file should be family/family-ensemble.db)
 # 	cleanup= [0|1] default = 0
 # 	make_report=[0|1] default = 1
 # 	type = [ wes.regular (default) | wes.synonymous | wes.fast | rnaseq | wgs ]
@@ -95,24 +94,25 @@ function f_make_report
 
     if [ "$type" == "rnaseq" ]
     then
-	export depth_threshold=5
-	export severity_filter=ALL
-    elif [ "$type" == "wes.synonymous" ] || [ "$type" == "wgs" ]
-    then
-	export depth_threshold=10
-	export severity_filter=ALL
+	   export depth_threshold=5
     else
-	export depth_threshold=10
-	export severity_filter=HIGHMED
+       export depth_threshold=10
+    fi
+
+	if [ "$type" == "wes.synonymous" ] || [ "$type" == "wgs" ]
+    then
+	   export severity_filter=ALL
+    else
+	   export severity_filter=HIGHMED
     fi
 
     if [ "$loader" == "vcf2db" ]
     then
-	cre.gemini2txt.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variants.txt
-	cre.gemini.variant_impacts.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variant_impacts.txt
+	   cre.gemini2txt.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variants.txt
+	   cre.gemini.variant_impacts.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variant_impacts.txt
     else
-	cre.gemini2txt.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af
-	cre.gemini_variant_impacts.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af
+	   cre.gemini2txt.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af
+	   cre.gemini_variant_impacts.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af
     fi
 
     for f in *.vcf.gz;

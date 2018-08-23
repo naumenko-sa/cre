@@ -49,7 +49,7 @@ sQuery="select \
 	i.ccds,\
 	i.hgvsc,\
 	i.hgvsp,\
-	i.source,\
+	v.source,\
 	i.lof,\
 	i.lof_info"
 
