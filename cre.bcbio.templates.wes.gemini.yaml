@@ -11,7 +11,6 @@ details:
     mark_duplicates: true
     save_diskspace: true
     tools_on:
-    - gemini
     - svplots
     - qualimap
     - vep_splicesite_annotations
@@ -23,8 +22,6 @@ details:
     - samtools
     - platypus
     - freebayes
-    vcfanno:
-    - /home/naumenko/cre/cre.vcfanno.conf
   analysis: variant2
   description: '912R_A337376'
   files:

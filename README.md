@@ -1,15 +1,9 @@
 # cre
-An excel report generator and accompanying scripts to process WES for clinical research in Mendelian diseases. Uses results from [bcbio variant2](https://bcbio-nextgen.readthedocs.io/en/latest/contents/pipelines.html#germline-variant-calling) 
-germline variant calling pipeline.
+Excel variant report generator and scripts to process WES data (cram/bam/fastq -> variant calls -> annotated variant calls -> prioritized variants -> excel report). Uses results from [bcbio variant2](https://bcbio-nextgen.readthedocs.io/en/latest/contents/pipelines.html#germline-variant-calling) germline variant calling pipeline.
 
-#-1. TODO
-* do all additional annotations with vcfanno
-* no need in gemini db - now bcbio makes all gemini annotations with vcfanno
+# 0. Prerequisites
 
-# 0. Prerequisites and credits
-
-## 0.1 Prerequisites
-* Install **Bcbio** (HPC or server) and add it to the PATH. bcbio installs many other useful tools through bionconda.
+## a * Install **Bcbio** (HPC or server) and add it to PATH. bcbio installs many other useful tools and datasets through bioconda and cloudbiolinux.
 * Clone **cre** to ~/cre and add it to the PATH (HPC).
 * Install R and packages: stringr,data.table,plyr (HPC or laptop, if you'd like to use it for the report generation).
 * Install OMIM (HPC or laptop).
@@ -39,14 +33,6 @@ germline variant calling pipeline.
 
 If you already have bcbio project results, you may start from step 3. However, note that resulting file names
 may have changed in bcbio since you had run the project, and cre follows the latest naming scheme, like project-ensemble-annotated-decomposed.vcf.gz.
-
-## 0.2 Credits
-
-This work was inspired by 
-* [bcbio](https://github.com/chapmanb/bcbio-nextgen/) and [gemini](https://github.com/arq5x/gemini) teams. Thank you all!
-* Kristin Kernohan from Children Hospital of Eastern Ontario (CHEO), who generated most ideas about the report contents. Thank you, Kristin, for all of the discussions!
-
-Thank you colleagues at [CCM](https://ccm.sickkids.ca/), for seminars and personal discussions.
 
 # 1. Create a project (projects) to run with bcbio.
 
@@ -219,3 +205,11 @@ vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 * vcf.split_multi.sh
 * vep4seqr_hg38.sh
 * vep4seqr.sh
+
+# 8. Credits
+
+This work was inspired by 
+* [bcbio](https://github.com/chapmanb/bcbio-nextgen/) and [gemini](https://github.com/arq5x/gemini) teams. Thank you all!
+* Kristin Kernohan from Children Hospital of Eastern Ontario (CHEO), who generated most ideas about the report contents. Thank you, Kristin, for all of the discussions!
+
+Thank you colleagues at [CCM](https://ccm.sickkids.ca/), for seminars and personal discussions.
