@@ -17,6 +17,8 @@ depth_threshold=$2
 
 severity_threshold=$3
 
+max_af=$4
+
 if [[ "$severity_threshold" == 'ALL' ]]
 then
 #used for RNA-seq = 20k variants in the report
