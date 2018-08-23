@@ -55,7 +55,7 @@ bname=`basename $vcf .vcf.gz`
 #    | sed '/^#/! s/;;/;/g' | bgzip -c > $bname.vepeffects.vcf.gz
 
 #find reference
-reference=`which bcbio_nextgen.py | sed s/"anaconda\/bin\/bcbio_nextgen.py"/"genomes\/Hsapiens\/GRCh37"/`
+reference=`readlink -f (which bcbio_nextgen.py) | sed s/"anaconda\/bin\/bcbio_nextgen.py"/"genomes\/Hsapiens\/GRCh37"/`
 vep_reference=$(readlink -f `which vep`| sed s/"\/vep"//)
 
 unset PERL5LIB && vep --vcf -o stdout \
