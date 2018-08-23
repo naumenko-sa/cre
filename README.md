@@ -3,11 +3,11 @@ Excel variant report generator and scripts to process WES data (cram/bam/fastq -
 
 # 0. Prerequisites
 
-..1 Install **Bcbio**.
+..1. Install **Bcbio**.
 Use HPC or server. Add bcbio PATH. bcbio installs many other useful tools and datasets through bioconda and cloudbiolinux.
-..2 Clone **cre** to ~/cre and add it to PATH.
-..3 Install R and packages: stringr,data.table,plyr 
-..4 Install OMIM (optional, because cre has [cre/data/omim.txt and cre/data/omim.inheritance.csv]).
+..2. Clone **cre** to ~/cre and add it to PATH.
+..3. Install R and packages: stringr,data.table,plyr 
+..4. Install OMIM (optional, because cre has [cre/data/omim.txt](../master/data/omim.txt) and [cre/data/omim.inheritance.csv](../master/data/omim.inheritance.csv).
   * Goto https://omim.org/downloads/ and request the latest database. It makes sense to renew it once a year.
   * In a couple of days you will receive
     * genemap2.txt
@@ -22,7 +22,7 @@ Use HPC or server. Add bcbio PATH. bcbio installs many other useful tools and da
   ~/cre/omim.sh
   ```
   It creates two tables: omim.txt with omim description of diseases related to 3700 genes, and omim_inheritance.txt with inheritance modes for genes in OMIM. 
-  * I recommend using improved inheritance table from [https://www.cs.toronto.edu/~buske/cheo/](https://www.cs.toronto.edu/~buske/cheo/). Download the second file with inheritance mappings. It references genes by gene name (symbol) rather than by Ensembl_id which is a requirement for CRE. Most genes could be mapped automatically with Ensembl biomart [genes.R](https://github.com/naumenko-sa/bioscripts/blob/master/genes.R), but some genes (not many) might need manual curation to assign the correct ENSEMBL_ID.
+  * I recommend using improved inheritance table from [https://www.cs.toronto.edu/~buske/cheo/](https://www.cs.toronto.edu/~buske/cheo/). Download the second file with inheritance mappings. It references genes by gene name (symbol) rather than by Ensembl_id which is a requirement for CRE. Most gene names (symbols) could be mapped automatically with Ensembl biomart [genes.R](https://github.com/naumenko-sa/bioscripts/blob/master/genes.R), but some genes (not many) might need manual curation to assign the correct ENSEMBL_ID.
 ```
     
 ```
