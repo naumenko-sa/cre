@@ -4,6 +4,7 @@ Excel variant report generator and scripts to process WES data (cram/bam/fastq -
 # 0. Prerequisites
 
   1. Install **Bcbio**.
+
 Use HPC or server. Add bcbio PATH. bcbio installs many other useful tools and datasets through bioconda and cloudbiolinux.
   2. Clone **cre** to ~/cre and add it to PATH.
   3. Install R and packages: stringr,data.table,plyr 
