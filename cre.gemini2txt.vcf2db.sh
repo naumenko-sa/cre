@@ -56,9 +56,9 @@ sQuery="select \
         start+1 as Pos,\
         aa_change as AA_change,\
         hgvsc as Codon_change,\
-        af_evs_aa as Evs_af_aa,\
-        af_evs_ea as Evs_af_ea,\
-        af_evs as Evs_af_all,\
+        evs_af_aa as Evs_af_aa,\
+        evs_af_ea as Evs_af_ea,\
+        evs_af as Evs_af_all,\
         phylop20way_mammalian as Conserved_in_20_mammals,
         gts,"
 
