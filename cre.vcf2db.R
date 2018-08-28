@@ -187,10 +187,7 @@ create_report = function(family,samples)
     # I use my copy of omim first, then look into cre, because I don't want to distribute omim
     # through my github.
     omim_file_name = paste0(default_tables_path,"/omim.txt")
-    omim_file_name_local = paste0(reference_tables_path,"/omim.txt")
     
-    if (file.exists(omim_file_name_local)) omim_file_name = omim_file_name_local
-
     if (file.exists(omim_file_name))
     {
 	    omim = read.delim2(omim_file_name, stringsAsFactors=F)
@@ -199,10 +196,7 @@ create_report = function(family,samples)
     }
         
     # Column21 - Omim_inheritance 
-    omim_inheritance_file_name = paste0(default_tables_path,"/omim.inheritance.csv")
-    omim_inheritance_file_name_local = paste0(reference_tables_path,"/omim.inheritance.csv")
-    
-    if (file.exists(omim_inheritance_file_name_local)) omim_inheritance_file_name = omim_inheritance_file_name_local
+    omim_inheritance_file_name = paste0(default_tables_path,"/omim.inheritance.csv")        
     
     if (file.exists(omim_inheritance_file_name))
     {
@@ -213,8 +207,7 @@ create_report = function(family,samples)
     # Column 22 = Orphanet
     # previous name - orphanet.deduplicated.txt
     orphanet_file_name = paste0(default_tables_path,"/orphanet.txt")
-    orphanet_file_name_local = paste0(reference_tables_path,"/orphanet.txt")
-    
+       
     if (file.exists(orphanet_file_name_local)) orphanet_file_name = orphanet_file_name_local
     
     if (file.exists(orphanet_file_name))
@@ -665,15 +658,15 @@ library(data.table)
 library(plyr)
 
 default_tables_path="~/cre/data"
-reference_tables_path = "~/Desktop/reference_tables"
+c4r_database_path = "/hpf/largeprojects/ccm_dccforge/dccforge/results/database"
 
 #load c4r information
-seen_in_c4r_counts.txt = paste0(reference_tables_path,"/seen_in_c4r_counts.txt")
+seen_in_c4r_counts.txt = paste0(c4r_database_path,"/seen_in_c4r_counts.txt")
 if (file.exists(seen_in_c4r_counts.txt))
 {
     seen_in_c4r_counts = read.delim(seen_in_c4r_counts.txt, stringsAsFactors=F)
 }
-seen_in_c4r_samples.txt = paste0(reference_tables_path,"/seen_in_c4r_samples.txt")
+seen_in_c4r_samples.txt = paste0(c4r_database_path,"/seen_in_c4r_samples.txt")
 if (file.exists(seen_in_c4r_samples.txt))
 {
     seen_in_c4r_samples = read.delim(seen_in_c4r_samples.txt, stringsAsFactors=F)
