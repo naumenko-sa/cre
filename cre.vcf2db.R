@@ -208,8 +208,6 @@ create_report = function(family,samples)
     # previous name - orphanet.deduplicated.txt
     orphanet_file_name = paste0(default_tables_path,"/orphanet.txt")
        
-    if (file.exists(orphanet_file_name_local)) orphanet_file_name = orphanet_file_name_local
-    
     if (file.exists(orphanet_file_name))
     {
 	    orphanet = read.delim(orphanet_file_name, stringsAsFactors=F)  
