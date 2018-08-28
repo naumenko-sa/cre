@@ -166,50 +166,38 @@ create_report = function(family,samples)
     # Column 17 - Ensembl_gene_id
 
     # Column 18 - Gene_description
-    gene_descriptions = read.delim2(paste0(default_tables_path,"/data/ensembl_w_description.txt"), stringsAsFactors=F)
+    gene_descriptions = read.delim2(paste0(default_tables_path,"/ensembl_w_description.txt"), stringsAsFactors=F)
     variants = merge(variants,gene_descriptions,by.x = "Ensembl_gene_id",by.y = "ensembl_gene_id",all.x=T)
     
-    # Column 19 - Omim_gene_description - from omim text file
-    # omim.forannotation2 previously
-    # I use my copy of omim first, then look into cre, because I don't want to distribute omim
-    # through my github.
-    omim_file_name = paste0(default_tables_path,"/omim.txt")
-    omim_file_name_local = paste0(reference_tables_path,"/omim.txt")
-    
-    if (file.exists(omim_file_name_local)) omim_file_name = omim_file_name_local
+    # Column 19 - Omim_gene_description
+    omim_file_name = paste0(default_tables_path,"/omim.txt")    
 
     if (file.exists(omim_file_name))
     {
-	omim = read.delim2(omim_file_name, stringsAsFactors=F)
-	variants = merge(variants,omim,all.x=T)
-	variants$Omim_gene_description[is.na(variants$Omim_gene_description)] = 0
+	   omim = read.delim2(omim_file_name, stringsAsFactors=F)
+	   variants = merge(variants,omim,all.x=T)
+	   variants$Omim_gene_description[is.na(variants$Omim_gene_description)] = 0
     }
         
     # Column 20 - Omim_inheritance 
     omim_inheritance_file_name = paste0(default_tables_path,"/omim_inheritance.txt")
-    omim_inheritance_file_name_local = paste0(reference_tables_path,"/omim_inheritance.txt")
-    
-    if (file.exists(omim_inheritance_file_name_local)) omim_inheritance_file_name = omim_inheritance_file_name_local
-    
+          
     if (file.exists(omim_inheritance_file_name))
     {
-	omim_inheritance = read.csv(omim_inheritance_file_name, sep="",stringsAsFactors = F)
-	variants = merge(variants,omim_inheritance,all.x=T)
+	   omim_inheritance = read.csv(omim_inheritance_file_name, sep="",stringsAsFactors = F)
+	   variants = merge(variants,omim_inheritance,all.x=T)
     }
 
     # Column 21 - Orphanet
     # previous name - orphanet.deduplicated.txt
-    orphanet_file_name = paste0(default_tables_path,"/orphanet.txt")
-    orphanet_file_name_local = paste0(reference_tables_path,"/orphanet.txt")
-    
-    if (file.exists(orphanet_file_name_local)) orphanet_file_name = orphanet_file_name_local
+    orphanet_file_name = paste0(default_tables_path,"/orphanet.txt")       
     
     if (file.exists(orphanet_file_name))
     {
-	orphanet = read.delim(orphanet_file_name, stringsAsFactors=F)  
-	variants = merge(variants,orphanet,all.x=T)
+	   orphanet = read.delim(orphanet_file_name, stringsAsFactors=F)  
+	   variants = merge(variants,orphanet,all.x=T)
     
-	variants$Orphanet[is.na(variants$Orphanet)] = 0
+	   variants$Orphanet[is.na(variants$Orphanet)] = 0
     }
     
     # Column 22 - Clinvar
@@ -234,7 +222,7 @@ create_report = function(family,samples)
     # Columns 30-35 - population frequencies
 
     # Columns 36-37, Exac scores
-    exac_scores_file = paste0(default_tables_path,"/data/exac_scores.txt")
+    exac_scores_file = paste0(default_tables_path,"/exac_scores.txt")
     exac_scores = read.delim(exac_scores_file, stringsAsFactors=F)
     variants = merge(variants,exac_scores,all.x=T)
 
@@ -251,12 +239,12 @@ create_report = function(family,samples)
 
     
     # Columns 44,45 - imprinting
-    imprinting_file_name = paste0(default_tables_path,"/data/imprinting.txt")
+    imprinting_file_name = paste0(default_tables_path,"/imprinting.txt")
     imprinting = read.delim(imprinting_file_name, stringsAsFactors=F)
     variants = merge(variants,imprinting,all.x=T)
     
     # Column 46 - pseudoautosomal
-    pseudoautosomal_file_name = paste0(default_tables_path,"/data/pseudoautosomal.txt")
+    pseudoautosomal_file_name = paste0(default_tables_path,"/pseudoautosomal.txt")
     pseudoautosomal = read.delim(pseudoautosomal_file_name, stringsAsFactors=F)
     variants = merge(variants,pseudoautosomal,all.x=T)
     
@@ -634,16 +622,16 @@ library(stringr)
 library(data.table)
 library(plyr)
 
-default_tables_path="~/cre"
-reference_tables_path = "~/Desktop/reference_tables"
+default_tables_path="~/cre/data"
+c4r_database_path = "/hpf/largeprojects/ccm_dccforge/dccforge/results/database"
 
 #load c4r information
-seen_in_c4r_counts.txt = paste0(reference_tables_path,"/seen_in_c4r_counts.txt.chr")
+seen_in_c4r_counts.txt = paste0(c4r_database_path,"/seen_in_c4r_counts.txt.chr")
 if (file.exists(seen_in_c4r_counts.txt))
 {
     seen_in_c4r_counts = read.delim(seen_in_c4r_counts.txt, stringsAsFactors=F)
 }
-seen_in_c4r_samples.txt = paste0(reference_tables_path,"/seen_in_c4r_samples.txt.chr")
+seen_in_c4r_samples.txt = paste0(c4r_database_path,"/seen_in_c4r_samples.txt.chr")
 if (file.exists(seen_in_c4r_samples.txt))
 {
     seen_in_c4r_samples = read.delim(seen_in_c4r_samples.txt, stringsAsFactors=F)
