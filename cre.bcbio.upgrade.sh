@@ -3,6 +3,11 @@
 #compute nodes do not have internet access, 
 #qnodes do have internet access, but it is better to run on a data node
 
+# fresh install
+wget https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/bcbio_nextgen_install.py
+python bcbio_nextgen_install.py /usr/local/share/bcbio --tooldir=/usr/local \
+  --genomes GRCh37 --aligners bwa --aligners bowtie2
+
 #upgrade code to stable version
 #bcbio_nextgen.py upgrade -u stable
 #upgrade code to development
