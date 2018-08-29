@@ -1,6 +1,7 @@
 details:
 - algorithm:
     aligner: false
+    bam_clean: remove_extracontigs
     effects: vep
     effects_transcripts: all
     ensemble:
@@ -11,6 +12,7 @@ details:
     mark_duplicates: false
     save_diskspace: true
     tools_on:
+    - gemini
     - svplots
     - qualimap
     - vep_splicesite_annotations
@@ -22,8 +24,10 @@ details:
     - samtools
     - platypus
     - freebayes
+    vcfanno:
+    - /home/naumenko/cre/cre.vcfanno.conf
   analysis: variant2
-  description: '912R_A337376'
+  description: 'project_sample'
   files:
   - /hpf/largeprojects/ccmbio/naumenko/project_cheo/912R/input/912R_A337376.bam
   genome_build: GRCh37
