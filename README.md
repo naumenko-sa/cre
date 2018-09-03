@@ -42,7 +42,7 @@ Excel variant report generator and scripts to process WES data (cram/bam/fastq -
   By default using [~/cre/data/imprinting.txt](../master/data/imprinting.txt).
 
 
-# 1. Creating bcbio project
+# 1. Creating bcbio project - grch37
 
 * Prepare input files: family_sample_1.fq.gz, family_sample_2.fq.gz, or family_sample.bam and place them into family/input folder.
 * There might be many samples in a family(project).
@@ -70,6 +70,13 @@ we can discover a useful non-coding variant. No sense to filter them out during 
 ## 1c. Input is cram file.
 * Run [cram2fq.sh](../master/cram2.fq). 
 * I would suggest to avoid crams when possible. A damaged bam file could be recovered with [cre.bam_recovery.sh](../master/cre.bam_recovery.sh), but nothing could be done for cram.
+
+# 2. Running bcbio for grch37 with decoys
+
+By default, for grch37 bcbio does not support decoy sequences, they are supported in grch38. Two step approach could be applied to use decoys https://github.com/bcbio/bcbio-nextgen/issues/2489:
+- install custom reference with decoys: ../master/cre.bcbio.custom_genome.sh
+- run alignment step vs grch37d5 reference
+- run variant calling with noalt_calling and bam_clean: remove_extracontigs
 
 # 2. Running bcbio
 
