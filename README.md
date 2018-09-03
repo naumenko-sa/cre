@@ -74,8 +74,8 @@ we can discover a useful non-coding variant. No sense to filter them out during 
 # 2. Running bcbio for grch37 with decoys
 
 By default, for grch37 bcbio does not support decoy sequences, they are supported in grch38. Two step approach could be applied to use decoys https://github.com/bcbio/bcbio-nextgen/issues/2489:
-- install custom reference with decoys: ../master/cre.bcbio.custom_genome.sh
-- run alignment step vs grch37d5 reference
+- install custom reference with decoys: [cre.bcbio.custom_genome.sh](../master/cre.bcbio.custom_genome.sh)
+- run alignment step vs grch37d5 reference: cre.prepare_bcbio_run.sh <project> align_decoy
 - run variant calling with noalt_calling and bam_clean: remove_extracontigs
 
 # 2. Running bcbio
