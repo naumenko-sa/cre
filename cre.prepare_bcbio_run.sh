@@ -4,10 +4,11 @@
 family=$1
 
 # $2 = template type, 
-# default = no value = default WES
-# noalign - no alignment (for rerunning), 
-# fast - no realignment,recalibration, and only gatk
-# validation = NA12878 validation
+# - default = no value = default WES
+# - noalign - no alignment (for rerunning), 
+# - fast - no realignment,recalibration, and only gatk
+# - validation = NA12878 validation
+# - align_decoy - align only, reference with decoy
 
 template_type=$2
 echo $template_type
@@ -45,6 +46,9 @@ then
     then
 	template=~/cre/cre.bcbio.templates.wes.gatk4.yaml
 	variant_regions=$3
+    elif [ $template_type == "align_decoy" ]
+    then
+	template=~/cre/cre.bcbio.templates.align_decoy.yaml
     fi
 fi
 
