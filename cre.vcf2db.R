@@ -136,15 +136,12 @@ create_report = function(family,samples)
         variants[i,"Info"] = s_impacts
     }
     
-    # Column12 = Protein_change_ensembl
-    variants$Protein_change_ensembl[variants$Protein_change_ensembl=='']='NA'
+    # Column12 - Protein_change (refseq)
+    variants = add_placeholder(variants,"Protein_change","NA")
     
-    # Column13 - Protein_change_refseq
-    variants = add_placeholder(variants,"Protein_change_refseq","NA")
-    
-    # Columns 14,15 - Depth, Quality
+    # Columns 13,14 - Depth, Quality
 
-    # Column 16 - Alt_depth - from v.gt_alt_depths
+    # Column 15 - Alt_depth - from v.gt_alt_depths
     # when multiple callers used, AD is not set and fixed in merge_reports function
     for(sample in samples)
     {
@@ -152,7 +149,7 @@ create_report = function(family,samples)
         setnames(variants, paste0("gt_alt_depths.",sample),new_name)
     }
 
-    # Column 17 - Trio_coverage - fixed in merge_reports function
+    # Column 16 - Trio_coverage - fixed in merge_reports function
     variants = add_placeholder(variants,"Trio_coverage","")
     n_sample = 1
     prefix = ""
@@ -176,16 +173,13 @@ create_report = function(family,samples)
         n_sample = n_sample+1
     }
     
-    # Column18 = Ensembl_gene_id
+    # Column17 = Ensembl_gene_id
 
-    # Column19 = Gene_description
+    # Column18 = Gene_description
     gene_descriptions = read.delim2(paste0(default_tables_path,"/ensembl_w_description.txt"), stringsAsFactors=F)
     variants = merge(variants,gene_descriptions,by.x = "Ensembl_gene_id",by.y = "ensembl_gene_id",all.x=T)
     
-    # Column20 - Omim_gene_description - from omim text file
-    # omim.forannotation2 previously
-    # I use my copy of omim first, then look into cre, because I don't want to distribute omim
-    # through my github.
+    # Column19 - Omim_gene_description
     omim_file_name = paste0(default_tables_path,"/omim.txt")
     
     if (file.exists(omim_file_name))
@@ -195,7 +189,7 @@ create_report = function(family,samples)
 	    variants$Omim_gene_description[is.na(variants$Omim_gene_description)] = 0
     }
         
-    # Column21 - Omim_inheritance 
+    # Column20 - Omim_inheritance 
     omim_inheritance_file_name = paste0(default_tables_path,"/omim.inheritance.csv")        
     
     if (file.exists(omim_inheritance_file_name))
@@ -204,7 +198,7 @@ create_report = function(family,samples)
 	    variants = merge(variants,omim_inheritance,all.x=T)
     }
 
-    # Column 22 = Orphanet
+    # Column 21 = Orphanet
     # previous name - orphanet.deduplicated.txt
     orphanet_file_name = paste0(default_tables_path,"/orphanet.txt")
        
@@ -216,55 +210,68 @@ create_report = function(family,samples)
 	    variants$Orphanet[is.na(variants$Orphanet)] = 0
     }
     
-    # Column 23 - Clinvar
+    # Column 22 - Clinvar
     
-    # Column 24 - Ensembl_transcript_id
+    # Column 23 - Ensembl_transcript_id
     
-    # Column 25 - AA_position
+    # Column 24 - AA_position
     # changing separator from / to _ because otherwise excel converts it into date
     variants[,"AA_position"] = with(variants,gsub("/","_",AA_position),fixed=T)
     
-    # Column 26 - Exon
+    # Column 25 - Exon
     variants[,"Exon"] = with(variants,gsub("/","_",Exon),fixed=T)
     
-    # Column 27 - Protein_domains
+    # Column 26 - Protein_domains
     
-    # Column 28, 29 = Frequency_in_C4R, Seen_in_C4R_samples
+    # Column 27, 28 = Frequency_in_C4R, Seen_in_C4R_samples
     variants = add_placeholder(variants,"Frequency_in_C4R","Frequency_in_C4R")
     variants = add_placeholder(variants,"Seen_in_C4R_samples","Seen_in_C4R_samples")
+    
+    # Columns 29,30,31,32: HGMD
+    for(hgmd_field in c("HGMD_id","HGMD_gene","HGMD_tag","HGMD_ref"))
+    {
+        variants = add_placeholder(variants,hgmd_field,"NA")
+    }
 
-    # Column 30 - rsIds
+    # Column 33 - rsIds
 
     # population frequencies
-    # Column31 = Af_1000g
-    # Column32 = Evs_af_aa
-    # Column33 = Evs_af_ea
-    # Column34 = Evs_af_all
-    # Column35 = Gnomad_af_es
-    # Column36 = Gnomad_af_gs
-    # Column37 = Max_af
+    # Column34 = Gnomad_af_es
+    # Column35 = Gnomad_af_gs
+    # Column36 = Max_af
     
     # Exac scores
-    # Column38 = Exac_pLi_score
-    # Column39 = Exac_missense_score
+    # Column37 = Exac_pLi_score
+    # Column38 = Exac_missense_score
     exac_scores_file = paste0(default_tables_path,"/exac_scores.txt")
     exac_scores = read.delim(exac_scores_file, stringsAsFactors=F)
     variants = merge(variants,exac_scores,all.x=T)
 
-    # Column40 = Gnomad_ac_gs
-    # Column41 = Gnomad_ac_es
-    # Column42 = Gnomad_hom_gs
-    # Column43 = Gnomad_hom_es
+    # Column39 = Gnomad_ac
+    for (field in c("Gnomad_ac_gs","Gnomad_ac_es","Gnomad_hom_gs","Gnomad_hom_es"))
+    {
+        variants[,field] = with(variants,gsub("-1","0",get(field),fixed=T))
+        variants[,field] = with(variants,gsub("None","0",get(field),fixed=T))
+    }
+    variants$Gnomad_ac_es = as.numeric(variants$Gnomad_ac_es)
+    variants$Gnomad_ac_gs = as.numeric(variants$Gnomad_ac_gs)
+    variants$Gnomad_ac = variants$Gnomad_ac_es + variants$Gnomad_ac_gs
+    # Column40 = Gnomad_hom
+    variants$Gnomad_hom_es = as.numeric(variants$Gnomad_hom_es)
+    variants$Gnomad_hom_gs = as.numeric(variants$Gnomad_hom_gs)
+    variants$Gnomad_hom = variants$Gnomad_hom_es + variants$Gnomad_hom_gs
     
-    # Column44 - Conserved_in_20_mammals
+    # Column41 - Conserved_in_20_mammals
     
     # pathogenicity scores
-    # Column45 = sift
-    # Column46 = polyphen
-    # Column47 = cadd scores
+    # Column42 = sift
+    # Column43 = polyphen
+    # Column44 = cadd
+    # Column45 = vest3
+    # Column46 = revel
     
-    # Column48 = Imprinting_status
-    # Column49 = Imprinting_expressed_allele
+    # Column47 = Imprinting_status
+    # Column48 = Imprinting_expressed_allele
     imprinting_file_name = paste0(default_tables_path,"/imprinting.txt")
     imprinting = read.delim(imprinting_file_name, stringsAsFactors=F)
     variants = merge(variants,imprinting,all.x=T)
@@ -320,8 +327,7 @@ create_report = function(family,samples)
     variants$Old_multiallelic[variants$Old_multiallelic=="None"]="NA"
         
     # replace -1 with 0
-    for (field in c("Evs_af_aa","Evs_af_ea","Evs_af_all","Af_1000g","Gnomad_af_es","Gnomad_af_gs",
-                    "Max_af","Gnomad_ac_gs","Gnomad_ac_es","Gnomad_hom_gs","Gnomad_hom_es","Trio_coverage"))
+    for (field in c("Max_af","Trio_coverage"))
     {
         variants[,field] = with(variants,gsub("-1","0",get(field),fixed=T))
         variants[,field] = with(variants,gsub("None","0",get(field),fixed=T))
@@ -361,14 +367,13 @@ select_and_write2 = function(variants,samples,prefix)
                           paste0("Zygosity.",samples),
                           c("Gene"),
                           paste0("Burden.",samples),
-                          c("gts","Variation","Info","Protein_change_ensembl","Protein_change_refseq","Depth","Quality"),
+                          c("gts","Variation","Info","Protein_change","Depth","Quality"),
                           paste0("Alt_depths.",samples),
                           c("Trio_coverage","Ensembl_gene_id","Gene_description","Omim_gene_description","Omim_inheritance",
                             "Orphanet", "Clinvar","Ensembl_transcript_id","AA_position","Exon","Protein_domains",
-                            "Frequency_in_C4R","Seen_in_C4R_samples","rsIDs","Af_1000g","Evs_af_aa","Evs_af_ea","Evs_af_all",
-                            "Gnomad_af_es","Gnomad_af_gs","Max_af","Gnomad_ac_gs",
-                            "Gnomad_ac_es","Gnomad_hom_gs","Gnomad_hom_es","Exac_pLi_score","Exac_missense_score",
-                            "Conserved_in_20_mammals","Sift_score","Polyphen_score","Cadd_score",
+                            "Frequency_in_C4R","Seen_in_C4R_samples", "HGMD_id","HGMD_gene","HGMD_tag","HGMD_ref","rsIDs",
+                            "Gnomad_af_es","Gnomad_af_gs","Max_af","Gnomad_ac","Gnomad_hom","Exac_pLi_score","Exac_missense_score",
+                            "Conserved_in_20_mammals","Sift_score","Polyphen_score","Cadd_score","Vest3_score","Revel_score",
                             "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing",
                             "Number_of_callers","Old_multiallelic"))]
   
@@ -399,7 +404,7 @@ merge_reports = function(family,samples)
             if (grepl(":NP_",impact,fixed = T))
             {
                 v_subimpacts = strsplit(impact,":",fixed=T)[[1]]
-                ensemble[i,"Protein_change_refseq"] = paste0(v_subimpacts[5],":",v_subimpacts[6])
+                ensemble[i,"Protein_change"] = paste0(v_subimpacts[5],":",v_subimpacts[6])
                 break
             }
         }
@@ -658,6 +663,11 @@ library(plyr)
 default_tables_path="~/cre/data"
 c4r_database_path = "/hpf/largeprojects/ccm_dccforge/dccforge/results/database"
 
+#debug
+seen_in_c4r_counts.txt="seen_in_c4r_counts.txt"
+seen_in_c4r_samples.txt="seen_in_c4r_samples.txt"
+hgmd.csv = "hgmd.csv"
+
 #load c4r information
 seen_in_c4r_counts.txt = paste0(c4r_database_path,"/seen_in_c4r_counts.txt")
 if (file.exists(seen_in_c4r_counts.txt))
@@ -668,6 +678,17 @@ seen_in_c4r_samples.txt = paste0(c4r_database_path,"/seen_in_c4r_samples.txt")
 if (file.exists(seen_in_c4r_samples.txt))
 {
     seen_in_c4r_samples = read.delim(seen_in_c4r_samples.txt, stringsAsFactors=F)
+}
+
+hgmd.csv = paste0(c4r_database_path,"/hgmd.csv")
+if (file.exists(hgmd.csv))
+{
+    hgmd = read.csv(hgmd.csv,stringsAsFactors = F,header = F)
+    colnames(hgmd) = c("chrom","pos","HGMD_id","ref","alt","HGMD_gene","HGMD_tag","author",
+                       "allname","vol","page","year","pmid")
+    hgmd$superindex = with(hgmd,paste(chrom,pos,ref,alt,sep='-'))
+    hgmd$HGMD_ref = with(hgmd,paste(author,allname,vol,page,year,"PMID:",pmid,sep = ' '))
+    hgmd = hgmd[,c("superindex","HGMD_id","HGMD_gene","HGMD_tag","HGMD_ref")]
 }
 
 # R substitutes "-" with "." in sample names in columns so fix this in samples.txt

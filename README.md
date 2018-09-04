@@ -41,6 +41,9 @@ Excel variant report generator and scripts to process WES data (cram/bam/fastq -
   7. (Optional) Install impriting annotation.
   By default using [~/cre/data/imprinting.txt](../master/data/imprinting.txt).
 
+  8. (Optional) Install HGMD pro database
+  Install HGMD pro and dump information with [~/cre/cre.hgmd2csv.sql](../master/cre.hgmd2csv.sql).
+
 
 # 1. Creating bcbio project - grch37
 

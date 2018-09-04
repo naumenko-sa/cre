@@ -1,5 +1,4 @@
-# variant report generator
-
+# variant report generator - not supported, old version for gemini load, no Gnomad WGS frequencies
 add_placeholder=function(variants,column_name,placeholder)
 {
     variants[,column_name]=with(variants,placeholder)
@@ -216,7 +215,7 @@ create_report = function(family,samples)
     # Column 27, 28 = Frequency_in_C4R, Seen_in_C4R_samples
     variants = add_placeholder(variants,"Frequency_in_C4R","Frequency_in_C4R")
     variants = add_placeholder(variants,"Seen_in_C4R_samples","Seen_in_C4R_samples")
-
+    
     # Column 29 - rsIds
 
     # Columns 30-35 - population frequencies
@@ -615,6 +614,11 @@ annotate_w_care4rare = function(family,samples)
     
     variants$Seen_in_C4R_samples[is.na(variants$Seen_in_C4R_samples)] = 0        
     
+    if (exists("hgmd"))
+    {
+        variants = merge(variants,hgmd,by.x="superindex",by.y="superindex",all.x=T,all.y=F)
+    }
+    
     select_and_write2(variants,samples,family)
 }
 
@@ -636,6 +640,7 @@ if (file.exists(seen_in_c4r_samples.txt))
 {
     seen_in_c4r_samples = read.delim(seen_in_c4r_samples.txt, stringsAsFactors=F)
 }
+
 
 # R substitutes "-" with "." in sample names in columns so fix this in samples.txt
 # sample names starting with letters should be prefixed by X in *.table
