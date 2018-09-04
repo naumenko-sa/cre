@@ -9,6 +9,7 @@ family=$1
 # - fast - no realignment,recalibration, and only gatk
 # - validation = NA12878 validation
 # - align_decoy - align only, reference with decoy
+# - annotate - variants were pre-called, annotation only
 
 template_type=$2
 echo $template_type
@@ -58,11 +59,21 @@ do
 done < samples.txt
 
 
-bcbio_nextgen.py -w template $template $family.csv input/*
+if [ $template_type == "annotate" ]
+then
+    mkdir config
+    mkdir work
+    cd input
+    vcf=`ls *.vcf.gz`
+    template=~/cre/cre.bcbio.templates.annotate.yaml
+    cat $template | sed s/"\[vrn_file\]"/$vcf/  | sed s/"\[familyid\]"/$family/ > ../config/$family.yaml
+    cd ..
+else
+    bcbio_nextgen.py -w template $template $family.csv input/*
+    mv $family/config .
+    mv $family/work .
+    rm $family.csv
+    rmdir $family
 
-mv $family/config .
-mv $family/work .
-rm $family.csv
-rmdir $family
-
-cd ..
+    cd ..
+fi
