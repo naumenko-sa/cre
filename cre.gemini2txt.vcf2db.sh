@@ -34,14 +34,12 @@ sQuery="select \
         dp as Depth,\
         qual as Quality,\
         gene as Gene,\
-        ensembl_geneid as Ensembl_gene_id,\
         clinvar_sig as Clinvar,\
         transcript as Ensembl_transcript_id,\
         aa_length as AA_position,\
         exon as Exon,\
         domains as Protein_domains,\
         rs_ids as rsIDs,\
-        af_1kg as Af_1000g,\
         gnomad_af_es as Gnomad_af_es,\
         gnomad_af_gs as Gnomad_af_gs,\
         max_af as Max_af,\
@@ -52,13 +50,12 @@ sQuery="select \
         sift_score as Sift_score,\
         polyphen_score as Polyphen_score,\
         cadd_phred as Cadd_score,\
+        vest3_score as Vest3_score,\
+        revel_score as Revel_score,\
         chrom as Chrom,\
         start+1 as Pos,\
         aa_change as AA_change,\
         hgvsc as Codon_change,\
-        evs_af_aa as Evs_af_aa,\
-        evs_af_ea as Evs_af_ea,\
-        evs_af as Evs_af_all,\
         phylop20way_mammalian as Conserved_in_20_mammals,
         gts,"
 
