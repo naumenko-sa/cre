@@ -9,7 +9,7 @@
 # 	family = [family_id] (=project_id=case_id=folder_name, main result file should be family/family-ensemble.db)
 # 	cleanup= [0|1] default = 0
 # 	make_report=[0|1] default = 1
-# 	type = [ wes.regular (default) | wes.synonymous | wes.fast | rnaseq | wgs ]
+# 	type = [ wes.regular (default) | wes.synonymous | wes.fast | rnaseq | wgs | annotate]
 #	max_af = af filter, default = 0.01
 #	loader [ default = gemini | vcf2db ] - load used to create gemini database
 ####################################################################################################
@@ -77,6 +77,11 @@ function f_cleanup
 	    ln -s ${family}-gatk-haplotype.db ${family}-ensemble.db
 	    ln -s ${family}-gatk-haplotype-annotated-decomposed.vcf.gz ${family}-ensemble-annotated-decomposed.vcf.gz
 	    ln -s ${family}-gatk-haplotype-annotated-decomposed.vcf.gz.tbi ${family}-ensemble-annotated-decomposed.vcf.gz.tbi
+	elif [ "$type" == "annotate" ]
+	then
+	    ln -s ${family}-precalled.db ${family}-ensemble.db
+	    ln -s ${family}-precalled-annotated-decomposed.vcf.gz ${family}-ensemble-annotated-decomposed.vcf.gz
+	    ln -s ${family}-precalled-annotated-decomposed.vcf.gz.tbi ${family}-ensemble-annotated-decomposed.vcf.gz.tbi
 	else
 	    # we don't need gemini databases for particular calling algorythms
 	    rm ${family}-freebayes.db
