@@ -675,8 +675,7 @@ annotate_w_care4rare = function(family,samples)
 
 load_tables = function(debug = F)
 {
-    default_tables_path="~/cre/data"
-    c4r_database_path = "/hpf/largeprojects/ccm_dccforge/dccforge/results/database"
+    
     print(debug)
     #debug
     if (debug == T)
@@ -714,6 +713,8 @@ load_tables = function(debug = F)
 library(stringr)
 library(data.table)
 library(plyr)
+default_tables_path="~/cre/data"
+c4r_database_path = "/hpf/largeprojects/ccm_dccforge/dccforge/results/database"
 
 # R substitutes "-" with "." in sample names in columns so fix this in samples.txt
 # sample names starting with letters should be prefixed by X in *.table
