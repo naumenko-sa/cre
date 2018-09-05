@@ -648,10 +648,7 @@ if (file.exists(seen_in_c4r_samples.txt))
 
 args = commandArgs(trailingOnly = T)
 family = args[1]
-
-# DEBUG
-# setwd("~/cluster/validation/nist_ashkenazim_trio/")
-# family="Ashkenazim"
+debug = FALSE
 
 setwd(family)
 

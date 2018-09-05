@@ -327,7 +327,7 @@ create_report = function(family,samples)
     variants$Old_multiallelic[variants$Old_multiallelic=="None"]="NA"
         
     # replace -1 with 0
-    for (field in c("Max_af","Trio_coverage"))
+    for (field in c("Max_af","Trio_coverage","Gnomad_af_es","Gnomad_af_gs"))
     {
         variants[,field] = with(variants,gsub("-1","0",get(field),fixed=T))
         variants[,field] = with(variants,gsub("None","0",get(field),fixed=T))
@@ -377,6 +377,8 @@ select_and_write2 = function(variants,samples,prefix)
                             "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing",
                             "Number_of_callers","Old_multiallelic"))]
   
+    variants = variants[order(variants$Position),]
+    
     write.csv(variants,paste0(prefix,".csv"),row.names = F)
 }
 
@@ -653,43 +655,65 @@ annotate_w_care4rare = function(family,samples)
     
     variants$Seen_in_C4R_samples[is.na(variants$Seen_in_C4R_samples)] = 0        
     
+    if (exists("hgmd"))
+    {
+        variants$HGMD_gene=NULL
+        variants$HGMD_id=NULL
+        variants$HGMD_ref=NULL
+        variants$HGMD_tag=NULL
+        variants = merge(variants,hgmd,by.x="superindex",by.y="superindex",all.x=T,all.y=F)
+        variants$HGMD_gene = NULL
+        
+        hgmd.genes = as.data.frame(unique(sort(hgmd$HGMD_gene)))
+        hgmd.genes = cbind(hgmd.genes,hgmd.genes)
+        colnames(hgmd.genes)=c("index","HGMD_gene")
+        variants = merge(variants,hgmd.genes,by.x="Gene",by.y = "index",all.x=T,all.y=F)
+    }
+    
     select_and_write2(variants,samples,family)
+}
+
+load_tables = function(debug = F)
+{
+    default_tables_path="~/cre/data"
+    c4r_database_path = "/hpf/largeprojects/ccm_dccforge/dccforge/results/database"
+    print(debug)
+    #debug
+    if (debug == T)
+    {
+        seen_in_c4r_counts.txt="seen_in_c4r_counts.txt"
+        seen_in_c4r_samples.txt="seen_in_c4r_samples.txt"
+        hgmd.csv = "hgmd.csv"
+    }else{
+        seen_in_c4r_counts.txt = paste0(c4r_database_path,"/seen_in_c4r_counts.txt")    
+        seen_in_c4r_samples.txt = paste0(c4r_database_path,"/seen_in_c4r_samples.txt")
+        hgmd.csv = paste0(c4r_database_path,"/hgmd.csv")
+    }
+    
+    if (file.exists(seen_in_c4r_counts.txt))
+    {
+        seen_in_c4r_counts = read.delim(seen_in_c4r_counts.txt, stringsAsFactors=F)
+    }
+    
+    if (file.exists(seen_in_c4r_samples.txt))
+    {
+        seen_in_c4r_samples = read.delim(seen_in_c4r_samples.txt, stringsAsFactors=F)
+    }
+    
+    if (file.exists(hgmd.csv))
+    {
+        hgmd = read.csv(hgmd.csv,stringsAsFactors = F,header = F)
+        colnames(hgmd) = c("chrom","pos","HGMD_id","ref","alt","HGMD_gene","HGMD_tag","author",
+                           "allname","vol","page","year","pmid")
+        hgmd$superindex = with(hgmd,paste(chrom,pos,ref,alt,sep='-'))
+        hgmd$HGMD_ref = with(hgmd,paste(author,allname,vol,page,year,"PMID:",pmid,sep = ' '))
+        hgmd = hgmd[,c("superindex","HGMD_id","HGMD_gene","HGMD_tag","HGMD_ref")]
+    }
 }
 
 library(stringr)
 library(data.table)
 library(plyr)
-
-default_tables_path="~/cre/data"
-c4r_database_path = "/hpf/largeprojects/ccm_dccforge/dccforge/results/database"
-
-#debug
-seen_in_c4r_counts.txt="seen_in_c4r_counts.txt"
-seen_in_c4r_samples.txt="seen_in_c4r_samples.txt"
-hgmd.csv = "hgmd.csv"
-
-#load c4r information
-seen_in_c4r_counts.txt = paste0(c4r_database_path,"/seen_in_c4r_counts.txt")
-if (file.exists(seen_in_c4r_counts.txt))
-{
-    seen_in_c4r_counts = read.delim(seen_in_c4r_counts.txt, stringsAsFactors=F)
-}
-seen_in_c4r_samples.txt = paste0(c4r_database_path,"/seen_in_c4r_samples.txt")
-if (file.exists(seen_in_c4r_samples.txt))
-{
-    seen_in_c4r_samples = read.delim(seen_in_c4r_samples.txt, stringsAsFactors=F)
-}
-
-hgmd.csv = paste0(c4r_database_path,"/hgmd.csv")
-if (file.exists(hgmd.csv))
-{
-    hgmd = read.csv(hgmd.csv,stringsAsFactors = F,header = F)
-    colnames(hgmd) = c("chrom","pos","HGMD_id","ref","alt","HGMD_gene","HGMD_tag","author",
-                       "allname","vol","page","year","pmid")
-    hgmd$superindex = with(hgmd,paste(chrom,pos,ref,alt,sep='-'))
-    hgmd$HGMD_ref = with(hgmd,paste(author,allname,vol,page,year,"PMID:",pmid,sep = ' '))
-    hgmd = hgmd[,c("superindex","HGMD_id","HGMD_gene","HGMD_tag","HGMD_ref")]
-}
 
 # R substitutes "-" with "." in sample names in columns so fix this in samples.txt
 # sample names starting with letters should be prefixed by X in *.table
@@ -697,16 +721,14 @@ if (file.exists(hgmd.csv))
 
 args = commandArgs(trailingOnly = T)
 family = args[1]
-
-# DEBUG
-# setwd("~/cluster/validation/nist_ashkenazim_trio/")
-# family="Ashkenazim"
+debug = F
 
 setwd(family)
 
 samples = unlist(read.table("samples.txt", stringsAsFactors=F))
 samples = gsub("-",".",samples)
     
+load_tables(debug)
 create_report(family,samples)
 merge_reports(family,samples)
 annotate_w_care4rare(family,samples)
