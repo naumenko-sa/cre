@@ -24,6 +24,8 @@ depth_threshold=$2
 severity_threshold=$3
 #echo $severity_threshold
 
+max_af=$4
+
 gemini query -q "select name from samples" $file > samples.txt
 
 sQuery="select \

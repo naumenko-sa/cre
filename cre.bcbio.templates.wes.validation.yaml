@@ -26,7 +26,6 @@ details:
   - /hpf/largeprojects/ccmbio/naumenko/validation/WGS_NA12878/input/WGS_NA12878_1.fq.gz
   - /hpf/largeprojects/ccmbio/naumenko/validation/WGS_NA12878/input/WGS_NA12878_2.fq.gz
   genome_build: GRCh37
-fc_name: gatk4
 resources:
   default:
     cores: 1

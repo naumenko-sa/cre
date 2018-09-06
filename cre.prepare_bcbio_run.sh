@@ -3,16 +3,16 @@
 # prepares family for bcbio run when input files are family_sample.bam or family_sample_1/2.fq.gz
 family=$1
 
-# $2 = template type, 
+# $2 = template type,
 # - default = no value = default WES
-# - noalign - no alignment (for rerunning), 
+# - noalign - no alignment (for rerunning),
 # - fast - no realignment,recalibration, and only gatk
 # - validation = NA12878 validation
 # - align_decoy - align only, reference with decoy
 # - annotate - variants were pre-called, annotation only
 
 template_type=$2
-echo $template_type
+echo "Generating bcbio project using template type: " $template_type
 
 cd $family
 

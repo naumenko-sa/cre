@@ -167,7 +167,7 @@ function f_make_report
 
     #gemini.decompose.sh ${family}-platypus.vcf.gz
     fprefix=${family}-platypus-annotated-decomposed
-    bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt decompose -s - | uniq - -o $fprefix.subset.vcf.gz
+    bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt decompose -s - | vt uniq - -o $fprefix.subset.vcf.gz
     tabix $fprefix.subset.vcf.gz
     vcf.platypus.getNV.sh $fprefix.subset.vcf.gz $reference
 

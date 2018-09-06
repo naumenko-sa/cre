@@ -33,7 +33,6 @@ details:
   genome_build: GRCh37
   metadata:
     batch: [familyid]
-fc_name: [familyid]
 resources:
   default:
     cores: 7
