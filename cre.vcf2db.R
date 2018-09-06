@@ -136,8 +136,8 @@ create_report = function(family,samples)
         variants[i,"Info"] = s_impacts
     }
     
-    # Column12 - Protein_change (refseq)
-    variants = add_placeholder(variants,"Protein_change","NA")
+    # Column12 - Refseq_change
+    variants = add_placeholder(variants,"Refseq_change","NA")
     
     # Columns 13,14 - Depth, Quality
 
