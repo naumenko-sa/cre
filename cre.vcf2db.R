@@ -12,7 +12,7 @@ get_variants_from_file = function (filename)
     return(variants)
 }
 
-# return Hom, Het, or - if == hom_reference
+# returns Hom / Het / - (for HOM reference)
 genotype2zygocity = function (genotype_str,ref)
 {
       #genotype_str = "A|A|B"
@@ -342,24 +342,6 @@ create_report = function(family,samples)
     select_and_write2(variants,samples,paste0(family,".create_report"))
 }
 
-# column selection and order
-select_and_write = function(variants,samples,prefix)
-{
-    variants = variants[c(c("Position","UCSC_Link","GNOMAD_Link","Ref","Alt"),
-                        paste0("Zygosity.",samples),c("Gene"),
-                        paste0("Burden.",samples),c("gts","Variation","Info","Protein_change_ensembl","Protein_change_refseq","Depth","Quality"),
-                        paste0("Alt_depths.",samples),
-                        c("Trio_coverage","Ensembl_gene_id","Gene_description","Omim_gene_description","Omim_inheritance",
-                          "Orphanet", "Clinvar","Ensembl_transcript_id","AA_position","Exon","Protein_domains",
-                          "Frequency_in_C4R","Seen_in_C4R_samples","rsIDs","Maf_1000g","EVS_maf_aa","EVS_maf_ea","EVS_maf_all",
-                          "Gnomad_maf_es","Gnomad_maf_gs","Maf_all", "Exac_pLi_score","Exac_missense_score","Gnomad_het","Exac_het","Gnomad_hom_alt",
-                          "Conserved_in_20_mammals","Sift_score","Polyphen_score","Cadd_score",
-                          "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing",
-                          "Number_of_callers"))]
-  
-    write.table(variants,paste0(prefix,".txt"),quote=F,sep = ";",row.names=F)  
-}
-
 # writes in CSV format
 select_and_write2 = function(variants,samples,prefix)
 {
@@ -367,7 +349,7 @@ select_and_write2 = function(variants,samples,prefix)
                           paste0("Zygosity.",samples),
                           c("Gene"),
                           paste0("Burden.",samples),
-                          c("gts","Variation","Info","Protein_change","Depth","Quality"),
+                          c("gts","Variation","Info","Refseq_change","Depth","Quality"),
                           paste0("Alt_depths.",samples),
                           c("Trio_coverage","Ensembl_gene_id","Gene_description","Omim_gene_description","Omim_inheritance",
                             "Orphanet", "Clinvar","Ensembl_transcript_id","AA_position","Exon","Protein_domains",
@@ -403,10 +385,10 @@ merge_reports = function(family,samples)
         v_impacts = strsplit(ensemble[i,"Info"],",",fixed=T)[[1]]
 	    for (impact in v_impacts)
         {
-            if (grepl(":NP_",impact,fixed = T))
+            if (grepl(":NM_",impact,fixed = T))
             {
                 v_subimpacts = strsplit(impact,":",fixed=T)[[1]]
-                ensemble[i,"Protein_change"] = paste0(v_subimpacts[5],":",v_subimpacts[6])
+                ensemble[i,"Refseq_change"] = paste0(v_subimpacts[4],":",v_subimpacts[6])
                 break
             }
         }
