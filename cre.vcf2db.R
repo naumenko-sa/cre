@@ -657,8 +657,7 @@ annotate_w_care4rare = function(family,samples)
 
 load_tables = function(debug = F)
 {
-    
-    print(debug)
+    print(paste0("Debug:",debug))
     #debug
     if (debug == T)
     {
@@ -674,11 +673,15 @@ load_tables = function(debug = F)
     if (file.exists(seen_in_c4r_counts.txt))
     {
         seen_in_c4r_counts = read.delim(seen_in_c4r_counts.txt, stringsAsFactors=F)
+    }else{
+        print("No C4R counts found")
     }
     
     if (file.exists(seen_in_c4r_samples.txt))
     {
         seen_in_c4r_samples = read.delim(seen_in_c4r_samples.txt, stringsAsFactors=F)
+    }else{
+        print("No C4R samples found")
     }
     
     if (file.exists(hgmd.csv))
@@ -689,6 +692,8 @@ load_tables = function(debug = F)
         hgmd$superindex = with(hgmd,paste(chrom,pos,ref,alt,sep='-'))
         hgmd$HGMD_ref = with(hgmd,paste(author,allname,vol,page,year,"PMID:",pmid,sep = ' '))
         hgmd = hgmd[,c("superindex","HGMD_id","HGMD_gene","HGMD_tag","HGMD_ref")]
+    }else{
+        print("No HGMD database")
     }
 }
 
