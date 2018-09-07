@@ -672,14 +672,14 @@ load_tables = function(debug = F)
     
     if (file.exists(seen_in_c4r_counts.txt))
     {
-        seen_in_c4r_counts = read.delim(seen_in_c4r_counts.txt, stringsAsFactors=F)
+        seen_in_c4r_counts <<- read.delim(seen_in_c4r_counts.txt, stringsAsFactors=F)
     }else{
         print("No C4R counts found")
     }
     
     if (file.exists(seen_in_c4r_samples.txt))
     {
-        seen_in_c4r_samples = read.delim(seen_in_c4r_samples.txt, stringsAsFactors=F)
+        seen_in_c4r_samples <<- read.delim(seen_in_c4r_samples.txt, stringsAsFactors=F)
     }else{
         print("No C4R samples found")
     }
@@ -689,9 +689,9 @@ load_tables = function(debug = F)
         hgmd = read.csv(hgmd.csv,stringsAsFactors = F,header = F)
         colnames(hgmd) = c("chrom","pos","HGMD_id","ref","alt","HGMD_gene","HGMD_tag","author",
                            "allname","vol","page","year","pmid")
-        hgmd$superindex = with(hgmd,paste(chrom,pos,ref,alt,sep='-'))
+        hgmd$superindex = with(hgmd,paste0(chrom,':',pos,'-',ref,'-',alt))
         hgmd$HGMD_ref = with(hgmd,paste(author,allname,vol,page,year,"PMID:",pmid,sep = ' '))
-        hgmd = hgmd[,c("superindex","HGMD_id","HGMD_gene","HGMD_tag","HGMD_ref")]
+        hgmd <<- hgmd[,c("superindex","HGMD_id","HGMD_gene","HGMD_tag","HGMD_ref")]
     }else{
         print("No HGMD database")
     }

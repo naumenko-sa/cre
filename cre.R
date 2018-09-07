@@ -179,12 +179,21 @@ create_report = function(family,samples)
     }
         
     # Column 20 - Omim_inheritance 
-    omim_inheritance_file_name = paste0(default_tables_path,"/omim_inheritance.txt")
+    #omim_inheritance_file_name = paste0(default_tables_path,"/omim_inheritance.txt")
           
+    #if (file.exists(omim_inheritance_file_name))
+    #{
+	#   omim_inheritance = read.csv(omim_inheritance_file_name, sep="",stringsAsFactors = F)
+	#   variants = merge(variants,omim_inheritance,all.x=T)
+    #}
+    
+    # Column20 - Omim_inheritance 
+    omim_inheritance_file_name = paste0(default_tables_path,"/omim.inheritance.csv")        
+    
     if (file.exists(omim_inheritance_file_name))
     {
-	   omim_inheritance = read.csv(omim_inheritance_file_name, sep="",stringsAsFactors = F)
-	   variants = merge(variants,omim_inheritance,all.x=T)
+        omim_inheritance = read.csv(omim_inheritance_file_name,stringsAsFactors = F)
+        variants = merge(variants,omim_inheritance,all.x=T)
     }
 
     # Column 21 - Orphanet
