@@ -7,6 +7,7 @@
 
 #ROH analysis with 
 #https://sourceforge.net/projects/h3m2/files/
+#https://www.ncbi.nlm.nih.gov/pubmed/24966365
 
 export H3M2PATH=/hpf/largeprojects/ccmbio/naumenko/tools/H3M2Tool
 

@@ -19,16 +19,10 @@ details:
     - vep_splicesite_annotations
     - noalt_calling
     variantcaller: false
-#    - gatk-haplotype
-#    - samtools
-#    - platypus
-#    - freebayes
     vcfanno:
     - /home/naumenko/cre/cre.vcfanno.conf
   analysis: variant2
   description: [familyid]_sample
-#  files:
-#  - /hpf/largeprojects/ccmbio/naumenko/project_cheo/1171R/input/1171R_595742.bam
   vrn_file: ../input/[vrn_file]
   genome_build: GRCh37
   metadata:

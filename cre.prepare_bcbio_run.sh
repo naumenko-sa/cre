@@ -5,7 +5,7 @@ family=$1
 
 # $2 = template type,
 # - default = no value = default WES
-# - noalign - no alignment (for rerunning),
+# - noalign - no alignment (for rerunning or for running after alignment to reference with decoy),
 # - fast - no realignment,recalibration, and only gatk
 # - validation = NA12878 validation
 # - align_decoy - align only, reference with decoy
