@@ -7,7 +7,7 @@ bname=`basename $1 .vcf.gz`
 
 if [ -e $1 ]
 then
-    gatk-launch VariantsToTable \
+    gatk VariantsToTable \
      -T VariantsToTable \
      -R $2 \
      -V $1 \
