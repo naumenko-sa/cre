@@ -35,7 +35,6 @@ sQuery="select \
 	i.transcript,\
 	i.is_exonic,\
 	i.is_coding,\
-	i.is_lof,\
 	i.exon,\
 	i.codon_change,\
 	i.aa_change,\
@@ -51,9 +50,7 @@ sQuery="select \
 	i.ccds,\
 	i.hgvsc,\
 	i.hgvsp,\
-	v.source,\
-	i.lof,\
-	i.lof_info"
+	v.source"
 
 #old runs before Oct2017 does not have maxentscanfields in the database
 if gemini db_info $1 | grep -q "maxentscan";

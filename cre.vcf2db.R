@@ -388,7 +388,7 @@ merge_reports = function(family,samples)
             if (grepl(":NM_",impact,fixed = T))
             {
                 v_subimpacts = strsplit(impact,":",fixed=T)[[1]]
-                ensemble[i,"Refseq_change"] = paste0(v_subimpacts[4],":",v_subimpacts[6])
+                ensemble[i,"Refseq_change"] = paste0(v_subimpacts[3],":",v_subimpacts[4],":",v_subimpacts[6])
                 break
             }
         }
