@@ -12,9 +12,11 @@ fi
 
 bname=`basename $vcf .vcf.gz`
 
-vcfanno -p 7 -lua /home/naumenko/cre/cre.vcfanno.lua \
+prefix=/home/naumenko/cre
+
+vcfanno -p 5 -lua $prefix/cre.vcfanno.lua \
 	     -base-path /hpf/largeprojects/ccmbio/naumenko/tools/bcbio/gemini_data \
-	     /home/naumenko/cre/cre.vcfanno.conf \
+	     $prefix/cre.vcfanno.conf \
 	     $vcf | sed -e 's/Number=A/Number=1/g' | bgzip -c > $bname.annotated.vcf.gz
 
 tabix $bname.annotated.vcf.gz

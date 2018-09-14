@@ -10,9 +10,16 @@
 #PBS -d .
 #PBS -l vmem=30g,mem=30g
 
-if [ -z $vcf ];
+if [ -z $vcf ]
 then
     vcf=$1
+fi
+
+if [ -n $2 ]
+then
+    threads=$2
+else
+    threads=5
 fi
 
 bname=`basename $vcf .vcf.gz`
@@ -33,14 +40,24 @@ bname=`basename $vcf .vcf.gz`
 reference=`readlink -f $(which bcbio_nextgen.py) | sed s/"anaconda\/bin\/bcbio_nextgen.py"/"genomes\/Hsapiens\/GRCh37"/`
 vep_reference=`readlink -f $(which vep) | sed s/"\/vep"//`
 
+#unset PERL5LIB && vep --vcf -o stdout \
+#    -i $vcf --fork 5 --species homo_sapiens --no_stats --cache --offline --dir ${reference}/vep --symbol --numbers --biotype --total_length \
+#    --canonical --gene_phenotype --ccds --uniprot --domains --regulatory --protein --tsl --appris --af --max_af --af_1kg --af_esp --af_gnomad --pubmed --variant_class \
+#    --allele_number \
+#    --fasta ${reference}/seq/GRCh37.fa.gz \
+#    --plugin LoF,human_ancestor_fa:${reference}/variation/human_ancestor.fa.gz,loftee_path:$vep_reference \
+#    --plugin MaxEntScan,/hpf/largeprojects/ccmbio/naumenko/tools/bcbio/anaconda/share/maxentscan-0_2004.04.21-0 \
+#    --plugin SpliceRegion --sift b --polyphen b --hgvs --shift_hgvs 1 --merged \
+#    | sed '/^#/! s/;;/;/g' | bgzip -c > $bname.vepeffects.vcf.gz
+
+#tabix $bname.vepeffects.vcf.gz
+
 unset PERL5LIB && vep --vcf -o stdout \
-    -i $vcf --fork 5 --species homo_sapiens --no_stats --cache --offline --dir ${reference}/vep --symbol --numbers --biotype --total_length \
+    -i $vcf --fork $threads --species homo_sapiens --no_stats --cache --offline --dir ${reference}/vep --symbol --numbers --biotype --total_length \
     --canonical --gene_phenotype --ccds --uniprot --domains --regulatory --protein --tsl --appris --af --max_af --af_1kg --af_esp --af_gnomad --pubmed --variant_class \
     --allele_number \
     --fasta ${reference}/seq/GRCh37.fa.gz \
     --plugin LoF,human_ancestor_fa:${reference}/variation/human_ancestor.fa.gz,loftee_path:$vep_reference \
-    --plugin MaxEntScan,/hpf/largeprojects/ccmbio/naumenko/tools/bcbio/anaconda/share/maxentscan-0_2004.04.21-0 \
+    --plugin MaxEntScan,/hpf/largeprojects/ccmbio/naumenko/tools/bcbio/anaconda/share/maxentscan-0_2004.04.21-1 \
     --plugin SpliceRegion --sift b --polyphen b --hgvs --shift_hgvs 1 --merged \
     | sed '/^#/! s/;;/;/g' | bgzip -c > $bname.vepeffects.vcf.gz
-
-tabix $bname.vepeffects.vcf.gz
