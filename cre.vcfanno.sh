@@ -12,7 +12,7 @@ fi
 
 bname=`basename $vcf .vcf.gz`
 
-prefix=/home/naumenko/cre
+prefix=$HOME/cre
 
 vcfanno -p 5 -lua $prefix/cre.vcfanno.lua \
 	     -base-path /hpf/largeprojects/ccmbio/naumenko/tools/bcbio/gemini_data \
