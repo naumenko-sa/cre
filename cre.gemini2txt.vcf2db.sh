@@ -43,7 +43,7 @@ sQuery="select \
         domains as Protein_domains,\
         rs_ids as rsIDs,\
         gnomad_af as Gnomad_af,\
-        gnomad_af_popmax as Max_af,\
+        gnomad_af_popmax as Gnomad_af_popmax,\
         gnomad_ac as Gnomad_ac,\
         gnomad_hom as Gnomad_hom,\
         sift_score as Sift_score,\
