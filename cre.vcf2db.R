@@ -653,7 +653,7 @@ annotate_w_care4rare = function(family,samples)
         variants = merge(variants,hgmd.genes,by.x="Gene",by.y = "index",all.x=T,all.y=F)
     }
     
-    select_and_write2(variants,samples,family)
+    select_and_write2(variants,samples,paste0(family,".wes.",Sys.Date()))
 }
 
 load_tables = function(debug = F)

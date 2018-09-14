@@ -628,7 +628,7 @@ annotate_w_care4rare = function(family,samples)
         variants = merge(variants,hgmd,by.x="superindex",by.y="superindex",all.x=T,all.y=F)
     }
     
-    select_and_write2(variants,samples,family)
+    select_and_write2(variants,samples,paste0(family,".wes.",Sys.Date()))
 }
 
 library(stringr)
