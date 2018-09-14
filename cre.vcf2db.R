@@ -236,30 +236,25 @@ create_report = function(family,samples)
     # Column 33 - rsIds
 
     # population frequencies
-    # Column34 = Gnomad_af_es
-    # Column35 = Gnomad_af_gs
-    # Column36 = Max_af
+    # Column34 = Gnomad_af
+    # Column35 = Gnomad_af_popmax
     
     # Exac scores
-    # Column37 = Exac_pLi_score
-    # Column38 = Exac_missense_score
+    # Column36 = Exac_pLi_score
+    # Column37 = Exac_missense_score
     exac_scores_file = paste0(default_tables_path,"/exac_scores.txt")
     exac_scores = read.delim(exac_scores_file, stringsAsFactors=F)
     variants = merge(variants,exac_scores,all.x=T)
 
-    # Column39 = Gnomad_ac
-    for (field in c("Gnomad_ac_gs","Gnomad_ac_es","Gnomad_hom_gs","Gnomad_hom_es"))
+    # Column38 = Gnomad_ac
+    # Column39 = Gnomad_hom
+    for (field in c("Gnomad_ac","Gnomad_hom"))
     {
         variants[,field] = with(variants,gsub("-1","0",get(field),fixed=T))
         variants[,field] = with(variants,gsub("None","0",get(field),fixed=T))
     }
-    variants$Gnomad_ac_es = as.numeric(variants$Gnomad_ac_es)
-    variants$Gnomad_ac_gs = as.numeric(variants$Gnomad_ac_gs)
-    variants$Gnomad_ac = variants$Gnomad_ac_es + variants$Gnomad_ac_gs
-    # Column40 = Gnomad_hom
-    variants$Gnomad_hom_es = as.numeric(variants$Gnomad_hom_es)
-    variants$Gnomad_hom_gs = as.numeric(variants$Gnomad_hom_gs)
-    variants$Gnomad_hom = variants$Gnomad_hom_es + variants$Gnomad_hom_gs
+    
+    
     
     # Column41 - Conserved_in_20_mammals
     
@@ -268,6 +263,12 @@ create_report = function(family,samples)
     # Column43 = polyphen
     # Column44 = cadd
     # Column45 = vest3
+    for (i in 1:nrow(variants))
+    {
+        v_vest = strsplit(variants[i,"Vest3_score"],",",fixed=T)[[1]]
+        variants[i,"Vest3_score"] = max(v_vest)
+    }
+    
     # Column46 = revel
     
     # Column47 = Imprinting_status
@@ -327,7 +328,7 @@ create_report = function(family,samples)
     variants$Old_multiallelic[variants$Old_multiallelic=="None"]="NA"
         
     # replace -1 with 0
-    for (field in c("Max_af","Trio_coverage","Gnomad_af_es","Gnomad_af_gs"))
+    for (field in c("Trio_coverage","Gnomad_af","Gnomad_af_popmax"))
     {
         variants[,field] = with(variants,gsub("-1","0",get(field),fixed=T))
         variants[,field] = with(variants,gsub("None","0",get(field),fixed=T))
@@ -354,7 +355,7 @@ select_and_write2 = function(variants,samples,prefix)
                           c("Trio_coverage","Ensembl_gene_id","Gene_description","Omim_gene_description","Omim_inheritance",
                             "Orphanet", "Clinvar","Ensembl_transcript_id","AA_position","Exon","Protein_domains",
                             "Frequency_in_C4R","Seen_in_C4R_samples", "HGMD_id","HGMD_gene","HGMD_tag","HGMD_ref","rsIDs",
-                            "Gnomad_af_es","Gnomad_af_gs","Max_af","Gnomad_ac","Gnomad_hom","Exac_pLi_score","Exac_missense_score",
+                            "Gnomad_af_popmax","Gnomad_af","Gnomad_ac","Gnomad_hom","Exac_pLi_score","Exac_missense_score",
                             "Conserved_in_20_mammals","Sift_score","Polyphen_score","Cadd_score","Vest3_score","Revel_score",
                             "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing",
                             "Number_of_callers","Old_multiallelic"))]
