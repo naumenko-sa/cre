@@ -15,10 +15,8 @@ then
     vcf=$1
 fi
 
-if [ -n $2 ]
+if [ -z $threads ]
 then
-    threads=$2
-else
     threads=5
 fi
 
@@ -51,6 +49,8 @@ vep_reference=`readlink -f $(which vep) | sed s/"\/vep"//`
 #    | sed '/^#/! s/;;/;/g' | bgzip -c > $bname.vepeffects.vcf.gz
 
 #tabix $bname.vepeffects.vcf.gz
+
+echo "Threads:" $threads
 
 unset PERL5LIB && vep --vcf -o stdout \
     -i $vcf --fork $threads --species homo_sapiens --no_stats --cache --offline --dir ${reference}/vep --symbol --numbers --biotype --total_length \
