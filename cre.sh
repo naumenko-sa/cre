@@ -9,7 +9,7 @@
 # 	family = [family_id] (=project_id=case_id=folder_name, main result file should be family/family-ensemble.db)
 # 	cleanup= [0|1] default = 0
 # 	make_report=[0|1] default = 1
-# 	type = [ wes.regular (default) | wes.synonymous | wes.fast | rnaseq | wgs | annotate]
+# 	type = [ wes.regular (default) | wes.synonymous | wes.fast | rnaseq | wgs | annotate (only for cleaning)]
 #	max_af = af filter, default = 0.01
 #	loader [ default = gemini | vcf2db ] - load used to create gemini database
 ####################################################################################################
