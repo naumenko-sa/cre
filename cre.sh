@@ -40,7 +40,7 @@ function f_cleanup
     # if summary exists
     if [ -f $project_summary ] 
     then
-        result_dir=`find final -name project-summary.yaml | sed s/"\/project-summary.yaml"//`
+        result_dir=`echo $project_summary | sed s/"\/project-summary.yaml"//`
         echo "result_dir =" $result_dir
     
         # if result_dir is empty that might cause copying entire /
