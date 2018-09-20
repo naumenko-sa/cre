@@ -129,7 +129,7 @@ function f_make_report
 
     for f in *.vcf.gz;
     do
-	tabix $f;
+	   tabix $f;
     done
 
     # report filtered vcf for import in phenotips
