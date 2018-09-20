@@ -22,73 +22,73 @@
 # cleanup is different for wes.fast template - don't remove gatk db
 function f_cleanup
 {
-
     # better to look for project-summary than hardcode the year
     # keep bam files for new samples
     
     if [ -z $family ] 
     then
-	echo "Project (family) folder does not exist. Exiting"
-	exit 1
+	   echo "Project (family) folder does not exist. Exiting"
+	   exit 1
     fi
     
     cd $family
     result_dir=`find final -name project-summary.yaml | sed s/"\/project-summary.yaml"//`
     
-    echo $result_dir
+    echo "result_dir =" $result_dir
     
-    if [ -d $result_dir ]
+    # if result_dir is empty that might cause copying entire /
+    if [ -d $result_dir ] && [ -n "$result_dir"]
     then
-	mv $result_dir/* .
-	mv final/*/*.bam .
-	mv final/*/*.bai .
-	# keep validation picture
-	mv final/*/*.png .
+	   mv $result_dir/* .
+	   mv final/*/*.bam .
+	   mv final/*/*.bai .
+	   # keep validation picture
+	   mv final/*/*.png .
 	
-	# keep sv calls
-	if [ "$type" == "wgs" ]
-	then
-	    mv final sv
-	fi
+	   # keep sv calls
+	   if [ "$type" == "wgs" ]
+	   then
+	        mv final sv
+	   fi
 	
-        rm -rf final/
-	rm -rf work/
+       rm -rf final/
+	   rm -rf work/
     
-	#proceed only if there is a result dir
+	    #proceed only if there is a result dir
 
         #don't remove input files for new projects
-	#rm -rf input/
+	    #rm -rf input/
 
         #rename bam files to match sample names
-	for f in *ready.bam;do mv $f `echo $f | sed s/"-ready"//`;done;
+        for f in *ready.bam;do mv $f `echo $f | sed s/"-ready"//`;done;
         for f in *ready.bam.bai;do mv $f `echo $f | sed s/"-ready"//`;done;
 
-	#make bam files read only
+	    #make bam files read only
         for f in *.bam;do chmod 444 $f;done;
 
-	#calculate md5 sums
+	    #calculate md5 sums
         for f in *.bam;do md5sum $f > $f.md5;done;
 
-	#validate bam files
+	    #validate bam files
         for f in *.bam;do	cre.bam.validate.sh $f;done;
     
-	if [ "$type" == "wes.fast" ] || [ "$type" == "wgs" ]
-	then
-	    ln -s ${family}-gatk-haplotype.db ${family}-ensemble.db
-	    ln -s ${family}-gatk-haplotype-annotated-decomposed.vcf.gz ${family}-ensemble-annotated-decomposed.vcf.gz
-	    ln -s ${family}-gatk-haplotype-annotated-decomposed.vcf.gz.tbi ${family}-ensemble-annotated-decomposed.vcf.gz.tbi
-	elif [ "$type" == "annotate" ]
-	then
-	    ln -s ${family}-precalled.db ${family}-ensemble.db
-	    ln -s ${family}-precalled-annotated-decomposed.vcf.gz ${family}-ensemble-annotated-decomposed.vcf.gz
-	    ln -s ${family}-precalled-annotated-decomposed.vcf.gz.tbi ${family}-ensemble-annotated-decomposed.vcf.gz.tbi
-	else
-	    # we don't need gemini databases for particular calling algorythms
-	    rm ${family}-freebayes.db
-	    rm ${family}-gatk-haplotype.db
-	    rm ${family}-samtools.db
-	    rm ${family}-platypus.db
-	fi
+        if [ "$type" == "wes.fast" ] || [ "$type" == "wgs" ]
+        then
+	       ln -s ${family}-gatk-haplotype.db ${family}-ensemble.db
+	       ln -s ${family}-gatk-haplotype-annotated-decomposed.vcf.gz ${family}-ensemble-annotated-decomposed.vcf.gz
+	       ln -s ${family}-gatk-haplotype-annotated-decomposed.vcf.gz.tbi ${family}-ensemble-annotated-decomposed.vcf.gz.tbi
+	   elif [ "$type" == "annotate" ]
+	   then
+	       ln -s ${family}-precalled.db ${family}-ensemble.db
+	       ln -s ${family}-precalled-annotated-decomposed.vcf.gz ${family}-ensemble-annotated-decomposed.vcf.gz
+	       ln -s ${family}-precalled-annotated-decomposed.vcf.gz.tbi ${family}-ensemble-annotated-decomposed.vcf.gz.tbi
+	   else
+	       # we don't need gemini databases for particular calling algorythms
+	       rm ${family}-freebayes.db
+	       rm ${family}-gatk-haplotype.db
+	       rm ${family}-samtools.db
+	       rm ${family}-platypus.db
+	   fi
     fi
     cd ..
 }
