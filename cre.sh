@@ -44,7 +44,7 @@ function f_cleanup
         echo "result_dir =" $result_dir
     
         # if result_dir is empty that might cause copying entire /
-        if [ -d $result_dir ] && [ -n "$result_dir"]
+        if [ -d $result_dir ] && [ -n "$result_dir" ]
         then
 	       mv $result_dir/* .
 	       mv final/*/*.bam .
