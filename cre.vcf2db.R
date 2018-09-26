@@ -743,7 +743,7 @@ load_tables(debug)
 create_report(family,samples)
 merge_reports(family,samples)
 annotate_w_care4rare(family,samples)
-clinical_report(family)
+clinical_report(family,samples)
 
 setwd("..")
 
