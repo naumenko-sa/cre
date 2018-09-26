@@ -698,6 +698,28 @@ load_tables = function(debug = F)
     }
 }
 
+# creates clinical report - more conservative filtering and less columns
+clinical_report = function(project,samples)
+{
+    report_file_name = paste0(project,".wes.",Sys.Date(),".csv")
+    full_report = read.csv(report_file_name,header = T,stringsAsFactors = F)
+    
+    
+    full_report$max_alt = with(full_report,pmax(get(paste0("Alt_depths.",samples))))
+    
+    filtered_report = subset(full_report, 
+               Quality > 1000 & Gnomad_af_popmax < 0.005 & Frequency_in_C4R < 6 & max_alt >=20,
+               select=c("Position","GNOMAD_Link","Ref","Alt","Gene",paste0("Burden.",samples),
+                        "Variation","Info","Refseq_change","Omim_gene_description","Omim_inheritance",
+                        "Orphanet","Clinvar","Frequency_in_C4R",
+                        "Gnomad_af_popmax","Gnomad_af","Gnomad_ac","Gnomad_hom",
+                        "Sift_score","Polyphen_score","Cadd_score","Vest3_score","Revel_score",
+                        "Imprinting_status","Pseudoautosomal")
+               )
+    
+    write.csv(filtered_report,paste0(project,".wes.clinical.",Sys.Date(),".csv"),row.names = F)
+}
+
 library(stringr)
 library(data.table)
 library(plyr)
@@ -721,6 +743,7 @@ load_tables(debug)
 create_report(family,samples)
 merge_reports(family,samples)
 annotate_w_care4rare(family,samples)
+clinical_report(family)
 
 setwd("..")
 

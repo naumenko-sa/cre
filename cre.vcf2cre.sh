@@ -11,7 +11,7 @@
 # parameters:
 # original_vcf = file.vcf.gz
 # project = case = family = S11 (example)
-# ped = file.ped
+# [optional] ped = file.ped
 
 # qsub ~/cre/cre.vcf2cre.sh -v original_vcf=file.vcf,project=412
 
