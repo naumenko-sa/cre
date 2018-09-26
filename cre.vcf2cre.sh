@@ -38,9 +38,13 @@ cre.vcfanno.sh $project.sorted.decomposed.vepeffects.vcf.gz
 
 if [ -z $ped ]
 then
-    echo "no ped file, generating for one sample..."
-    sample=`bcftools query -l $original_vcf`
-    echo -e "1\t"$sample"\t0\t0\t0\t0\n" > $project.ped
+    echo "no ped file, generating ..."
+    bcftools query -l $original_vcf > samples.txt
+    > $project.ped
+    for sample in `cat samples.txt`
+    do
+    	echo -e "1\t"$sample"\t0\t0\t0\t0\n" >> $project.ped
+    done
     ped=$project.ped
 fi
 
