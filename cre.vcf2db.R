@@ -540,7 +540,10 @@ merge_reports = function(family,samples)
                     field_bayes = paste0(fix_column_name(sample),".NV")
           
                     #sometimes freebayes has 10,10,10 for decomposed alleles
-                    ensemble[i,field_depth] = strsplit(ensemble[i,field_bayes],",",fixed=T)[[1]][1]
+                    if (is.character(ensemble[i,field_bayes]))
+                    {
+                        ensemble[i,field_depth] = strsplit(ensemble[i,field_bayes],",",fixed=T)[[1]][1]
+                    }
                 }
                 n_sample = 1
                 prefix = ""
@@ -551,7 +554,12 @@ merge_reports = function(family,samples)
                     column = paste0(fix_column_name(sample),".NR")
                     if (n_sample>1) prefix="_"
                     #sometimes freebayes has 10,10,10 for decomposed alleles
-                    cov_value=strsplit(ensemble[i,column],",",fixed=T)[[1]][1]
+                    if (is.character(ensemble[i,column]))
+                    {
+                        cov_value=strsplit(ensemble[i,column],",",fixed=T)[[1]][1]
+                    }else{
+                        cov_value=ensemble[i,column]
+                    }
                     ensemble[i,"Trio_coverage"] = paste(ensemble[i,"Trio_coverage"],cov_value,sep = prefix)
           
                     n_sample = n_sample+1
