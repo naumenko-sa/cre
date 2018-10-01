@@ -17,7 +17,10 @@
 
 bname=`basename $original_vcf .vcf.gz`
 
-echo `date` "Removing annotation..."
+echo "###############################################"
+echo `date` ": Removing annotation of " $original_vcf
+echo "###############################################"
+
 cre.annotation.strip.sh $original_vcf
 
 gunzip -c $bname.no_anno.vcf.gz | grep "^#"  > $project.vcf
@@ -30,10 +33,15 @@ tabix $project.sorted.vcf.gz
 
 cre.vt.decompose.sh $project.sorted.vcf.gz
 
+echo "################################################"
 echo `date` "Annotating with VEP..."
+echo "################################################"
+
 cre.vep.sh $project.sorted.decomposed.vcf.gz
 
+echo "################################################"
 echo `date` "Annotating with vcfanno ..."
+echo "################################################"
 cre.vcfanno.sh $project.sorted.decomposed.vepeffects.vcf.gz
 
 if [ -z $ped ]
@@ -48,7 +56,9 @@ then
     ped=$project.ped
 fi
 
+echo "#################################################"
 echo `date` "Generating gemini database"
+echo "#################################################"
 vcf2db.py $project.sorted.decomposed.vepeffects.annotated.vcf.gz 	$ped	${project}-ensemble.db
 
 mkdir $project
@@ -72,3 +82,7 @@ rm $project.vcf.gz.tbi
 
 rm $project.sorted*.vcf.gz
 rm $project.sorted*.vcf.gz.tbi
+
+echo "#####################################################"
+echo `date` " DONE"
+echo "#####################################################"

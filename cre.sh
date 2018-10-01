@@ -162,21 +162,30 @@ function f_make_report
     #decompose first for the old version of bcbio!
     #gemini.decompose.sh ${family}-freebayes.vcf.gz
     fprefix=${family}-freebayes-annotated-decomposed
-    bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt decompose -s - | vt uniq - -o $fprefix.subset.vcf.gz
-    tabix $fprefix.subset.vcf.gz
-    vcf.freebayes.getAO.sh $fprefix.subset.vcf.gz $reference
+    if [ -f $fprefix.vcf.gz ]
+    then
+	bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt decompose -s - | vt uniq - -o $fprefix.subset.vcf.gz
+	tabix $fprefix.subset.vcf.gz
+	vcf.freebayes.getAO.sh $fprefix.subset.vcf.gz $reference
+    fi
 
     #gemini.decompose.sh ${family}-gatk-haplotype.vcf.gz
     fprefix=${family}-gatk-haplotype-annotated-decomposed
-    bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt decompose -s - | vt uniq - -o $fprefix.subset.vcf.gz
-    tabix $fprefix.subset.vcf.gz
-    vcf.gatk.get_depth.sh $fprefix.subset.vcf.gz $reference
+    if [ -f $fprefix.vcf.gz ]
+    then
+	bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt decompose -s - | vt uniq - -o $fprefix.subset.vcf.gz
+	tabix $fprefix.subset.vcf.gz
+	vcf.gatk.get_depth.sh $fprefix.subset.vcf.gz $reference
+    fi
 
     #gemini.decompose.sh ${family}-platypus.vcf.gz
     fprefix=${family}-platypus-annotated-decomposed
-    bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt decompose -s - | vt uniq - -o $fprefix.subset.vcf.gz
-    tabix $fprefix.subset.vcf.gz
-    vcf.platypus.getNV.sh $fprefix.subset.vcf.gz $reference
+    if [ -f $fprefix.vcf.gz ]
+    then
+	bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt decompose -s - | vt uniq - -o $fprefix.subset.vcf.gz
+	tabix $fprefix.subset.vcf.gz
+	vcf.platypus.getNV.sh $fprefix.subset.vcf.gz $reference
+    fi
 
     cd ..
 
