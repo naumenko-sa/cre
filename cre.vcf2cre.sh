@@ -51,7 +51,7 @@ then
     > $project.ped
     for sample in `cat samples.txt`
     do
-    	echo -e "1\t"$sample"\t0\t0\t0\t0\n" >> $project.ped
+    	echo -e "1\t"$sample"\t0\t0\t0\t0" >> $project.ped
     done
     ped=$project.ped
 fi
