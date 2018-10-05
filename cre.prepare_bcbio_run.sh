@@ -58,8 +58,7 @@ do
     echo $sample","$sample","$family",,,$variant_regions" >> $family.csv
 done < samples.txt
 
-
-if [ $template_type == "annotate" ]
+if [ -n "$2" ] && [ $template_type == "annotate" ]
 then
     mkdir config
     mkdir work
