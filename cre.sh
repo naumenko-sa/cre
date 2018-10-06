@@ -175,6 +175,20 @@ function f_make_report
     then
 	bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt decompose -s - | vt uniq - -o $fprefix.subset.vcf.gz
 	tabix $fprefix.subset.vcf.gz
+	
+	#workaround to fix: https://github.com/quinlan-lab/vcf2db/issues/52
+	sample_name_in_vcf=`bcftools query -l S05-gatk-haplotype-annotated-decomposed.subset.vcf.gz | head -n1`
+	sample_name_in_db=`head -n1 samples.txt`
+	
+	if [ "$sample_name_in_vcf" != "$sample_name_in_db" ]
+	then
+	    echo "VCF2DB fixed sample names, fixing sample names in gatk.vcf to match..."
+	    mv $fprefix.subset.vcf.gz $fprefix.subset.tmp.vcf.gz
+	    bcftools reheader -s samples.txt $fprefix.subset.tmp.vcf.gz > $fprefix.subset.vcf.gz
+	    tabix $fprefix.subset.vcf.gz
+	    rm $fprefix.subset.tmp.vcf.gz
+	fi
+	
 	vcf.gatk.get_depth.sh $fprefix.subset.vcf.gz $reference
     fi
 
