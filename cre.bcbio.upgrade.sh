@@ -23,7 +23,7 @@
 #upgrade data - it upgrades gemini, cadd, rnaseq if they were installed before
 
 # VEP is upgraded quite often ~2-3 months - when upgrading tools it looks for new cache
-bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget vep
+#bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget vep
 
 #gemini
 #bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget gemini
@@ -34,6 +34,8 @@ bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget vep
 
 #gnomad
 #bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget gnomad
+bcbio_nextgen.py upgrade -u skip --genomes hg38 --datatarget gnomad
 
 #rnaseq
 #bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget rnaseq
+bcbio_nextgen.py upgrade -u skip --genomes hg38 --datatarget rnaseq
