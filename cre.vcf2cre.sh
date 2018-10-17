@@ -15,6 +15,10 @@
 
 # qsub ~/cre/cre.vcf2cre.sh -v original_vcf=file.vcf,project=412
 
+# in old bcbio vcf files from rna-seq pipeline, i.e. combined-annotated-rnaedit.vcf.gz, bcbio-nextgen1.0.4, some info field formats are wrong:
+# AC, AF, MLEAC, MLEAF Number=1 not A. Because of that vt is not properly decomposing multiallelic variants, and vcf2db can't create gemini database
+# solution is to put Number=A in the vcf header or rerun variant calling with the latest bcbio
+
 bname=`basename $original_vcf .vcf.gz`
 
 echo "###############################################"

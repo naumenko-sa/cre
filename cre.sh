@@ -108,7 +108,7 @@ function f_make_report
     then
 	   export depth_threshold=5
     else
-       export depth_threshold=10
+	    export depth_threshold=10
     fi
 
     if [ "$type" == "wes.synonymous" ] || [ "$type" == "wgs" ]
