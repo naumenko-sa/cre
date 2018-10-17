@@ -252,19 +252,14 @@ then
     f_cleanup
 fi
 
-#make report by default
-if [ -z $make_report ]
-then
-    make_report=1
-fi 
-
 if [ -z $max_af ]
 then
     max_af=0.01
 fi
 export max_af
 
-if [ $make_report -eq 1 ]
+#make report by default
+if [ -z $make_report ]  || [ $make_report -eq 1 ]
 then
     f_make_report
 fi
