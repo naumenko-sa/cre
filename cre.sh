@@ -11,7 +11,7 @@
 # 	make_report=[0|1] default = 1
 # 	type = [ wes.regular (default) | wes.synonymous | wes.fast | rnaseq | wgs | annotate (only for cleaning)]
 #	max_af = af filter, default = 0.01
-#	loader [ default = gemini | vcf2db ] - load used to create gemini database
+#	loader [ default = vcf2db | gemini ] - load used to create gemini database
 ####################################################################################################
 
 #PBS -l walltime=20:00:00,nodes=1:ppn=1
@@ -108,7 +108,7 @@ function f_make_report
     then
 	   export depth_threshold=5
     else
-       export depth_threshold=10
+	   export depth_threshold=10
     fi
 
     if [ "$type" == "wes.synonymous" ] || [ "$type" == "wgs" ]
@@ -175,6 +175,21 @@ function f_make_report
     then
 	bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt decompose -s - | vt uniq - -o $fprefix.subset.vcf.gz
 	tabix $fprefix.subset.vcf.gz
+	
+	#workaround to fix: https://github.com/quinlan-lab/vcf2db/issues/52
+	#vcf2db changes - to _ in the sample names
+	bcftools query -l $fprefix.subset.vcf.gz > $fprefix.samples.txt
+	if grep -q "-" $fprefix.samples.txt;
+	then
+	    cat $fprefix.samples.txt | sed s/"-"/"_"/g > $fprefix.samples.fixed.txt
+	
+	    echo "VCF2DB fixed sample names, fixing sample names in gatk.vcf to match..."
+	    mv $fprefix.subset.vcf.gz $fprefix.subset.tmp.vcf.gz
+	    bcftools reheader -s $fprefix.samples.fixed.txt $fprefix.subset.tmp.vcf.gz > $fprefix.subset.vcf.gz
+	    tabix $fprefix.subset.vcf.gz
+	    rm $fprefix.subset.tmp.vcf.gz
+	fi
+	
 	vcf.gatk.get_depth.sh $fprefix.subset.vcf.gz $reference
     fi
 
@@ -227,6 +242,11 @@ then
     export severity_filter=ALL
 fi
 
+if [ -z $loader ]
+then
+    export loader="vcf2db"
+fi
+
 #no cleanup by default
 if [ -z $cleanup ]
 then
@@ -238,19 +258,14 @@ then
     f_cleanup
 fi
 
-#make report by default
-if [ -z $make_report ]
-then
-    make_report=1
-fi 
-
 if [ -z $max_af ]
 then
     max_af=0.01
 fi
 export max_af
 
-if [ $make_report -eq 1 ]
+#make report by default
+if [ -z $make_report ]  || [ $make_report -eq 1 ]
 then
     f_make_report
 fi

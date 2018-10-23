@@ -1,11 +1,11 @@
 #!/bin/bash
-#fresh install with human and mouse genome
+# fresh install with human and mouse genome
 
 # to check what enviroments were picked up during the installation
-#conda info --envs --json
+# conda info --envs --json
 # check file ~/.conda/environments.txt - it has environment from all installations - they can interfere
 
-#wget https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/bcbio_nextgen_install.py
+# wget https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/bcbio_nextgen_install.py
 export PYTHONPATH=/hpf/largeprojects/lauryl/bcbio110/anaconda/lib/python2.7
 
 PATH=/hpf/largeprojects/lauryl/bcbio110/anaconda/bin

@@ -52,10 +52,29 @@ create_report = function(family,samples)
     file = paste0(family,".variants.txt")
     variants = get_variants_from_file(file)
     
-    #temporarily due to https://github.com/quinlan-lab/vcf2db/issues/48
-    transcripts_genes = read.csv("~/cre/data/genes.transcripts.csv")
-    variants$Ensembl_gene_id=NULL
-    variants = merge(variants,transcripts_genes,by.x='Ensembl_transcript_id',by.y="Ensembl_transcript_id",all.x=T)
+    impact_file=paste0(family,".variant_impacts.txt")
+    impacts = get_variants_from_file(impact_file)
+    
+    # temporarily due to https://github.com/quinlan-lab/vcf2db/issues/48
+    # fixed in vcf2db
+    #transcripts_genes = read.csv("~/cre/data/genes.transcripts.csv")
+    #variants$Ensembl_gene_id=NULL
+    #variants$Ensembl_transcript_id1=variants$Ensembl_transcript_id
+    
+    #for (i in 1:nrow(variants)){
+    #    variant_id = variants[i,"Variant_id"]
+    #    #variant_id="4489"
+    #    variant_impacts = subset(impacts, variant_id == variant_id & gene == variants[i,"Gene"])
+    #    variant_impacts = variant_impacts[order(variant_impacts$transcript),]
+        
+    #    if (nrow(variant_impacts)>0){
+    #        variants[i,"Ensembl_transcript_id1"] = variant_impacts[1,"transcript"]
+    #    }
+    #    ar = strsplit(variants[i,"Ensembl_transcript_id1"],".",fixed=T)
+    #    variants[i,"Ensembl_transcript_id1"] = ar[[1]][1]
+    #}
+    
+    #variants = merge(variants,transcripts_genes,by.x='Ensembl_transcript_id1',by.y="Ensembl_transcript_id",all.x=T)
     
     #Column1 - Position
     variants$Position=with(variants,paste(Chrom,Pos,sep=':'))
@@ -107,9 +126,6 @@ create_report = function(family,samples)
     
     # Column11 =  Info
     variants = add_placeholder(variants,"Info","Info")
-    
-    impact_file=paste0(family,".variant_impacts.txt")
-    impacts = get_variants_from_file(impact_file)
     
     for (i in 1:nrow(variants))
     {
@@ -540,7 +556,7 @@ merge_reports = function(family,samples)
                     field_bayes = paste0(fix_column_name(sample),".NV")
           
                     #sometimes freebayes has 10,10,10 for decomposed alleles
-                    if (is.character(ensemble[i,field_bayes]))
+                    if (grepl(",",ensemble[i,field_bayes]))
                     {
                         ensemble[i,field_depth] = strsplit(ensemble[i,field_bayes],",",fixed=T)[[1]][1]
                     }
@@ -554,7 +570,7 @@ merge_reports = function(family,samples)
                     column = paste0(fix_column_name(sample),".NR")
                     if (n_sample>1) prefix="_"
                     #sometimes freebayes has 10,10,10 for decomposed alleles
-                    if (is.character(ensemble[i,column]))
+                    if (grepl(",",ensemble[i,column]))
                     {
                         cov_value=strsplit(ensemble[i,column],",",fixed=T)[[1]][1]
                     }else{
