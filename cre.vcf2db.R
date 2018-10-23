@@ -55,25 +55,26 @@ create_report = function(family,samples)
     impact_file=paste0(family,".variant_impacts.txt")
     impacts = get_variants_from_file(impact_file)
     
-    #temporarily due to https://github.com/quinlan-lab/vcf2db/issues/48
-    transcripts_genes = read.csv("~/cre/data/genes.transcripts.csv")
-    variants$Ensembl_gene_id=NULL
-    variants$Ensembl_transcript_id1=variants$Ensembl_transcript_id
+    # temporarily due to https://github.com/quinlan-lab/vcf2db/issues/48
+    # fixed in vcf2db
+    #transcripts_genes = read.csv("~/cre/data/genes.transcripts.csv")
+    #variants$Ensembl_gene_id=NULL
+    #variants$Ensembl_transcript_id1=variants$Ensembl_transcript_id
     
-    for (i in 1:nrow(variants)){
-        variant_id = variants[i,"Variant_id"]
-        #variant_id="4489"
-        variant_impacts = subset(impacts, variant_id == variant_id & gene == variants[i,"Gene"])
-        variant_impacts = variant_impacts[order(variant_impacts$transcript),]
+    #for (i in 1:nrow(variants)){
+    #    variant_id = variants[i,"Variant_id"]
+    #    #variant_id="4489"
+    #    variant_impacts = subset(impacts, variant_id == variant_id & gene == variants[i,"Gene"])
+    #    variant_impacts = variant_impacts[order(variant_impacts$transcript),]
         
-        if (nrow(variant_impacts)>0){
-            variants[i,"Ensembl_transcript_id1"] = variant_impacts[1,"transcript"]
-        }
-        ar = strsplit(variants[i,"Ensembl_transcript_id1"],".",fixed=T)
-        variants[i,"Ensembl_transcript_id1"] = ar[[1]][1]
-    }
+    #    if (nrow(variant_impacts)>0){
+    #        variants[i,"Ensembl_transcript_id1"] = variant_impacts[1,"transcript"]
+    #    }
+    #    ar = strsplit(variants[i,"Ensembl_transcript_id1"],".",fixed=T)
+    #    variants[i,"Ensembl_transcript_id1"] = ar[[1]][1]
+    #}
     
-    variants = merge(variants,transcripts_genes,by.x='Ensembl_transcript_id1',by.y="Ensembl_transcript_id",all.x=T)
+    #variants = merge(variants,transcripts_genes,by.x='Ensembl_transcript_id1',by.y="Ensembl_transcript_id",all.x=T)
     
     #Column1 - Position
     variants$Position=with(variants,paste(Chrom,Pos,sep=':'))
