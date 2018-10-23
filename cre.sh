@@ -11,7 +11,7 @@
 # 	make_report=[0|1] default = 1
 # 	type = [ wes.regular (default) | wes.synonymous | wes.fast | rnaseq | wgs | annotate (only for cleaning)]
 #	max_af = af filter, default = 0.01
-#	loader [ default = gemini | vcf2db ] - load used to create gemini database
+#	loader [ default = vcf2db | gemini ] - load used to create gemini database
 ####################################################################################################
 
 #PBS -l walltime=20:00:00,nodes=1:ppn=1
@@ -240,6 +240,11 @@ if [ "$type" == "rnaseq" ]
 then
     export depth_threshold=5
     export severity_filter=ALL
+fi
+
+if [ -z $loader ]
+then
+    export loader="vcf2db"
 fi
 
 #no cleanup by default
