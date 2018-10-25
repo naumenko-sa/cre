@@ -1,5 +1,4 @@
 #!/bin/bash
-
 #PBS -l walltime=23:00:00,nodes=1:ppn=1
 #PBS -joe .
 #PBS -d .
@@ -18,6 +17,13 @@
 # in old bcbio vcf files from rna-seq pipeline, i.e. combined-annotated-rnaedit.vcf.gz, bcbio-nextgen1.0.4, some info field formats are wrong:
 # AC, AF, MLEAC, MLEAF Number=1 not A. Because of that vt is not properly decomposing multiallelic variants, and vcf2db can't create gemini database
 # solution is to put Number=A in the vcf header or rerun variant calling with the latest bcbio
+
+# if input is from TCAG (HAS) it does not have DP INFO field, we need to fake it from FORMAT DP for SNVs and from DPI for indels:
+# cre.vcf.has2dp.sh
+# gunzip -c 331606_S1.flt.nochr.vcf.gz | grep "^#" > 331606.vcf
+# add to header: 
+##INFO=<ID=DP,Number=1,Type=Integer,Description="Approximate read depth; some reads may have been filtered">
+# gunzip -c 331606_S1.flt.nochr.vcf.gz | grep -v "^#"  | grep PASS | sed s/":DPI:"/":DP:"awk -F ':' '{print $0"\tDP="$9}' | awk -F "\t" '{print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$11";"$8"\t"$9"\t"$10}' >> 331606.vcf
 
 bname=`basename $original_vcf .vcf.gz`
 
