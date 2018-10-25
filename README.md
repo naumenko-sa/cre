@@ -164,6 +164,7 @@ vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 * cre.gemini_load.sh loads vep-annotated vcf to gemini db.
 * cre.package.sh
 * cre.sh
+* cre.vcf.has2dp.sh fixes input vcf file from HAS pipeline (Illumina, TCAG) filling DP field
 * gemini.gemini2txt.sh
 * gemini.refseq.sh
 * gemini.variant_impacts.sh

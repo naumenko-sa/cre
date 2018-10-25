@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # if input vcf is from TCAG (HAS) it does not have DP INFO field, we need to fake it from FORMAT DP for SNVs and from DPI for indels:
+# don't forget to change sample name if necessary with bcftools reheader
 
 bname=`basename $1 .vcf.gz`
 
