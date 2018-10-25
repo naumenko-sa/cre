@@ -111,7 +111,7 @@ function f_make_report
 	   export depth_threshold=10
     fi
 
-    if [ "$type" == "wes.synonymous" ] || [ "$type" == "wgs" ]
+    if [ "$type" == "wes.synonymous" ] || [ "$type" == "wgs" ] || [ "$type" == "rnaseq" ]
     then
 	   export severity_filter=ALL
     else
