@@ -212,6 +212,7 @@ function f_make_report
 		noncoding="noncoding"
 	   else
 		noncoding=""
+	   fi
 		
 	   Rscript ~/cre/cre.vcf2db.R $family $noncoding
     else
