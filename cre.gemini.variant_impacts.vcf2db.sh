@@ -62,7 +62,7 @@ then
 	i.spliceregion"
 fi
 
-sQuery=$sQuery" from variants v,variant_impacts i where "$severity_filter"v.max_af <= "$max_af" and \
+sQuery=$sQuery" from variants v,variant_impacts i where "$severity_filter"v.gnomad_af_popmax <= "$max_af" and \
 		v.variant_id=i.variant_id and \
 		(v.dp>="$depth_threshold" or v.dp='' or v.dp is null)"
 
