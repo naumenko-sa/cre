@@ -8,7 +8,7 @@
 #   parameters:
 # 	family = [family_id] (=project_id=case_id=folder_name, main result file should be family/family-ensemble.db)
 # 	cleanup= [0|1] default = 0
-# 	make_report=[0|1] default = 1
+# 	make_report=[0|1] default = 1, don't make report for WGS analysis first
 # 	type = [ wes.regular (default) | wes.synonymous | wes.fast | rnaseq | wgs | annotate (only for cleaning)]
 #	max_af = af filter, default = 0.01
 #	loader [ default = vcf2db | gemini ] - load used to create gemini database
@@ -207,7 +207,13 @@ function f_make_report
     # using Rscript from bcbio
     if [ "$loader" == "vcf2db" ]
     then
-	   Rscript ~/cre/cre.vcf2db.R $family
+	   if [ "$type" == "wgs" ] || [ "$type" == "rnaseq" ]
+	   then
+		noncoding="noncoding"
+	   else
+		noncoding=""
+		
+	   Rscript ~/cre/cre.vcf2db.R $family $noncoding
     else
 	   Rscript ~/cre/cre.R $family
     fi
@@ -265,7 +271,7 @@ fi
 export max_af
 
 #make report by default
-if [ -z $make_report ]  || [ $make_report -eq 1 ]
+if [ -z $make_report ] || [ $make_report -eq 1 ]
 then
     f_make_report
 fi
