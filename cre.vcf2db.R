@@ -132,7 +132,13 @@ create_report = function(family,samples)
         #debug: i=1  
         v_id = variants[i,"Variant_id"]
         gene = variants[i,"Gene"]
-        gene_impacts = subset(impacts, variant_id==v_id & is_coding == 1,select=c("exon","hgvsc","hgvsp"))
+        #for WES reports we need only coding impacts in the info field, for WGS we need all
+        if (coding){
+            gene_impacts = subset(impacts, variant_id==v_id & is_coding == 1,select=c("exon","hgvsc","hgvsp"))
+        }else{
+            gene_impacts = subset(impacts, variant_id==v_id,select=c("exon","hgvsc","hgvsp"))
+        }
+        
         gene_impacts$gene = rep(gene,nrow(gene_impacts))
         
         gene_impacts$exon[gene_impacts$exon=='']='NA'
@@ -756,6 +762,9 @@ c4r_database_path = "/hpf/largeprojects/ccm_dccforge/dccforge/results/database"
 
 args = commandArgs(trailingOnly = T)
 family = args[1]
+
+coding = if(is.null(args[2])) T else F
+
 debug = F
 
 setwd(family)

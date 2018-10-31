@@ -1,6 +1,6 @@
 select 
 	v.chrom, v.pos, v.id, v.ref, v.alt,
-	a.gene, a.tag, a.author, a.allname, a.vol, a.page, a.year, a.pmid 
+	a.gene, a.tag, a.author, a.allname, a.vol, a.page, a.year, a.pmid,a.dbsnp
 into outfile 'hgmd.csv' 
 	fields terminated by ',' 
 	optionally enclosed by '"' lines terminated by '\n' 
