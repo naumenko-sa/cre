@@ -1,6 +1,5 @@
 # variant report generator
 # Rscript ~/cre/cre.vcf2.db.R <family> noncoding|default=NULL,coding
-
 add_placeholder=function(variants,column_name,placeholder)
 {
     variants[,column_name]=with(variants,placeholder)
