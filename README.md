@@ -83,26 +83,23 @@ By default, for grch37 bcbio does not support decoy sequences, they are supporte
 
 # 2. Running bcbio
 
-* Running a single project
+* Single project
 ```
 qsub ~/cre/bcbio.pbs -v project=[project_name]
 ```
 Project should have a folder project_name in the current directory.
 
-* Running multiple projects
+* Multiple projects
 ```
 qsub -t 1-N ~/cre/bcbio.array.pbs
 ```
 Current directory should have a list of projects in projects.txt.
 
-# 3.Cleaning project directory and creating project.csv report
-[cre.sh](../master/cre.sh) [family] or qsub cre.sh -v family=[family]```
+# 3. Cleaning project directory and creating project.csv report
+```
+qsub ~/cre/cre.sh -v family=[family],cleanup=1
+```
 
-by default it does both cleanup and make_report steps.
-If you want to do one of those steps:
-```
-qsub cre.sh -v family=[family],cleanup=0,make_report=1
-```
   During the cleanup step:
   * moves project results and sample bam files to family dir
   * removes work and final dirs from bcbio project
