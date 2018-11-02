@@ -291,7 +291,9 @@ create_report = function(family,samples)
         variants[i,"Vest3_score"] = max(v_vest)
     }
     
-    # Column46 = revel
+    # Column45 = revel
+    
+    # Column46 = Gerp
     
     # Column47 = Imprinting_status
     # Column48 = Imprinting_expressed_allele
@@ -299,19 +301,13 @@ create_report = function(family,samples)
     imprinting = read.delim(imprinting_file_name, stringsAsFactors=F)
     variants = merge(variants,imprinting,all.x=T)
     
-    # Column50 - pseudoautosomal
+    # Column49 - pseudoautosomal
     pseudoautosomal_file_name = paste0(default_tables_path,"/pseudoautosomal.txt")
     pseudoautosomal = read.delim(pseudoautosomal_file_name, stringsAsFactors=F)
     variants = merge(variants,pseudoautosomal,all.x=T)
     
-    # Column51 - splicing
+    # Column50 - splicing
     variants = add_placeholder(variants,"Splicing","NA")
-    
-    #in older runs (before Nov2017) there are no splicing fields in the database
-    # we report the max vep_maxentscan_diff (ref-alt) score for a gene over all isoforms
-    # https://github.com/Ensembl/VEP_plugins/blob/master/MaxEntScan.pm
-    # that means the lesser the score (more in the negative), the stronger is Alt splice signal
-    # diff = REF  - ALT
     if ("spliceregion" %in% colnames(impacts))
     {
         for (i in 1:nrow(variants))
@@ -341,12 +337,14 @@ create_report = function(family,samples)
 	          
 	          variants[i,"Splicing"] = s_splicing_field
         }
+    }else{
+	print("VEP MaxEntScan annotation is missing")
     }
     
-    # Column 52: number of callers
+    # Column 51: number of callers
     variants = add_placeholder(variants,"Number_of_callers","Number_of_callers")
     
-    # Column 53: Old multiallelic
+    # Column 52: Old multiallelic
     variants$Old_multiallelic[variants$Old_multiallelic=="None"]="NA"
         
     # replace -1 with 0
@@ -378,7 +376,7 @@ select_and_write2 = function(variants,samples,prefix)
                             "Orphanet", "Clinvar","Ensembl_transcript_id","AA_position","Exon","Protein_domains",
                             "Frequency_in_C4R","Seen_in_C4R_samples", "HGMD_id","HGMD_gene","HGMD_tag","HGMD_ref","rsIDs",
                             "Gnomad_af_popmax","Gnomad_af","Gnomad_ac","Gnomad_hom","Exac_pLi_score","Exac_missense_score",
-                            "Conserved_in_20_mammals","Sift_score","Polyphen_score","Cadd_score","Vest3_score","Revel_score",
+                            "Conserved_in_20_mammals","Sift_score","Polyphen_score","Cadd_score","Vest3_score","Revel_score","Gerp_score",
                             "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing",
                             "Number_of_callers","Old_multiallelic"))]
   
@@ -746,7 +744,7 @@ clinical_report = function(project,samples)
                         "Sift_score","Polyphen_score","Cadd_score","Vest3_score","Revel_score",
                         "Imprinting_status","Pseudoautosomal")
                )
-    
+
     write.csv(filtered_report,paste0(project,".wes.clinical.",Sys.Date(),".csv"),row.names = F)
 }
 
