@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/bin/env python
 
 # extracts information about omim inheritance modes from genemap2.txt
 
@@ -24,7 +24,7 @@ inheritance['Somatic mutation'] = 'Smu'
 
 genes = {}
 
-f1 = open(home+'/cre/ensembl_w_description.txt','r')
+f1 = open(home+'/cre/data/ensembl_w_description.txt','r')
 for line in f1:
     ar = line.split('\t')
     genes[ar[0]] = ar[1]

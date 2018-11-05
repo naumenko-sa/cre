@@ -52,6 +52,7 @@ sQuery="select \
         cadd_phred as Cadd_score,\
         vest3_score as Vest3_score,\
         revel_score as Revel_score,\
+        gerp_score as Gerp_score,\
         chrom as Chrom,\
         start+1 as Pos,\
         aa_change as AA_change,\

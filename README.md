@@ -19,12 +19,11 @@ Excel variant report generator and scripts to process WES data (cram/bam/fastq -
   
   ```
       cd OMIM_DIR
-      ~/cre/omim.sh
+      ~/cre/cre.omim.sh
   ```
   
-    It creates two tables: omim.txt with omim description of diseases related to 3700 genes, and omim_inheritance.txt with inheritance modes for genes in OMIM. 
-    
-    * I recommend using improved inheritance table from [https://www.cs.toronto.edu/~buske/cheo/](https://www.cs.toronto.edu/~buske/cheo/). Download the second file with inheritance mappings. It references genes by gene name (symbol) rather than by Ensembl_id which is a requirement for CRE. Most gene names (symbols) could be mapped automatically with Ensembl biomart [genes.R](https://github.com/naumenko-sa/bioscripts/blob/master/genes.R), but some genes (not many) might need manual curation to assign the correct ENSEMBL_ID.
+    Result - omim.txt with omim description of diseases related to ~ 4000 genes
+    We use improved OMIM inheritance table from [https://www.cs.toronto.edu/~buske/cheo/](https://www.cs.toronto.edu/~buske/cheo/).Download the second file with inheritance mappings. It references genes by gene name (symbol) rather than by Ensembl_id which is a requirement for CRE. Most gene names (symbols) could be mapped automatically with Ensembl biomart [genes.R](https://github.com/naumenko-sa/bioscripts/blob/master/genes.R), but some genes (not many) might need manual curation to assign the correct ENSEMBL_ID.
 
   5. (Optional) Install/update Orphanet.
 ```
