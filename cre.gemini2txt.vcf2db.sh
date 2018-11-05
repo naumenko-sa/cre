@@ -29,6 +29,8 @@ max_af=$4
 gemini query -q "select name from samples" $file > samples.txt
 
 sQuery="select \
+        chrom as Chrom,\
+        start+1 as Pos,\
         variant_id as Variant_id,\
         ref as Ref,\
         alt as Alt,\
@@ -53,8 +55,6 @@ sQuery="select \
         vest3_score as Vest3_score,\
         revel_score as Revel_score,\
         gerp_score as Gerp_score,\
-        chrom as Chrom,\
-        start+1 as Pos,\
         aa_change as AA_change,\
         hgvsc as Codon_change,\
         phylop20way_mammalian as Conserved_in_20_mammals,
