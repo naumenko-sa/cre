@@ -28,8 +28,7 @@ Excel variant report generator and scripts to process WES data (cram/bam/fastq -
   5. (Optional) Install/update Orphanet.
 ```
     cd ~/cre/data
-    wget http://www.orphadata.org/data/xml/en_product6.xml
-    cre.orphanet.sh
+    ~/cre/cre.orphanet.sh
 ```
   Orphanet provides descriptions for ~3600 genes:. By default CRE uses [orphanet.txt](../master/data/orphanet.txt)
 

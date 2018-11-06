@@ -25,6 +25,4 @@ cat en_product6.xml.final | awk '{if($0 ~ "ENSG") {print $0"\t"dis}else{dis=$0}}
 cat orphanet.tmp | sort -k1,1 > orphanet.sorted.txt
 cat orphanet.sorted.txt  | awk -F "\t" 'BEGIN{prev_gene="Ensembl_gene_id\tOrphanet";buf=""}{if(prev_gene != $1){print prev_gene"\t"buf;buf=$2;prev_gene=$1}else{buf=buf","$2;}}END{print prev_gene","buf'} > orphanet.txt
 
-cp orphanet.txt ~/cre
-
 rm en_product6.* orphanet.tmp orphanet.sorted.txt
