@@ -32,7 +32,7 @@ Excel variant report generator and scripts to process WES data (cram/bam/fastq -
 ```
   Orphanet provides descriptions for ~3600 genes:. By default CRE uses [orphanet.txt](../master/data/orphanet.txt)
 
-  6. (Optional) Install Gene-level Exac scores.
+  6. (Optional) Update Gnomad gene contraint scores.
 
   By default using [~/cre/data/exac_scores.txt](../master/data/exac_scores.txt)
   
@@ -41,7 +41,6 @@ Excel variant report generator and scripts to process WES data (cram/bam/fastq -
 
   8. (Optional) Install HGMD pro database
   Install HGMD pro and dump information with [~/cre/cre.hgmd2csv.sql](../master/cre.hgmd2csv.sql).
-
 
 # 1. Creating bcbio project - grch37
 

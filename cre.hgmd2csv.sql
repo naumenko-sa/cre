@@ -1,3 +1,4 @@
+-- mysql -u root -p hgmd_pro < ~/cre/cre.hgmd2csv.sql
 select 
 	v.chrom, v.pos, v.id, v.ref, v.alt,
 	a.gene, a.tag, a.author, a.allname, a.vol, a.page, a.year, a.pmid,a.dbsnp
