@@ -33,8 +33,10 @@ Excel variant report generator and scripts to process WES data (cram/bam/fastq -
   Orphanet provides descriptions for ~3600 genes:. By default CRE uses [orphanet.txt](../master/data/orphanet.txt)
 
   6. (Optional) Update Gnomad gene contraint scores.
-
-  By default using [~/cre/data/exac_scores.txt](../master/data/exac_scores.txt)
+```
+    Rscript ~/cre/cre.gnomad_scores.R
+```
+  By default using [~/cre/data/gnomad_scores.csv](../master/data/gnomad_scores.csv)
   
   7. (Optional) Install impriting annotation.
   By default using [~/cre/data/imprinting.txt](../master/data/imprinting.txt).

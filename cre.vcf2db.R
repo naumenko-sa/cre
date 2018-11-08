@@ -261,12 +261,12 @@ create_report = function(family,samples)
     # Column34 = Gnomad_af
     # Column35 = Gnomad_af_popmax
     
-    # Exac scores
-    # Column36 = Exac_pLi_score
-    # Column37 = Exac_missense_score
-    exac_scores_file = paste0(default_tables_path,"/exac_scores.txt")
-    exac_scores = read.delim(exac_scores_file, stringsAsFactors=F)
-    variants = merge(variants,exac_scores,all.x=T)
+    # Gnomad gene constraint scores
+    # Column36 = Gnomad_oe_lof_score
+    # Column37 = Gnomad_oe_mis_score
+    gnomad_scores_file = paste0(default_tables_path,"/gnomad_scores.csv")
+    gnomad_scores = read.csv(gnomad_scores_file, stringsAsFactors=F)
+    variants = merge(variants,gnomad_scores,all.x=T,all.y=F)
 
     # Column38 = Gnomad_ac
     # Column39 = Gnomad_hom
@@ -275,8 +275,6 @@ create_report = function(family,samples)
         variants[,field] = with(variants,gsub("-1","0",get(field),fixed=T))
         variants[,field] = with(variants,gsub("None","0",get(field),fixed=T))
     }
-    
-    
     
     # Column41 - Conserved_in_20_mammals
     
