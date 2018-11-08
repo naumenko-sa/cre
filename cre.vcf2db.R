@@ -373,7 +373,7 @@ select_and_write2 = function(variants,samples,prefix)
                           c("Trio_coverage","Ensembl_gene_id","Gene_description","Omim_gene_description","Omim_inheritance",
                             "Orphanet", "Clinvar","Ensembl_transcript_id","AA_position","Exon","Protein_domains",
                             "Frequency_in_C4R","Seen_in_C4R_samples", "HGMD_id","HGMD_gene","HGMD_tag","HGMD_ref","rsIDs",
-                            "Gnomad_af_popmax","Gnomad_af","Gnomad_ac","Gnomad_hom","Exac_pLi_score","Exac_missense_score",
+                            "Gnomad_af_popmax","Gnomad_af","Gnomad_ac","Gnomad_hom","Gnomad_oe_lof_score","Gnomad_oe_mis_score",
                             "Conserved_in_20_mammals","Sift_score","Polyphen_score","Cadd_score","Vest3_score","Revel_score","Gerp_score",
                             "Imprinting_status","Imprinting_expressed_allele","Pseudoautosomal","Splicing",
                             "Number_of_callers","Old_multiallelic"))]
