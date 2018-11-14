@@ -100,6 +100,22 @@ function f_cleanup
     cd ..
 }
 
+#workaround to fix: https://github.com/quinlan-lab/vcf2db/issues/52
+#vcf2db changes - to _ in the sample names
+function f_fix_sample_names
+{
+    bcftools query -l $1.subset.vcf.gz > $1.samples.txt
+    if grep -q "-" $1.samples.txt;
+    then
+        cat $1.samples.txt | sed s/"-"/"_"/g > $1.samples.fixed.txt
+        echo "VCF2DB fixed sample names, fixing sample names in " $1 " to match..."
+	mv $1.subset.vcf.gz $1.subset.tmp.vcf.gz
+        bcftools reheader -s $1.samples.fixed.txt $1.subset.tmp.vcf.gz > $1.subset.vcf.gz
+	tabix $1.subset.vcf.gz
+	rm $1.subset.tmp.vcf.gz
+    fi
+}
+
 function f_make_report
 {
     cd $family
@@ -169,6 +185,8 @@ function f_make_report
     then
 	bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt decompose -s - | vt uniq - -o $fprefix.subset.vcf.gz
 	tabix $fprefix.subset.vcf.gz
+	
+	f_fix_sample_names $fprefix
 	vcf.freebayes.getAO.sh $fprefix.subset.vcf.gz $reference
     fi
 
@@ -179,20 +197,7 @@ function f_make_report
 	bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt decompose -s - | vt uniq - -o $fprefix.subset.vcf.gz
 	tabix $fprefix.subset.vcf.gz
 	
-	#workaround to fix: https://github.com/quinlan-lab/vcf2db/issues/52
-	#vcf2db changes - to _ in the sample names
-	bcftools query -l $fprefix.subset.vcf.gz > $fprefix.samples.txt
-	if grep -q "-" $fprefix.samples.txt;
-	then
-	    cat $fprefix.samples.txt | sed s/"-"/"_"/g > $fprefix.samples.fixed.txt
-	
-	    echo "VCF2DB fixed sample names, fixing sample names in gatk.vcf to match..."
-	    mv $fprefix.subset.vcf.gz $fprefix.subset.tmp.vcf.gz
-	    bcftools reheader -s $fprefix.samples.fixed.txt $fprefix.subset.tmp.vcf.gz > $fprefix.subset.vcf.gz
-	    tabix $fprefix.subset.vcf.gz
-	    rm $fprefix.subset.tmp.vcf.gz
-	fi
-	
+	f_fix_sample_names $fprefix
 	vcf.gatk.get_depth.sh $fprefix.subset.vcf.gz $reference
     fi
 
@@ -202,7 +207,8 @@ function f_make_report
     then
 	bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt decompose -s - | vt uniq - -o $fprefix.subset.vcf.gz
 	tabix $fprefix.subset.vcf.gz
-	vcf.platypus.getNV.sh $fprefix.subset.vcf.gz $reference
+	f_fix_sample_names $fprefix
+	vcf.platypus.getNV.gatk3.sh $fprefix.subset.vcf.gz $reference
     fi
 
     cd ..

@@ -436,7 +436,7 @@ merge_reports = function(family,samples)
         #two variant callers called one genotype, two another - two genotypes, creates two records at the same site
         ensemble = merge(ensemble,ensemble_table,by.x="superindex",by.y="superindex",all.x=T, all.y=F)
     }
-    
+
     gatk_file = paste0(family,"-gatk-haplotype-annotated-decomposed.table")
     if (file.exists(gatk_file))
     {
@@ -491,15 +491,15 @@ merge_reports = function(family,samples)
             ensemble[c("DP",paste0(fix_column_name(sample),".DP"),paste0(fix_column_name(sample),".AD"))]=NULL
         }
     }
-    
+
     freebayes_file = paste0(family,"-freebayes-annotated-decomposed.table")
     if(file.exists(freebayes_file))
     {
         freebayes = read.delim(freebayes_file, stringsAsFactors=F)
         freebayes$superindex=with(freebayes,paste(paste0(CHROM,":",POS),REF,ALT,sep='-'))
         freebayes[c("CHROM","POS","REF","ALT")]=NULL
+
         ensemble = merge(ensemble,freebayes,by.x = "superindex", by.y="superindex",all.x = T,all.y=F)
-    
         for (i in 1:nrow(ensemble))
         {
             #if(grepl("NA",ensemble[i,"Trio_coverage"]))
@@ -530,13 +530,12 @@ merge_reports = function(family,samples)
                 }
           }
       }
-    
       for (sample in samples)
       {
           ensemble[c("DP",paste0(fix_column_name(sample),".DP"),paste0(fix_column_name(sample),".AO"))]=NULL
       }
     }
-    
+
     platypus_file = paste0(family,"-platypus-annotated-decomposed.table")
     if(file.exists(platypus_file))
     {
