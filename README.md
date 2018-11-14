@@ -5,11 +5,10 @@ Excel variant report generator and scripts to process WES data (cram/bam/fastq -
 
   1. Install **Bcbio**.
 
-  Use HPC or server. Add bcbio to PATH. bcbio installs many other useful tools and datasets through bioconda and cloudbiolinux.
+  Use HPC or server. Add bcbio to PATH. bcbio installs many other useful tools (including java and R) and datasets through bioconda and cloudbiolinux.
   
   2. Clone **cre** to ~/cre and add it to PATH.  
-  3. Install R and packages: stringr,data.table,plyr.
-  4. (Optional) Install/update OMIM.
+  3. (Optional) Install/update OMIM.
 
     By default CRE uses [cre/data/omim.txt](../master/data/omim.txt) and [cre/data/omim.inheritance.csv](../master/data/omim.inheritance.csv).
 
@@ -25,23 +24,23 @@ Excel variant report generator and scripts to process WES data (cram/bam/fastq -
     Result - omim.txt with omim description of diseases related to ~ 4000 genes
     We use improved OMIM inheritance table from [https://www.cs.toronto.edu/~buske/cheo/](https://www.cs.toronto.edu/~buske/cheo/).Download the second file with inheritance mappings. It references genes by gene name (symbol) rather than by Ensembl_id which is a requirement for CRE. Most gene names (symbols) could be mapped automatically with Ensembl biomart [genes.R](https://github.com/naumenko-sa/bioscripts/blob/master/genes.R), but some genes (not many) might need manual curation to assign the correct ENSEMBL_ID.
 
-  5. (Optional) Install/update Orphanet.
+  4. (Optional) Install/update Orphanet.
 ```
     cd ~/cre/data
     ~/cre/cre.orphanet.sh
 ```
   Orphanet provides descriptions for ~3600 genes:. By default CRE uses [orphanet.txt](../master/data/orphanet.txt)
 
-  6. (Optional) Update Gnomad gene contraint scores.
+  5. (Optional) Update Gnomad gene contraint scores.
 ```
     Rscript ~/cre/cre.gnomad_scores.R
 ```
   By default using [~/cre/data/gnomad_scores.csv](../master/data/gnomad_scores.csv)
   
-  7. (Optional) Install impriting annotation.
+  6. (Optional) Install impriting annotation.
   By default using [~/cre/data/imprinting.txt](../master/data/imprinting.txt).
 
-  8. (Optional) Install HGMD pro database
+  7. (Optional) Install HGMD pro database
   Install HGMD pro and dump information with [~/cre/cre.hgmd2csv.sql](../master/cre.hgmd2csv.sql).
 
 # 1. Creating bcbio project - grch37

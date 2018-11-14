@@ -60,7 +60,7 @@ sQuery="select \
         phylop20way_mammalian as Conserved_in_20_mammals,
         gts,"
 
-while read sample;
+while read sample
 do
 	sQuery=$sQuery"gts."$sample","
 	sQuery=$sQuery"gt_alt_depths."$sample","
@@ -75,7 +75,10 @@ if [[ "$severity_threshold" == "ALL" ]]
 then
 #used for RNA-seq = 20k variants in the report
     severity_filter=""
-#use for WES = 1k variants in the report
+elif [[ "$severity_threshold" == "wes.synonymous" ]]
+then
+    severity_filter=" and (is_coding=1 or is_splicing=1)"
+#for WES = 1k variants in the report
 else
     severity_filter=" and impact_severity<>'LOW' "
 fi

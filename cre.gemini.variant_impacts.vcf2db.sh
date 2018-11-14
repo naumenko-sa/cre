@@ -24,6 +24,9 @@ then
 #used for RNA-seq = 20k variants in the report
     severity_filter=""
 #use for WES = 1k variants in the report
+elif [[ "$severity_threshold" == "wes.synonymous" ]]
+then
+    severity_filter="(v.is_coding=1 or v.is_splicing=1) and "
 else
     severity_filter="v.impact_severity<>'LOW' and "
 fi
