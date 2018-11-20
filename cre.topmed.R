@@ -17,11 +17,11 @@ init = function()
 af_by_rsid = function(rs_id)
 {
     #DEBUG:
-    #rs_id = "rs202193903" - found
+    #rs_id = "rs202193903" - from 
     #rs_id = "rs903331232"
     #- not found
     #ls("package:MafDb.TOPMed.freeze5.hg19")
-    mafdb <- MafDb.TOPMed.freeze5.hg19
+    mafdb = MafDb.TOPMed.freeze5.hg19
     #mafdb
     #citation(mafdb)
     #populations(mafdb)
@@ -29,7 +29,7 @@ af_by_rsid = function(rs_id)
     ## as reported by Eiberg et al. Blue eye color in humans may be caused by a perfectly associated
     ## founder mutation in a regulatory element located within the HERC2 gene inhibiting OCA2 expression.
     ## Human Genetics, 123(2):177-87, 2008 [http://www.ncbi.nlm.nih.gov/pubmed/18172690]
-    snpdb <- SNPlocs.Hsapiens.dbSNP144.GRCh37
+    snpdb = SNPlocs.Hsapiens.dbSNP144.GRCh37
     #print(rs_id)
     rng <- snpsById(snpdb, ids=rs_id,ifnotfound ="drop")
     #rng
@@ -71,7 +71,4 @@ analysis = function()
     
     print("AF > 1%")
     print(nrow(hgmd))
-    
-    
-
 }
