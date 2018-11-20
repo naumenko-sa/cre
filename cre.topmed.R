@@ -1,5 +1,7 @@
 # http://bioconductor.org/packages/release/data/annotation/html/MafDb.TOPMed.freeze5.hg19.html 
 # https://bioconductor.org/packages/release/data/annotation/html/SNPlocs.Hsapiens.dbSNP144.GRCh37.html
+# http://gnomad.broadinstitute.org/
+# https://bravo.sph.umich.edu/freeze3a/hg19/
 
 install = function()
 {
@@ -16,9 +18,10 @@ init = function()
 
 af_by_rsid = function(rs_id)
 {
-    #DEBUG:
-    #rs_id = "rs202193903" - from 
-    #rs_id = "rs903331232"
+    # DEBUG:
+    # from Johar 2016
+    rs_id = "rs202193903"
+    # rs_id = "rs903331232"
     #- not found
     #ls("package:MafDb.TOPMed.freeze5.hg19")
     mafdb = MafDb.TOPMed.freeze5.hg19
@@ -31,9 +34,9 @@ af_by_rsid = function(rs_id)
     ## Human Genetics, 123(2):177-87, 2008 [http://www.ncbi.nlm.nih.gov/pubmed/18172690]
     snpdb = SNPlocs.Hsapiens.dbSNP144.GRCh37
     #print(rs_id)
-    rng <- snpsById(snpdb, ids=rs_id,ifnotfound ="drop")
+    rng = snpsById(snpdb, ids=rs_id,ifnotfound ="drop")
     #rng
-    seqlevelsStyle(rng) <- seqlevelsStyle(mafdb)
+    seqlevelsStyle(rng) = seqlevelsStyle(mafdb)
     if (length(rng) > 0){
         scores = gscores(mafdb, rng)
         result = scores$AF
@@ -41,6 +44,8 @@ af_by_rsid = function(rs_id)
         result = NA
     }
     return(result)
+    
+    #gscores(mafdb, GRanges("chr15:28356859"))
 }
 
 analysis = function()
