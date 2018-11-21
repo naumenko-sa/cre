@@ -8,7 +8,7 @@
 
 # annotates vcf with VEP and vcfanno for cre for cre report generation
 # parameters:
-# original_vcf = file.vcf.gz
+# original_vcf = file.vcf.gz, no tabix index is needed in the dir
 # project = case = family = S11 (example)
 # [optional] ped = file.ped
 
