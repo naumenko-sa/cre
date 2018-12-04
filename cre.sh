@@ -113,7 +113,9 @@ function f_fix_sample_names
         bcftools reheader -s $1.samples.fixed.txt $1.subset.tmp.vcf.gz > $1.subset.vcf.gz
 	tabix $1.subset.vcf.gz
 	rm $1.subset.tmp.vcf.gz
+	rm $1.samples.fixed.txt
     fi
+    rm $1.samples.txt
 }
 
 function f_make_report
