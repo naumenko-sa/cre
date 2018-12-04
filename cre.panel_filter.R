@@ -16,6 +16,7 @@ filter_variants = function(variant_report.csv,panel.csv,output.csv)
 # https://panelapp.genomicsengland.co.uk/panels/60/
 # panel should be avaliable in panel_name.tsv in the current directory
 # panel_name = "Primary immunodeficiency"
+panel_name = "Periodic fever syndromes"
 # Periodic fever syndromes
 filter_variants_genomics_england_panel = function(variant_report.csv,panel_name)
 {
