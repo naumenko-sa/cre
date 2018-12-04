@@ -14,10 +14,13 @@ filter_variants = function(variant_report.csv,panel.csv,output.csv)
 
 # when the panel is from genomics England
 # https://panelapp.genomicsengland.co.uk/panels/60/
-filter_variants_genomics_england_panel = function(variant_report.csv,panel.tsv)
+# panel should be avaliable in panel_name.tsv in the current directory
+# panel_name = "Primary immunodeficiency"
+# Periodic fever syndromes
+filter_variants_genomics_england_panel = function(variant_report.csv,panel_name)
 {
-    variants = read.csv(variant_report.csv, stringsAsFactors = F)    
-    panel = read.delim("Periodic fever syndromes.tsv", stringsAsFactors=F)
+    variants = read.csv(variant_report.csv, stringsAsFactors = F)
+    panel = read.delim(paste0(panel_name,".tsv"), stringsAsFactors = F)
 
     panel = panel[,c("Gene.Symbol","Model_Of_Inheritance","Phenotypes","UserRatings_Green_amber_red","EnsemblId.GRch37.")]
 
