@@ -10,7 +10,7 @@ lupus = read.csv("~/cre/data/lupus.csv",stringsAsFactors = F)
 
 lupus.langefeld.gwas = read.csv("~/cre/data/lupus.langefeld.gwas.csv",stringsAsFactors = F)
 
-lupus.eastasianssle.gwas = read.csv("~/cre/data/lupus.eastasianssle.gwas.csv", stringsAsFactors = F)
+lupus.eastasian.gwas = read.csv("~/cre/data/lupus.eastasians.gwas.csv", stringsAsFactors = F)
 
 primary_immunodeficiency = read.csv("~/cre/data/primary_immunodeficiency.csv", stringsAsFactors = F)
 
