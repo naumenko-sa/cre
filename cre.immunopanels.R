@@ -10,7 +10,7 @@ lupus = read.csv("~/cre/data/lupus.csv",stringsAsFactors = F)
 
 lupus.langefeld.gwas = read.csv("~/cre/data/lupus.langefeld.gwas.csv",stringsAsFactors = F)
 
-lupus.eastasianssle.gwas = read.csv("~/cre/data/lupus.eastasianssle.gwas.csv", stringsAsFactors = F)
+lupus.eastasians.gwas = read.csv("~/cre/data/lupus.eastasians.gwas.csv", stringsAsFactors = F)
 
 primary_immunodeficiency = read.csv("~/cre/data/primary_immunodeficiency.csv", stringsAsFactors = F)
 
@@ -22,7 +22,7 @@ recurrent_fever_SK = read.csv("~/cre/data/recurrent_fever_syndrome_panel_from_cr
 
 variants$Lupus_panel = ifelse(variants$Ensembl_gene_id %in% lupus$ensembl_gene_id,"Lupus_panel",NA)
 variants$Lupus_langefeld_gwas = ifelse(variants$Ensembl_gene_id %in% lupus.langefeld.gwas$ensembl_gene_id,"Lupus_langefeld_gwas",NA)
-variants$Lupus_eastasianssle_gwas = ifelse(variants$Ensembl_gene_id %in% lupus.eastasianssle.gwas$ensembl_gene_id,"Lupus_eastasianssle_gwas",NA)
+variants$Lupus_eastasians_gwas = ifelse(variants$Ensembl_gene_id %in% lupus.eastasians.gwas$ensembl_gene_id,"Lupus_eastasians_gwas",NA)
 variants$Primary_immunodeficiency_panel = ifelse(variants$Ensembl_gene_id %in% primary_immunodeficiency$PanelAPP.EnsemblId.GRch37,"Primary_immunodeficiency_panel",NA)
 variants$Periodic_fever_panel = ifelse(variants$Ensembl_gene_id %in% periodic_fever$PanelAPP.EnsemblId.GRch37,"Periodic_fever",NA)
 variants$MAS = ifelse(variants$Ensembl_gene_id %in% mas$ensembl_gene_id,"MAS",NA)
