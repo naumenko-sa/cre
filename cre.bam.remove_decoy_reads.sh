@@ -4,8 +4,10 @@
 #PBS -d .
 #PBS -l vmem=10g,mem=10g
 
-#variant bam: https://github.com/walaj/VariantBam
-#needs to install xz and newer gcc
+# removes reads mapped to decoy in grch37
+
+# variant bam: https://github.com/walaj/VariantBam
+# needs to install xz and newer gcc
 
 module load gcc/5.2.0
 
