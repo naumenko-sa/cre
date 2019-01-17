@@ -31,15 +31,15 @@ filter_variants_genomics_england_panel = function(variant_report.csv,panel.tsv,o
     variants.ens = variants[variants$Ensembl_gene_id %in% panel$PanelAPP.EnsemblId.GRch37,]
     variants.gene = variants[variants$Gene %in% panel$PanelAPP.Gene.Symbol,]
     
-    variants = unique(sort(rbind(variants.ens,variants.gene)))
+    variants = unique(rbind(variants.ens,variants.gene))
     write.csv(variants,output.csv,row.names=F)
 }
 
 args = commandArgs(trailingOnly = T)
 
-if (args[4] == "genomics_england")
+if (is.null(args[4]))
 {
-    filter_variants_genomics_england_panel(args[1],args[2],args[3])
-}else{
     filter_variants(args[1],args[2],args[3])
+}else{
+    filter_variants_genomics_england_panel(args[1],args[2],args[3])
 }
