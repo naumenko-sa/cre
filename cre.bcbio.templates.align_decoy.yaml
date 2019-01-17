@@ -2,12 +2,10 @@ details:
 - algorithm:
     aligner: bwa
     effects: false
-    realign: true
-    recalibrate: true
+    realign: false
+    recalibrate: false
     mark_duplicates: true
     save_diskspace: true
-    tools_off:
-    - gatk4
     variantcaller: false
   analysis: variant2
   description: '912R_A337376'
