@@ -157,7 +157,9 @@ vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 * cre.coverage.bamstats05.sh - calculate coverage
 * cre.fixit.sh - fixes sample names
 * cre.gemini_load.sh loads vep-annotated vcf to gemini db.
+* cre.kinship.R - to plot relatedness (kinship) diagram for a group of samples. Sometimes helps to detect and solve mislabelling.
 * cre.package.sh
+* cre.rtg.validate.sh - validates NA12878 calls vs genome in a bottle callset with RTG and a bed file
 * cre.sh
 * cre.vcf.has2dp.sh fixes input vcf file from HAS pipeline (Illumina, TCAG) filling DP field
 * gemini.gemini2txt.sh

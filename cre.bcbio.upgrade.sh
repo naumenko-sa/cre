@@ -26,7 +26,7 @@
 #bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget vep
 
 #gemini
-#bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget gemini
+bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget gemini
 
 #cadd
 #bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget cadd
@@ -40,5 +40,5 @@
 #bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget rnaseq
 
 #mouse
-bcbio_nextgen.py upgrade -u skip --genomes mm10 --datatarget rnaseq --cores 5
+#bcbio_nextgen.py upgrade -u skip --genomes mm10 --datatarget rnaseq --cores 5
 
