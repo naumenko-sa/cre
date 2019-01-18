@@ -159,10 +159,12 @@ vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 * cre.fixit.sh - fixes sample names
 * cre.gemini_load.sh loads vep-annotated vcf to gemini db.
 * cre.gnomad_scores.R - download and parse gnomad scores.
+* cre.immunopanels.R - annotates CRE report with 6 immunopanels.
 * cre.kinship.R - to plot relatedness (kinship) diagram for a group of samples. Sometimes helps to detect and solve mislabelling.
 * cre.package.sh
 * cre.rtg.validate.sh - validates NA12878 calls vs genome in a bottle callset with RTG and a bed file
-* cre.sh
+* cre.sh - master script to produce variant reports from bcbio output
+* cre.topmed.R - pull variant frequency from TopMed having rs_id
 * cre.vcf.has2dp.sh fixes input vcf file from HAS pipeline (Illumina, TCAG) filling DP field
 * gemini.gemini2txt.sh
 * gemini.refseq.sh

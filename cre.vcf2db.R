@@ -1,59 +1,52 @@
 # variant report generator
 # Rscript ~/cre/cre.vcf2.db.R <family> noncoding|default=NULL,coding
-add_placeholder=function(variants,column_name,placeholder)
-{
-    variants[,column_name]=with(variants,placeholder)
+add_placeholder <- function(variants, column_name, placeholder){
+    variants[,column_name] <- with(variants, placeholder)
     return(variants)
 }
 
-get_variants_from_file = function (filename)
-{
-    variants = read.delim(filename, stringsAsFactors=FALSE)
+get_variants_from_file <- function (filename){
+    variants <- read.delim(filename, stringsAsFactors = F)
     return(variants)
 }
 
 # returns Hom / Het / - (for HOM reference)
-genotype2zygocity = function (genotype_str,ref)
-{
-      #genotype_str = "A|A|B"
-      #genotype_str = "./." - call not possible
-      #genotype_str = "TCA/."
-      #genotype_str = "G"
-      #genotype_str="A/A"
-      #greedy
-      genotype_str = gsub("|","/",genotype_str,fixed=T)
-      genotype_str = gsub("./.","Insufficient_coverage",genotype_str,fixed=T)
-      #genotype_str = gsub(".","NO_CALL",genotype_str,fixed=T)
+genotype2zygocity <- function (genotype_str, ref){
+    # test
+    # genotype_str = "A|A|B"
+    # genotype_str = "./." - call not possible
+    # genotype_str = "TCA/."
+    # genotype_str = "G"
+    # genotype_str = "A/A"
+    # greedy
+    genotype_str <- gsub("|", "/", genotype_str, fixed = T)
+    genotype_str <- gsub("./.", "Insufficient_coverage", genotype_str, fixed = T)
+    #genotype_str = gsub(".","NO_CALL",genotype_str,fixed=T)
       
-      if(grepl("Insufficient_coverage",genotype_str)){
-          result = genotype_str
-      }else{
-          ar = strsplit(genotype_str,"/",fixed=T)
-          len = length(ar[[1]])
-          if (len == 2)
-          {
+    if(grepl("Insufficient_coverage", genotype_str)){
+      result <- genotype_str
+    }else{
+        ar <- strsplit(genotype_str, "/", fixed = T)
+        len <- length(ar[[1]])
+        if (len == 2){
             if (ar[[1]][1] == ar[[1]][2]){
-              if (ar[[1]][1] == ref)
-                  result = "-"
-              else
-                  result = "Hom"
-            }else
-              result = "Het"
-          }else{
-            result = genotype_str
-          }
-      }
-      return(result)
+                if (ar[[1]][1] == ref)
+                    result = "-"
+                else
+                    result <- "Hom"
+            }else result <- "Het"
+        }else result <- genotype_str
+    }
+    return(result)
 }
 
 # output : family.ensemble.txt
-create_report = function(family,samples)
-{
-    file = paste0(family,".variants.txt")
-    variants = get_variants_from_file(file)
+create_report <- function(family, samples){
+    file <- paste0(family, ".variants.txt")
+    variants <- get_variants_from_file(file)
     
-    impact_file=paste0(family,".variant_impacts.txt")
-    impacts = get_variants_from_file(impact_file)
+    impact_file <- paste0(family, ".variant_impacts.txt")
+    impacts <- get_variants_from_file(impact_file)
     
     # temporarily due to https://github.com/quinlan-lab/vcf2db/issues/48
     # fixed in vcf2db
@@ -77,18 +70,18 @@ create_report = function(family,samples)
     #variants = merge(variants,transcripts_genes,by.x='Ensembl_transcript_id1',by.y="Ensembl_transcript_id",all.x=T)
     
     #Column1 - Position
-    variants$Position=with(variants,paste(Chrom,Pos,sep=':'))
+    variants$Position <- with(variants, paste(Chrom, Pos, sep = ':'))
     
     #Column2 - UCSC link
-    sUCSC1="=HYPERLINK(\"http://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&hgt.out3=10x&position="
-    sUCSC2="\",\"UCSC_link\")"
-    variants$UCSC_Link=with(variants,paste(sUCSC1,Position,sUCSC2,sep=''))
+    sUCSC1 <- "=HYPERLINK(\"http://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&hgt.out3=10x&position="
+    sUCSC2 <- "\",\"UCSC_link\")"
+    variants$UCSC_Link <- with(variants, paste(sUCSC1, Position, sUCSC2, sep = ''))
 
     # Column3 = GNOMAD_Link
-    variants$GNOMAD_POS = with(variants,paste(Chrom,Pos,Ref,Alt,sep='-'))
-    sGNOMAD1 = "=HYPERLINK(\"http://gnomad.broadinstitute.org/variant/"
-    sGNOMAD2 = "\",\"GNOMAD_link\")"
-    variants$GNOMAD_Link = with(variants,paste(sGNOMAD1,GNOMAD_POS,sGNOMAD2,sep=''))
+    variants$GNOMAD_POS <- with(variants, paste(Chrom,Pos,Ref,Alt, sep='-'))
+    sGNOMAD1 <- "=HYPERLINK(\"http://gnomad.broadinstitute.org/variant/"
+    sGNOMAD2 <- "\",\"GNOMAD_link\")"
+    variants$GNOMAD_Link <- with(variants, paste(sGNOMAD1, GNOMAD_POS, sGNOMAD2, sep = ''))
 
     # Columns 4,5: Ref,Alt
 
@@ -99,23 +92,24 @@ create_report = function(family,samples)
     # snappy decompression
     # https://github.com/arq5x/gemini/issues/700
     # https://github.com/lulyon/R-snappy
-    for(sample in samples)
-    {
+    for(sample in samples){
         #DEBUG: gene = IL20RA
         #sample=samples[1]
         
-        zygocity_column_name = paste0("Zygosity.",sample)
+        zygocity_column_name <- paste0("Zygosity.", sample)
         #t = lapply(variants[,paste0("gts.",sample),"Ref"],genotype2zygocity)
         #t = lapply(variants[,paste0("gts.",sample),"Ref"],genotype2zygocity)
-        t=unlist(mapply(genotype2zygocity,variants[,paste0("gts.",sample)],variants[,"Ref"]))
-        variants[,zygocity_column_name] = unlist(t)
+        t <- unlist(mapply(genotype2zygocity, variants[,paste0("gts.",sample)], variants[,"Ref"]))
+        variants[,zygocity_column_name] <- unlist(t)
     
-        burden_column_name = paste0("Burden.",sample)
-        t = subset(variants, get(zygocity_column_name) == 'Hom' | get(zygocity_column_name) == 'Het',select=c("Ensembl_gene_id",zygocity_column_name))
-        df_burden = count(t,'Ensembl_gene_id')    
-        colnames(df_burden)[2] = burden_column_name
-        variants = merge(variants,df_burden,all.x=T)
-        variants[,burden_column_name][is.na(variants[,burden_column_name])] = 0
+        burden_column_name <- paste0("Burden.", sample)
+        t <- subset(variants, 
+                    get(zygocity_column_name) == 'Hom' | get(zygocity_column_name) == 'Het',
+                    select=c("Ensembl_gene_id", zygocity_column_name))
+        df_burden <- count(t,'Ensembl_gene_id')    
+        colnames(df_burden)[2] <- burden_column_name
+        variants <- merge(variants, df_burden, all.x = T)
+        variants[,burden_column_name][is.na(variants[,burden_column_name])] <- 0
     }
     
     # Column6 - Gene
@@ -125,28 +119,28 @@ create_report = function(family,samples)
     # Column10 = Variation
     
     # Column11 =  Info
-    variants = add_placeholder(variants,"Info","Info")
+    variants <- add_placeholder(variants,"Info","Info")
     
-    for (i in 1:nrow(variants))
-    {
+    for (i in 1:nrow(variants)){
         #debug: i=1  
-        v_id = variants[i,"Variant_id"]
-        gene = variants[i,"Gene"]
+        v_id <- variants[i,"Variant_id"]
+        gene <- variants[i,"Gene"]
         #for WES reports we need only coding impacts in the info field, for WGS we need all
         if (coding){
-            gene_impacts = subset(impacts, variant_id==v_id & is_coding == 1,select=c("exon","hgvsc","hgvsp"))
+            gene_impacts <- subset(impacts, variant_id == v_id & is_coding == 1,
+                                   select = c("exon", "hgvsc", "hgvsp"))
         }else{
-            gene_impacts = subset(impacts, variant_id==v_id,select=c("exon","hgvsc","hgvsp"))
+            gene_impacts <- subset(impacts, variant_id == v_id, 
+                                   select = c("exon", "hgvsc", "hgvsp"))
         }
         
-        gene_impacts$gene = rep(gene,nrow(gene_impacts))
+        gene_impacts$gene <- rep(gene, nrow(gene_impacts))
         
-        gene_impacts$exon[gene_impacts$exon=='']='NA'
+        gene_impacts$exon[gene_impacts$exon==''] <- 'NA'
         
-        gene_impacts = gene_impacts[c("gene","exon","hgvsc","hgvsp")]
+        gene_impacts <- gene_impacts[c("gene", "exon", "hgvsc", "hgvsp")]
         
-        if (nrow(gene_impacts)>0)
-        {
+        if (nrow(gene_impacts) > 0){
             v_impacts = paste0(gene_impacts$gene,":exon",gene_impacts$exon,":",gene_impacts$hgvsc,":",gene_impacts$hgvsp)
             s_impacts = paste(v_impacts,collapse=",")
         }
