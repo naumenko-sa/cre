@@ -1,4 +1,4 @@
-# calculates kinship for the families using SNPRelate
+# calculates kinship for the samples/families using SNPRelate
 
 # example: https://www.biostars.org/p/83232/ - misleading
 # tutorial: 
@@ -21,8 +21,8 @@
 # 3.prepare multisample vcf with bcftools merge  
 
 installation <- function(){
-    source("https://bioconductor.org/biocLite.R")
-    biocLite("SNPRelate")
+    install.packages("BiocManager")
+    BiocManager::install("SNPRelate")
 }
 
 init <- function(){
@@ -103,7 +103,7 @@ tutorial <- function(){
 
 # plots pca and dendrogram for samples listed in samples.txt in dataset.gds
 # dataset.gds should be in the current directory: do coversion vcf -> gds first
-plot_relatedness_picture <- function(samples.txt){
+plot_relatedness_picture <- function(samples.txt = "samples.txt"){
     #test:
     #samples.txt = "all.samples.txt"
     #samples.txt = "c4r_24.samples.txt"
@@ -138,11 +138,8 @@ plot_relatedness_picture <- function(samples.txt){
     text(tab$EV2,tab$EV1, tab$sample.id)
     dev.off()
     
-    #family.id = c(1,1,1,2,2,2,3,3,3,4,5,6,7,7,7,8,8,8,9,9,9,10,10,10,11,11,11,12,12,12,
-    #              13,14,15,16,17,18,19,19,19,20,20,20,25,25,25,26,26,26,27,27,27,
-    #              28,28,28,29,29,29,30,30,30)
-    #family.id = c (1,1,2,2,2,3,3,4,5,6,6,6,7,7,7,8,9,9,9,10,10,11,11,12,13,13,14,14,14,15,16,17,17,17,18,18,19,19,19)
-    family.id <- c(1,1,1)
+    #family.id <- c(rep(1,length(samples)))
+    family.id <- c(26,36,26,34,35,38,15,15,15,38,34)
                    
     ibd.robust <- snpgdsIBDKING(genofile, snp.id = snpset.id, num.thread = 2, 
                                family.id = family.id)
@@ -155,7 +152,7 @@ plot_relatedness_picture <- function(samples.txt){
     snpHCluster <- snpgdsHCluster(dissMatrix, sample.id = NULL, need.mat = TRUE, hang = 0.01)
 
     #outlier.n=5
-    cutTree = snpgdsCutTree(snpHCluster, z.threshold = 5, outlier.n = 0, n.perm = 5000, 
+    cutTree <- snpgdsCutTree(snpHCluster, z.threshold = 5, outlier.n = 0, n.perm = 5000, 
                             samp.group = NULL, col.outlier = "red", col.list = NULL, 
                             pch.outlier = 4, pch.list = NULL, label.H = T, label.Z = T, verbose = T)
     
@@ -170,6 +167,5 @@ plot_relatedness_picture <- function(samples.txt){
 }
 
 init()
-setwd("~/Desktop/work")
-snpgdsVCF2GDS("C1A-106.vcf", "dataset2.gds")
+snpgdsVCF2GDS("merged.vcf", "dataset2.gds")
 plot_relatedness_picture("samples.txt")

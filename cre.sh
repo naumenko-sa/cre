@@ -11,7 +11,6 @@
 # 	make_report=[0|1] default = 1, don't make report for WGS analysis first
 # 	type = [ wes.regular (default) | wes.synonymous | wes.fast | rnaseq | wgs | annotate (only for cleaning)]
 #	max_af = af filter, default = 0.01
-#	loader [ default = vcf2db | gemini ] - load used to create gemini database
 ####################################################################################################
 
 #PBS -l walltime=20:00:00,nodes=1:ppn=1
@@ -139,30 +138,19 @@ function f_make_report
 	   export severity_filter=HIGHMED
     fi
 
-    if [ "$loader" == "vcf2db" ]
-    then
-	   cre.gemini2txt.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variants.txt
-	   cre.gemini.variant_impacts.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variant_impacts.txt
-    else
-	   cre.gemini2txt.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af
-	   cre.gemini_variant_impacts.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af
-    fi
+    cre.gemini2txt.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variants.txt
+    cre.gemini.variant_impacts.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variant_impacts.txt
 
-    for f in *.vcf.gz;
+    for f in *.vcf.gz
     do
-	   tabix $f;
+	   tabix $f
     done
 
     # report filtered vcf for import in phenotips
     # note that if there is a multiallelic SNP, with one rare allele and one frequent one, both will be reported in the VCF,
     # and just a rare one in the excel report
-    if [ "$loader" == "vcf2db" ]
-    then
-        cat $family.variants.txt | cut -f 1,2 | sed 1d | sed s/chr// | sort -k1,1 -k2,2n > ${family}-ensemble.db.txt.positions
-    else
-        cat ${family}-ensemble.db.txt | cut -f 24,25  | sed 1d | sed s/chr// | sort -k1,1 -k2,2n > ${family}-ensemble.db.txt.positions
-    fi
-
+    cat $family.variants.txt | cut -f 1,2 | sed 1d | sed s/chr// | sort -k1,1 -k2,2n > ${family}-ensemble.db.txt.positions
+    
     # this may produce duplicate records if two positions from positions file overlap with a variant 
     # (there are 2 positions and 2 overlapping variants, first reported twice)
     bcftools view -R ${family}-ensemble.db.txt.positions ${family}-ensemble-annotated-decomposed.vcf.gz | bcftools sort | vt uniq - | vt rminfo -t CSQ,Interpro_domain,MutPred_Top5features,MutationTaster_AAE - -o $family.vcf.gz
@@ -185,11 +173,11 @@ function f_make_report
     fprefix=${family}-freebayes-annotated-decomposed
     if [ -f $fprefix.vcf.gz ]
     then
-	bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt decompose -s - | vt uniq - -o $fprefix.subset.vcf.gz
-	tabix $fprefix.subset.vcf.gz
+	   bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt decompose -s - | vt uniq - -o $fprefix.subset.vcf.gz
+	   tabix $fprefix.subset.vcf.gz
 	
-	f_fix_sample_names $fprefix
-	vcf.freebayes.getAO.sh $fprefix.subset.vcf.gz $reference
+	   f_fix_sample_names $fprefix
+	   vcf.freebayes.getAO.sh $fprefix.subset.vcf.gz $reference
     fi
 
     #gemini.decompose.sh ${family}-gatk-haplotype.vcf.gz
@@ -216,20 +204,15 @@ function f_make_report
     cd ..
 
     # using Rscript from bcbio
-    if [ "$loader" == "vcf2db" ]
-    then
-	   if [ "$type" == "wgs" ] || [ "$type" == "rnaseq" ]
-	   then
+    if [ "$type" == "wgs" ] || [ "$type" == "rnaseq" ]
+	then
 		noncoding="noncoding"
-	   else
+	else
 		noncoding=""
-	   fi
+	fi
 		
-	   Rscript ~/cre/cre.vcf2db.R $family $noncoding
-    else
-	   Rscript ~/cre/cre.R $family
-    fi
-
+	Rscript ~/cre/cre.vcf2db.R $family $noncoding
+    
     cd $family
     #rm $family.create_report.csv $family.merge_reports.csv
     #for vcaller in {freebayes,gatk-haplotype,platypus}
@@ -258,11 +241,6 @@ if [ "$type" == "rnaseq" ]
 then
     export depth_threshold=5
     export severity_filter=ALL
-fi
-
-if [ -z $loader ]
-then
-    export loader="vcf2db"
 fi
 
 #no cleanup by default
