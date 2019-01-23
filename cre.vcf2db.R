@@ -31,7 +31,7 @@ genotype2zygocity <- function (genotype_str, ref){
         if (len == 2){
             if (ar[[1]][1] == ar[[1]][2]){
                 if (ar[[1]][1] == ref)
-                    result = "-"
+                    result <- "-"
                 else
                     result <- "Hom"
             }else result <- "Het"
@@ -554,12 +554,12 @@ merge_reports <- function(family, samples){
             for (sample in samples){
                 field_depth <- paste0("Alt_depths.", sample)
                 field_samtools <- paste0(fix_column_name(sample), ".DP")
-                ensemble[i,field_depth] <- ensemble[i, field_samtools]
+                ensemble[i, field_depth] <- ensemble[i, field_samtools]
             }
             ensemble[i, "Trio_coverage"] <- ""
         }
         for (sample in samples){
-          ensemble[c("DP",paste0(fix_column_name(sample),".DP"))] <- NULL
+          ensemble[c("DP", paste0(fix_column_name(sample),".DP"))] <- NULL
           #samtools does not discriminate between insufficient coverage (cannot call) and no_call =reference
           field <- paste0("Zygosity.", sample)
           ensemble[,field] <- with(ensemble, gsub("Insufficient_coverage", 
@@ -611,11 +611,12 @@ annotate_w_care4rare <- function(family,samples){
         variants$HGMD_id <- NULL
         variants$HGMD_ref <- NULL
         variants$HGMD_tag <- NULL
-        variants <- merge(variants,hgmd,by.x="superindex",by.y="superindex",all.x=T,all.y=F)
+        variants <- merge(variants, hgmd, by.x = "superindex", 
+                          by.y = "superindex", all.x = T, all.y = F)
         variants$HGMD_gene <- NULL
         
-        hgmd.genes <-  as.data.frame(unique(sort(hgmd$HGMD_gene)))
-        hgmd.genes <-  cbind(hgmd.genes, hgmd.genes)
+        hgmd.genes <- as.data.frame(unique(sort(hgmd$HGMD_gene)))
+        hgmd.genes <- cbind(hgmd.genes, hgmd.genes)
         colnames(hgmd.genes) <- c("index", "HGMD_gene")
         variants <- merge(variants, hgmd.genes, by.x = "Gene", by.y = "index",
                           all.x = T, all.y = F)
