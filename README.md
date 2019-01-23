@@ -43,7 +43,15 @@ Excel variant report generator and scripts to process WES data (cram/bam/fastq -
   7. (Optional) Install HGMD pro database
   Install HGMD pro and dump information with [~/cre/cre.hgmd2csv.sql](../master/cre.hgmd2csv.sql).
 
-# 1. Creating bcbio project - grch37
+# 1. (optional) Alignment to grch37 with decoy
+
+By default, bcbio does not have decoy in grch37 reference, decoy is supported only in grch38. Using decoy improves FDR by ~0.5%. Two step approach could be applied to use decoy in bcbio https://github.com/bcbio/bcbio-nextgen/issues/2489:
+- install custom grch37d5 reference with decoy: [cre.bcbio.custom_genome.sh](../master/cre.bcbio.custom_genome.sh)
+- run alignment step vs grch37d5 reference: cre.prepare_bcbio_run.sh <project> align_decoy
+- keep bam file aligned vs grch37d5 for storage
+- run variant calling with noalt_calling and bam_clean: remove_extracontigs (SV calling in WGS required additional processing of decoy aligned bam file, see crg).
+
+# 2. Set up bcbio project for alignment, variant caling and annotation
 
 * Prepare input files: family_sample_1.fq.gz, family_sample_2.fq.gz, or family_sample.bam and place them into family/input folder.
 * There might be many samples in a family(project).
@@ -62,38 +70,25 @@ we can discover a useful non-coding variant. No sense to filter them out during 
   * custom annotation [cre.vcfanno.conf](../master/cre.vcfanno.conf) using data sources installed in bcbio.
   * creates gemini database with vcf2db
 
-## 1a. Input files are in Illumina basespace.
+## 2a. Input files are in Illumina basespace.
 * use basespace-cli to dump bcl files to HPC, then do 1b.
 
-## 1b. Input is Illumina run (bcl files).
+## 2b. Input is Illumina run (bcl files).
 * create a sample sheet and run [bcl2fq.sh](../master/bcl2fq.sh).
 
-## 1c. Input is cram file.
+## 2c. Input is cram file.
 * Run [cram2fq.sh](../master/cram2.fq). 
 * I would suggest to avoid crams when possible. A damaged bam file could be recovered with [cre.bam_recovery.sh](../master/cre.bam_recovery.sh), but nothing could be done for cram.
 
-# 2. Running bcbio for grch37 with decoys
+# 3. Run bcbio
 
-By default, for grch37 bcbio does not support decoy sequences, they are supported in grch38. Two step approach could be applied to use decoys https://github.com/bcbio/bcbio-nextgen/issues/2489:
-- install custom reference with decoys: [cre.bcbio.custom_genome.sh](../master/cre.bcbio.custom_genome.sh)
-- run alignment step vs grch37d5 reference: cre.prepare_bcbio_run.sh <project> align_decoy
-- run variant calling with noalt_calling and bam_clean: remove_extracontigs
-
-# 2. Running bcbio
-
-* Single project
-```
-qsub ~/cre/bcbio.pbs -v project=[project_name]
-```
+* Single project: `qsub ~/cre/bcbio.pbs -v project=[project_name]`
 Project should have a folder project_name in the current directory.
 
-* Multiple projects
-```
-qsub -t 1-N ~/cre/bcbio.array.pbs
-```
+* Multiple projects: `qsub -t 1-N ~/cre/bcbio.array.pbs`
 Current directory should have a list of projects in projects.txt.
 
-# 3. Cleaning project directory and creating project.csv report
+# 4. Cleaning project directory and creating project.csv report
 ```
 qsub ~/cre/cre.sh -v family=[family],cleanup=1
 ```
@@ -110,7 +105,7 @@ qsub ~/cre/cre.sh -v family=[family],cleanup=1
   * gets coverage from GATK Haplotype calls, freebayes, and platypus
   * build excel report based on gemini variants table, variant impacts, coverage information and some other fields.
 
-# 4. Step 3 in detail
+# 5. Step 4 in detail
 
 ## 4.0 [Report description](https://docs.google.com/document/d/1zL4QoINtkUd15a0AK4WzxXoTWp2MRcuQ9l_P9-xSlS4/edit?usp=sharing).
 ## 4.1 [Report example for Ashkenazim trio from NIST](https://drive.google.com/open?id=0B_bLL10GwDnsN29vY3RRdGlXMWM).
@@ -133,18 +128,18 @@ vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 ```
 ## 4.6 Rscript ~/cre/[cre.R](../master/cre.R) [family] - creates report family.csv.
 
-# 5. How to create a database of variants
+# 6. How to create a database of variants
 
 - cre.database.sh [input_dir] [output_dir] - creates sample-wise and variant-wise reports, which are necessary for annotation with cre.R.
 - cre.database.pull_gene.sh [database_prefix] [gene_name] - pull a gene report from the database.
 
-# 6. Coverage plots
+# 7. Coverage plots
 
 - ~/bioscripts/genes.R - pull a bed file from Ensembl
 - ~/bioscripts/bam.coverage.bamstats05.sh - calculate coverage
 - cheo.R - plot coverage pictures
 
-# 7. List of all scripts
+# 8. List of all scripts
 
 * bcbio.array.pbs
 * bcbio.pbs
@@ -177,7 +172,7 @@ vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 * vep4seqr_hg38.sh
 * vep4seqr.sh
 
-# 8. Credits
+# 9. Credits
 
 This work was inspired by 
 * [bcbio](https://github.com/chapmanb/bcbio-nextgen/) and [gemini](https://github.com/arq5x/gemini) teams. Thank you all!
