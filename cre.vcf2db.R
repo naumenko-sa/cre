@@ -527,7 +527,7 @@ merge_reports <- function(family, samples){
                     #sometimes freebayes has 10,10,10 for decomposed alleles
                     if (grepl(",",ensemble[i,column])){
                         cov_value <- strsplit(ensemble[i,column], ",", fixed = T)[[1]][1]
-                    }else cov_value=ensemble[i,column]
+                    }else cov_value <- ensemble[i,column]
                     
                     ensemble[i, "Trio_coverage"] <- paste(ensemble[i, "Trio_coverage"], cov_value, sep = prefix)
                     n_sample <- n_sample + 1
@@ -546,7 +546,7 @@ merge_reports <- function(family, samples){
         samtools <- read.delim(samtools_file, stringsAsFactors = F)
         samtools$superindex <- with(samtools, paste(paste0(CHROM, ":", POS), REF, ALT, sep = '-'))
         samtools[c("CHROM", "POS", "REF", "ALT")] = NULL
-        ensemble = merge(ensemble, samtools, by.x = "superindex", 
+        ensemble <- merge(ensemble, samtools, by.x = "superindex", 
                          by.y="superindex", all.x = T, all.y = F)
       
         for (i in 1:nrow(ensemble)){
@@ -567,17 +567,17 @@ merge_reports <- function(family, samples){
         }
     }
     
-    ensemble[,"Trio_coverage"] = with(ensemble,gsub("NA", "0", get("Trio_coverage"), fixed = T))  
+    ensemble[,"Trio_coverage"] <- with(ensemble,gsub("NA", "0", get("Trio_coverage"), fixed = T))  
    
     for (i in 1:nrow(ensemble)){
         if (is.na(ensemble[i, "Depth"])){
-            l = strsplit(ensemble[i, "Trio_coverage"],"_")[[1]]
-            ensemble[i, "Depth"] = sum(as.integer(l))
+            l <- strsplit(ensemble[i, "Trio_coverage"],"_")[[1]]
+            ensemble[i, "Depth"] <- sum(as.integer(l))
         }
         for (sample in samples){
-            field_depth = paste0("Alt_depths.", sample)
+            field_depth <- paste0("Alt_depths.", sample)
             if (is.na(ensemble[i, field_depth]))
-                ensemble[i,field_depth] = 0
+                ensemble[i,field_depth] <- 0
         }
     }
     
@@ -591,7 +591,7 @@ annotate_w_care4rare <- function(family,samples){
     
     if(exists("seen_in_c4r_counts")){
         variants <- merge(variants, seen_in_c4r_counts, by.x = "superindex", 
-                          by.y="Position.Ref.Alt", all.x = T)
+                          by.y = "Position.Ref.Alt", all.x = T)
         variants$Frequency_in_C4R <- variants$Frequency
         variants$Frequency <- NULL
     }
@@ -643,20 +643,18 @@ load_tables <- function(debug = F){
         print("No C4R counts found")
     }
     
-    if (file.exists(seen_in_c4r_samples.txt))
-    {
+    if (file.exists(seen_in_c4r_samples.txt)){
         seen_in_c4r_samples <<- read.delim(seen_in_c4r_samples.txt, stringsAsFactors=F)
     }else{
         print("No C4R samples found")
     }
     
-    if (file.exists(hgmd.csv))
-    {
-        hgmd = read.csv(hgmd.csv,stringsAsFactors = F,header = F)
-        colnames(hgmd) = c("chrom","pos","HGMD_id","ref","alt","HGMD_gene","HGMD_tag","author",
+    if (file.exists(hgmd.csv)){
+        hgmd <- read.csv(hgmd.csv,stringsAsFactors = F,header = F)
+        colnames(hgmd) <- c("chrom","pos","HGMD_id","ref","alt","HGMD_gene","HGMD_tag","author",
                            "allname","vol","page","year","pmid")
-        hgmd$superindex = with(hgmd,paste0(chrom,':',pos,'-',ref,'-',alt))
-        hgmd$HGMD_ref = with(hgmd,paste(author,allname,vol,page,year,"PMID:",pmid,sep = ' '))
+        hgmd$superindex <- with(hgmd,paste0(chrom,':',pos,'-',ref,'-',alt))
+        hgmd$HGMD_ref <- with(hgmd,paste(author,allname,vol,page,year,"PMID:",pmid,sep = ' '))
         hgmd <<- hgmd[,c("superindex","HGMD_id","HGMD_gene","HGMD_tag","HGMD_ref")]
     }else{
         print("No HGMD database")
@@ -664,48 +662,46 @@ load_tables <- function(debug = F){
 }
 
 # creates clinical report - more conservative filtering and less columns
-clinical_report = function(project,samples)
-{
-    report_file_name = paste0(project,".wes.",Sys.Date(),".csv")
-    full_report = read.csv(report_file_name,header = T,stringsAsFactors = F)
+clinical_report <- function(project,samples){
+    report_file_name <- paste0(project,".wes.",Sys.Date(),".csv")
+    full_report <- read.csv(report_file_name, header = T, stringsAsFactors = F)
     
+    full_report$max_alt <- with(full_report,pmax(get(paste0("Alt_depths.", samples))))
     
-    full_report$max_alt = with(full_report,pmax(get(paste0("Alt_depths.",samples))))
-    
-    filtered_report = subset(full_report, 
+    filtered_report <- subset(full_report, 
                Quality > 1000 & Gnomad_af_popmax < 0.005 & Frequency_in_C4R < 6 & max_alt >=20,
-               select=c("Position","GNOMAD_Link","Ref","Alt","Gene",paste0("Burden.",samples),
-                        "Variation","Info","Refseq_change","Omim_gene_description","Omim_inheritance",
-                        "Orphanet","Clinvar","Frequency_in_C4R",
-                        "Gnomad_af_popmax","Gnomad_af","Gnomad_ac","Gnomad_hom",
-                        "Sift_score","Polyphen_score","Cadd_score","Vest3_score","Revel_score",
-                        "Imprinting_status","Pseudoautosomal")
+               select = c("Position", "GNOMAD_Link", "Ref", "Alt", "Gene", paste0("Burden.",samples),
+                        "Variation", "Info", "Refseq_change", "Omim_gene_description", "Omim_inheritance",
+                        "Orphanet", "Clinvar", "Frequency_in_C4R",
+                        "Gnomad_af_popmax", "Gnomad_af", "Gnomad_ac", "Gnomad_hom",
+                        "Sift_score", "Polyphen_score", "Cadd_score", "Vest3_score", "Revel_score",
+                        "Imprinting_status", "Pseudoautosomal")
                )
 
-    write.csv(filtered_report,paste0(project,".wes.clinical.",Sys.Date(),".csv"),row.names = F)
+    write.csv(filtered_report,paste0(project,".wes.clinical.",Sys.Date(),".csv"), row.names = F)
 }
 
 library(stringr)
 library(data.table)
 library(plyr)
-default_tables_path="~/cre/data"
-c4r_database_path = "/hpf/largeprojects/ccm_dccforge/dccforge/results/database"
+default_tables_path <- "~/cre/data"
+c4r_database_path <- "/hpf/largeprojects/ccm_dccforge/dccforge/results/database"
 
 # R substitutes "-" with "." in sample names in columns so fix this in samples.txt
 # sample names starting with letters should be prefixed by X in *.table
 # for correct processing. most of them start with numbers, and R adds X automatically
 
-args = commandArgs(trailingOnly = T)
-family = args[1]
+args <- commandArgs(trailingOnly = T)
+family <- args[1]
 
-coding = if(is.null(args[2])) T else F
+coding <- if(is.null(args[2])) T else F
 
-debug = F
+debug <- F
 
 setwd(family)
 
-samples = unlist(read.table("samples.txt", stringsAsFactors=F))
-samples = gsub("-",".",samples)
+samples <- unlist(read.table("samples.txt", stringsAsFactors = F))
+samples <- gsub("-", ".", samples)
     
 load_tables(debug)
 create_report(family,samples)

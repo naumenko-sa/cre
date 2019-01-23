@@ -154,6 +154,7 @@ vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 * cheo.R - mostly Venn diagrams to compare pipeline validations + some coverage analysis
 * cre.prepare_bcbio_run.sh
 * cre.bam.validate.sh
+* cre.bam.remove_decoy_reads.sh - removes decoy reads for grch37d5 with VariantBam and grep.
 * cre.bcbio.upgrade.sh
 * cre.coverage.bamstats05.sh - calculate coverage
 * cre.fixit.sh - fixes sample names
@@ -166,11 +167,6 @@ vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 * cre.sh - master script to produce variant reports from bcbio output
 * cre.topmed.R - pull variant frequency from TopMed having rs_id
 * cre.vcf.has2dp.sh fixes input vcf file from HAS pipeline (Illumina, TCAG) filling DP field
-* gemini.gemini2txt.sh
-* gemini.refseq.sh
-* gemini.variant_impacts.sh
-* gemini.vep.refseq.sh
-* gemini.vep.sh
 * omim.sh
 * orphanet.sh
 * vcf.freebayes.getAO.sh
