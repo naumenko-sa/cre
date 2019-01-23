@@ -3,7 +3,6 @@
 ####################################################################################################
 #   keeps only important files from bcbio run: qc, vcf, gemini, bam
 #   creates csv report for small variants
-#   keeps bam files for new samples
 
 #   parameters:
 # 	family = [family_id] (=project_id=case_id=folder_name, main result file should be family/family-ensemble.db)
@@ -23,11 +22,10 @@ function f_cleanup
 {
     # better to look for project-summary than hardcode the year
     # keep bam files for new samples
-    
     if [ -z $family ] 
     then
-	   echo "Project (family) folder does not exist. Exiting"
-	   exit 1
+        echo "Project (family) folder does not exist. Exiting"
+        exit 1
     fi
     
     cd $family
@@ -45,50 +43,50 @@ function f_cleanup
         # if result_dir is empty that might cause copying entire /
         if [ -d $result_dir ] && [ -n "$result_dir" ]
         then
-	       mv $result_dir/* .
-	       mv final/*/*.bam .
-	       mv final/*/*.bai .
-	       # keep validation picture
-	       mv final/*/*.png .
+            mv $result_dir/* .
+            mv final/*/*.bam .
+            mv final/*/*.bai .
+            # keep validation picture
+            mv final/*/*.png .
 	
-	       # keep sv calls
-	       if [ "$type" == "wgs" ]
-	       then
-	           mv final sv
-	       fi
+            # keep sv calls
+            if [ "$type" == "wgs" ]
+            then
+                mv final sv
+            fi
 
-           rm -rf final/
-           rm -rf work/
+            rm -rf final/
+            rm -rf work/
     
 	       #proceed only if there is a result dir
            #don't remove input files for new projects
            #rm -rf input/
            #rename bam files to match sample names
         
-           for f in *ready.bam;do mv $f `echo $f | sed s/"-ready"//`;done;
-           for f in *ready.bam.bai;do mv $f `echo $f | sed s/"-ready"//`;done;
+            for f in *ready.bam;do mv $f `echo $f | sed s/"-ready"//`;done;
+            for f in *ready.bam.bai;do mv $f `echo $f | sed s/"-ready"//`;done;
 
 	       #make bam files read only
-           for f in *.bam;do chmod 444 $f;done;
+            for f in *.bam;do chmod 444 $f;done;
 
 	       #calculate md5 sums
-           for f in *.bam;do md5sum $f > $f.md5;done;
+            for f in *.bam;do md5sum $f > $f.md5;done;
 
 	       #validate bam files
-           for f in *.bam;do	cre.bam.validate.sh $f;done;
+            for f in *.bam;do cre.bam.validate.sh $f;done;
     
             if [ "$type" == "wes.fast" ] || [ "$type" == "wgs" ]
             then
 	           ln -s ${family}-gatk-haplotype.db ${family}-ensemble.db
 	           ln -s ${family}-gatk-haplotype-annotated-decomposed.vcf.gz ${family}-ensemble-annotated-decomposed.vcf.gz
 	           ln -s ${family}-gatk-haplotype-annotated-decomposed.vcf.gz.tbi ${family}-ensemble-annotated-decomposed.vcf.gz.tbi
-	       elif [ "$type" == "annotate" ]
-	       then
+            elif [ "$type" == "annotate" ]
+            then
 	           ln -s ${family}-precalled.db ${family}-ensemble.db
 	           ln -s ${family}-precalled-annotated-decomposed.vcf.gz ${family}-ensemble-annotated-decomposed.vcf.gz
 	           ln -s ${family}-precalled-annotated-decomposed.vcf.gz.tbi ${family}-ensemble-annotated-decomposed.vcf.gz.tbi
-	       else
-	           # we don't need gemini databases for particular calling algorythms
+            else
+	           # we don't need gemini databases for individual variant callers
 	           rm ${family}-freebayes.db
 	           rm ${family}-gatk-haplotype.db
 	           rm ${family}-samtools.db
@@ -108,11 +106,11 @@ function f_fix_sample_names
     then
         cat $1.samples.txt | sed s/"-"/"_"/g > $1.samples.fixed.txt
         echo "VCF2DB fixed sample names, fixing sample names in " $1 " to match..."
-	mv $1.subset.vcf.gz $1.subset.tmp.vcf.gz
+        mv $1.subset.vcf.gz $1.subset.tmp.vcf.gz
         bcftools reheader -s $1.samples.fixed.txt $1.subset.tmp.vcf.gz > $1.subset.vcf.gz
-	tabix $1.subset.vcf.gz
-	rm $1.subset.tmp.vcf.gz
-	rm $1.samples.fixed.txt
+        tabix $1.subset.vcf.gz
+        rm $1.subset.tmp.vcf.gz
+        rm $1.samples.fixed.txt
     fi
     rm $1.samples.txt
 }
@@ -173,45 +171,45 @@ function f_make_report
     fprefix=${family}-freebayes-annotated-decomposed
     if [ -f $fprefix.vcf.gz ]
     then
-	   bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt decompose -s - | vt uniq - -o $fprefix.subset.vcf.gz
-	   tabix $fprefix.subset.vcf.gz
+        bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt decompose -s - | vt uniq - -o $fprefix.subset.vcf.gz
+        tabix $fprefix.subset.vcf.gz
 	
-	   f_fix_sample_names $fprefix
-	   vcf.freebayes.getAO.sh $fprefix.subset.vcf.gz $reference
+        f_fix_sample_names $fprefix
+        vcf.freebayes.getAO.sh $fprefix.subset.vcf.gz $reference
     fi
 
     #gemini.decompose.sh ${family}-gatk-haplotype.vcf.gz
     fprefix=${family}-gatk-haplotype-annotated-decomposed
     if [ -f $fprefix.vcf.gz ]
     then
-	bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt decompose -s - | vt uniq - -o $fprefix.subset.vcf.gz
-	tabix $fprefix.subset.vcf.gz
+        bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt decompose -s - | vt uniq - -o $fprefix.subset.vcf.gz
+        tabix $fprefix.subset.vcf.gz
 	
-	f_fix_sample_names $fprefix
-	vcf.gatk.get_depth.sh $fprefix.subset.vcf.gz $reference
+        f_fix_sample_names $fprefix
+        vcf.gatk.get_depth.sh $fprefix.subset.vcf.gz $reference
     fi
 
     #gemini.decompose.sh ${family}-platypus.vcf.gz
     fprefix=${family}-platypus-annotated-decomposed
     if [ -f $fprefix.vcf.gz ]
     then
-	bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt decompose -s - | vt uniq - -o $fprefix.subset.vcf.gz
-	tabix $fprefix.subset.vcf.gz
-	f_fix_sample_names $fprefix
-	vcf.platypus.getNV.sh $fprefix.subset.vcf.gz $reference
+        bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt decompose -s - | vt uniq - -o $fprefix.subset.vcf.gz
+        tabix $fprefix.subset.vcf.gz
+        f_fix_sample_names $fprefix
+        vcf.platypus.getNV.sh $fprefix.subset.vcf.gz $reference
     fi
 
     cd ..
 
     # using Rscript from bcbio
     if [ "$type" == "wgs" ] || [ "$type" == "rnaseq" ]
-	then
-		noncoding="noncoding"
-	else
-		noncoding=""
-	fi
+    then
+        noncoding="noncoding"
+    else
+        noncoding=""
+    fi
 		
-	Rscript ~/cre/cre.vcf2db.R $family $noncoding
+    Rscript ~/cre/cre.vcf2db.R $family $noncoding
     
     cd $family
     #rm $family.create_report.csv $family.merge_reports.csv
@@ -219,7 +217,6 @@ function f_make_report
     #do
 #	rm ${family}-${vcaller}-annotated-decomposed.subset.vcf.gz ${family}-${vcaller}-annotated-decomposed.subset.vcf.gz.tbi
 #   done
-
     cd ..
 }
 
