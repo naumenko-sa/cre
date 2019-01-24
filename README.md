@@ -50,6 +50,7 @@ By default, bcbio does not have decoy in grch37 reference, decoy is supported on
 - run alignment step vs grch37d5 reference: cre.prepare_bcbio_run.sh <project> align_decoy
 - keep bam file aligned vs grch37d5 for storage
 - run variant calling with noalt_calling and bam_clean: remove_extracontigs (SV calling in WGS required additional processing of decoy aligned bam file, see crg).
+- when saving project to the storage, use bam files aligned to decoy
 
 # 2. Set up bcbio project for alignment, variant caling and annotation
 
