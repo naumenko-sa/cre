@@ -34,22 +34,22 @@ if [ -n "$2" ]
 then
     if [ $template_type == "noalign" ]
     then
-	template=~/cre/cre.bcbio.templates.wes.noalign.yaml
+	template=~/cre/config/cre.bcbio.templates.wes.noalign.yaml
     elif [ $template_type == "fast" ]
     then
 	echo fast
-	template=~/cre/cre.bcbio.templates.wes.fast.yaml
+	template=~/cre/config/cre.bcbio.templates.wes.fast.yaml
     elif [ $template_type == "validation" ]
     then
-	template=~/cre/cre.bcbio.templates.wes.validation.yaml
+	template=~/cre/config/cre.bcbio.templates.wes.validation.yaml
 	variant_regions=$3
     elif [ $template_type == "gatk4" ]
     then
-	template=~/cre/cre.bcbio.templates.wes.gatk4.yaml
+	template=~/cre/config/cre.bcbio.templates.wes.gatk4.yaml
 	variant_regions=$3
     elif [ $template_type == "align_decoy" ]
     then
-	template=~/cre/cre.bcbio.templates.align_decoy.yaml
+	template=~/cre/config/cre.bcbio.templates.align_decoy.yaml
     fi
 fi
 
@@ -64,7 +64,7 @@ then
     mkdir work
     cd input
     vcf=`ls *.vcf.gz`
-    template=~/cre/cre.bcbio.templates.annotate.yaml
+    template=~/cre/config/cre.bcbio.templates.annotate.yaml
     cat $template | sed s/"\[vrn_file\]"/$vcf/  | sed s/"\[familyid\]"/$family/ > ../config/$family.yaml
     cd ..
 else
