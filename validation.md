@@ -1,3 +1,11 @@
+# Latest NA12878 WES and WGS
+<table>
+    <tr><td rowspan="2">Data</td><td rowspan="2">Tool</td><td colspan="2">SNP</td><td colspan="2">Indel</td></tr>
+    <tr><td>FDR</td><td>FNR</td><td>FDR</td><td>FNR</td></tr>
+    <tr><td>WES</td><td>Ensembl 2of4 (bcbio 1.1.2)</td><td>0.22%</td><td>0.23%</td><td>7.41%</td><td>5.98%</td></tr>
+    <tr><td>WGS</td><td>Gatk 4.0.12.0(bcbio)</td><td>0.10%</td><td>0.12%</td><td>0.95%</td><td>1.19%</td></tr>
+</table>
+
 # WES - 2019-01-23
 
 **Data:**
