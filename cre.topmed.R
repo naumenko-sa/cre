@@ -4,14 +4,15 @@
 # https://bravo.sph.umich.edu/freeze3a/hg19/
 
 install <- function(){
-    source("https://bioconductor.org/biocLite.R")
-    biocLite("MafDb.TOPMed.freeze5.hg19")
-    biocLite("SNPlocs.Hsapiens.dbSNP144.GRCh37")
+    if (!requireNamespace("BiocManager", quietly = TRUE))
+        install.packages("BiocManager")
+    BiocManager::install("MafDb.TOPMed.freeze5.hg19", version = "3.8")
+    BiocManager::install("SNPlocs.Hsapiens.dbSNP144.GRCh37")
 }
 
 init <- function(){
-    library("SNPlocs.Hsapiens.dbSNP144.GRCh37")
-    library("MafDb.TOPMed.freeze5.hg19")
+    library(SNPlocs.Hsapiens.dbSNP144.GRCh37)
+    library(MafDb.TOPMed.freeze5.hg19)
 }
 
 get_af_by_rsid <- function(rs_id){
@@ -19,6 +20,7 @@ get_af_by_rsid <- function(rs_id){
     # from Johar 2016
     # rs_id <- "rs202193903"
     # rs_id = "rs903331232"
+    rs_id = "rs1129038"
     #- not found
     #ls("package:MafDb.TOPMed.freeze5.hg19")
     mafdb <- MafDb.TOPMed.freeze5.hg19
@@ -54,7 +56,7 @@ check_hgmd <- function(){
     
     hgmd$AF <- NULL
     
-    hgmd = hgmd[hgmd$tag == "DM" | hgmd$tag == "DM?",]
+    hgmd <- hgmd[hgmd$tag == "DM" | hgmd$tag == "DM?",]
     for (i in 1:nrow(hgmd)){
         print(i)
         hgmd[i,"AF"] <- af_by_rsid(hgmd[i, "dbsnp"])
