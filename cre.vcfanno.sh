@@ -15,7 +15,7 @@ bname=`basename $vcf .vcf.gz`
 prefix=$HOME/cre
 
 vcfanno -p 5 -lua $prefix/cre.vcfanno.lua \
-	     -base-path /hpf/largeprojects/ccmbio/naumenko/tools/bcbio/genomes/Hsapiens/GRCh37/variation \
+	     -base-path /hpf/largeprojects/ccmbio/naumenko/tools/bcbio/genomes/Hsapiens/GRCh37 \
 	     $prefix/cre.vcfanno.conf \
 	     $vcf | sed -e 's/Number=A/Number=1/g' | bgzip -c > $bname.annotated.vcf.gz
 
