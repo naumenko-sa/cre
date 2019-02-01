@@ -679,6 +679,29 @@ clinical_report <- function(project,samples){
                         "Sift_score", "Polyphen_score", "Cadd_score", "Vest3_score", "Revel_score",
                         "Imprinting_status", "Pseudoautosomal")
                )
+    
+    # recalculate burden using the filtered report
+    for(sample in samples){
+        zygocity_column_name <- paste0("Zygosity.", sample)
+        burden_column_name <- paste0("Burden.", sample)
+        t <- subset(filtered_report, 
+                    get(zygocity_column_name) == 'Hom' | get(zygocity_column_name) == 'Het',
+                    select=c("Ensembl_gene_id", zygocity_column_name))
+        df_burden <- count(t, "Ensembl_gene_id")    
+        colnames(df_burden)[2] <- burden_column_name
+        filtered_report[,burden_column_name] <- NULL
+        filtered_report <- merge(filtered_report, df_burden, all.x = T)
+        filtered_report[,burden_column_name][is.na(variants[, burden_column_name])] <- 0
+    }
+    
+    #order columns
+    filtered_report <- filtered_report[c("Position", "GNOMAD_Link", "Ref", "Alt", "Gene", paste0("Zygosity.", samples), 
+      paste0("Burden.",samples),
+      "Variation", "Info", "Refseq_change", "Omim_gene_description", "Omim_inheritance",
+      "Orphanet", "Clinvar", "Frequency_in_C4R",
+      "Gnomad_af_popmax", "Gnomad_af", "Gnomad_ac", "Gnomad_hom",
+      "Sift_score", "Polyphen_score", "Cadd_score", "Vest3_score", "Revel_score",
+      "Imprinting_status", "Pseudoautosomal")]
 
     write.csv(filtered_report,paste0(project,".wes.clinical.",Sys.Date(),".csv"), row.names = F)
 }
