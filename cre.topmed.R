@@ -20,7 +20,7 @@ get_af_by_rsid <- function(rs_id){
     # from Johar 2016
     # rs_id <- "rs202193903"
     # rs_id = "rs903331232"
-    rs_id = "rs1129038"
+    # rs_id = "rs1129038"
     #- not found
     #ls("package:MafDb.TOPMed.freeze5.hg19")
     mafdb <- MafDb.TOPMed.freeze5.hg19

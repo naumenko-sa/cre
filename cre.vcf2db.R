@@ -671,7 +671,8 @@ clinical_report <- function(project,samples){
     
     filtered_report <- subset(full_report, 
                Quality > 1000 & Gnomad_af_popmax < 0.005 & Frequency_in_C4R < 6 & max_alt >=20,
-               select = c("Position", "GNOMAD_Link", "Ref", "Alt", "Gene", paste0("Burden.",samples),
+               select = c("Position", "GNOMAD_Link", "Ref", "Alt", "Gene", paste0("Zygosity.", samples), 
+                          paste0("Burden.",samples),
                         "Variation", "Info", "Refseq_change", "Omim_gene_description", "Omim_inheritance",
                         "Orphanet", "Clinvar", "Frequency_in_C4R",
                         "Gnomad_af_popmax", "Gnomad_af", "Gnomad_ac", "Gnomad_hom",
