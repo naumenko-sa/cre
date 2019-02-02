@@ -104,10 +104,12 @@ create_report <- function(family, samples){
         variants[,zygocity_column_name] <- unlist(t)
     
         burden_column_name <- paste0("Burden.", sample)
+        # calculating Burden using gene rather then Ensembl_gene_id - request from Matt
         t <- subset(variants, 
                     get(zygocity_column_name) == 'Hom' | get(zygocity_column_name) == 'Het',
-                    select=c("Ensembl_gene_id", zygocity_column_name))
-        df_burden <- count(t,'Ensembl_gene_id')    
+                    select = c("Gene", zygocity_column_name))
+        # counts from plyr
+        df_burden <- count(t, "Gene")    
         colnames(df_burden)[2] <- burden_column_name
         variants <- merge(variants, df_burden, all.x = T)
         variants[,burden_column_name][is.na(variants[, burden_column_name])] <- 0
@@ -667,7 +669,7 @@ clinical_report <- function(project,samples){
     report_file_name <- paste0(project,".wes.",Sys.Date(),".csv")
     full_report <- read.csv(report_file_name, header = T, stringsAsFactors = F)
     
-    full_report$max_alt <- with(full_report,pmax(get(paste0("Alt_depths.", samples))))
+    full_report$max_alt <- with(full_report, pmax(get(paste0("Alt_depths.", samples))))
     
     filtered_report <- subset(full_report, 
                Quality > 1000 & Gnomad_af_popmax < 0.005 & Frequency_in_C4R < 6 & max_alt >=20,
@@ -682,28 +684,29 @@ clinical_report <- function(project,samples){
     
     # recalculate burden using the filtered report
     for(sample in samples){
-        zygocity_column_name <- paste0("Zygosity.", sample)
+        zygosity_column_name <- paste0("Zygosity.", sample)
         burden_column_name <- paste0("Burden.", sample)
         t <- subset(filtered_report, 
-                    get(zygocity_column_name) == 'Hom' | get(zygocity_column_name) == 'Het',
-                    select=c("Ensembl_gene_id", zygocity_column_name))
-        df_burden <- count(t, "Ensembl_gene_id")    
+                    get(zygosity_column_name) == 'Hom' | get(zygosity_column_name) == 'Het',
+                    select = c("Gene", zygosity_column_name))
+        # count is from plyr
+        df_burden <- count(t, "Gene")    
         colnames(df_burden)[2] <- burden_column_name
         filtered_report[,burden_column_name] <- NULL
         filtered_report <- merge(filtered_report, df_burden, all.x = T)
-        filtered_report[,burden_column_name][is.na(variants[, burden_column_name])] <- 0
+        filtered_report[,burden_column_name][is.na(filtered_report[, burden_column_name])] <- 0
     }
     
     #order columns
     filtered_report <- filtered_report[c("Position", "GNOMAD_Link", "Ref", "Alt", "Gene", paste0("Zygosity.", samples), 
-      paste0("Burden.",samples),
+      paste0("Burden.", samples),
       "Variation", "Info", "Refseq_change", "Omim_gene_description", "Omim_inheritance",
       "Orphanet", "Clinvar", "Frequency_in_C4R",
       "Gnomad_af_popmax", "Gnomad_af", "Gnomad_ac", "Gnomad_hom",
       "Sift_score", "Polyphen_score", "Cadd_score", "Vest3_score", "Revel_score",
       "Imprinting_status", "Pseudoautosomal")]
 
-    write.csv(filtered_report,paste0(project,".wes.clinical.",Sys.Date(),".csv"), row.names = F)
+    write.csv(filtered_report, paste0(project, ".wes.clinical.", Sys.Date(), ".csv"), row.names = F)
 }
 
 library(stringr)
