@@ -86,7 +86,7 @@ create_report <- function(family, samples){
     # Columns 4,5: Ref,Alt
 
     # Column6 - Gene
-    variants$Gene <- with(variants, gsub("", "NA", Gene), fixed = T)
+    variants$Gene[variants$Gene == ""] <- NA
     
     # Column 6 - Zygosity, column 8 - Burden
     # use new loader vcf2db.py - with flag  to load plain text
@@ -116,7 +116,7 @@ create_report <- function(family, samples){
         colnames(df_burden)[2] <- burden_column_name
         variants <- merge(variants, df_burden, all.x = T)
         variants[,burden_column_name][is.na(variants[,burden_column_name])] <- 0
-        variants[,burden_column_name][is.na(variants[,"Gene"])] <-0
+        variants[,burden_column_name][is.na(variants$Gene)] <-0
     }
     
     # Column9 = gts
@@ -697,7 +697,7 @@ clinical_report <- function(project,samples){
         filtered_report[,burden_column_name] <- NULL
         filtered_report <- merge(filtered_report, df_burden, all.x = T)
         filtered_report[,burden_column_name][is.na(filtered_report[, burden_column_name])] <- 0
-        filtered_report[,burden_column_name][is.na(filtered_report[,"Gene"])] <-0
+        filtered_report[,burden_column_name][is.na(filtered_report$Gene)] <-0
     }
     
     #order columns
