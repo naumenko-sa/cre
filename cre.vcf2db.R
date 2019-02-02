@@ -86,7 +86,7 @@ create_report <- function(family, samples){
     # Columns 4,5: Ref,Alt
 
     # Column6 - Gene
-    variants[,"Gene"] <- with(variants, gsub("", "NA", Gene), fixed = T))
+    variants$Gene <- with(variants, gsub("", "NA", Gene), fixed = T)
     
     # Column 6 - Zygosity, column 8 - Burden
     # use new loader vcf2db.py - with flag  to load plain text
