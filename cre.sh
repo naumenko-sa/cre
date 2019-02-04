@@ -31,6 +31,14 @@ function f_cleanup
     cd $family
     
     project_summary=`find final -name project-summary.yaml`
+    
+    # if there are multiple folders
+    n_summaries=`echo $project_summary | grep -o yaml | wc -l`
+    if [ $n_summaries -gt 1 ]
+    then
+	echo "Multiple project-summary.yaml"
+	exit 1
+    fi
 
     echo "Project summary: " $project_summary
 
