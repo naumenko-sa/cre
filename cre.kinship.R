@@ -107,7 +107,7 @@ plot_relatedness_picture <- function(samples.txt = "samples.txt"){
     #test:
     #samples.txt = "all.samples.txt"
     #samples.txt = "c4r_24.samples.txt"
-    prefix <- gsub(".txt","",samples.txt,fixed = T)  
+    prefix <- gsub(".txt","",samples.txt, fixed = T)  
     samples <- unlist(read.table(samples.txt, stringsAsFactors = F))
     
     #biallelic by default
@@ -118,7 +118,7 @@ plot_relatedness_picture <- function(samples.txt = "samples.txt"){
     #LD based SNP pruning
     set.seed(1000)
     #default threshold is 0.2, for many samples it should be relaxed to 0.5
-    snpset <- snpgdsLDpruning(genofile, ld.threshold = 0.2, sample.id = samples)
+    snpset <- snpgdsLDpruning(genofile, ld.threshold = 0.5, sample.id = samples)
     snpset.id <- unlist(snpset)
 
     #pca
@@ -138,8 +138,9 @@ plot_relatedness_picture <- function(samples.txt = "samples.txt"){
     text(tab$EV2,tab$EV1, tab$sample.id)
     dev.off()
     
-    #family.id <- c(rep(1,length(samples)))
-    family.id <- c(26,36,26,34,35,38,15,15,15,38,34)
+    family.id <- c(rep(1,length(samples)))
+    #family.id <- c(26,36,26,34,35,38,15,15,15,38,34)
+    #family.id <- c(1,2,2,3,4,4,5,5,5,5,5,6,6,6,7,8,8,9,10,10,11)
                    
     ibd.robust <- snpgdsIBDKING(genofile, snp.id = snpset.id, num.thread = 2, 
                                family.id = family.id)
@@ -167,5 +168,6 @@ plot_relatedness_picture <- function(samples.txt = "samples.txt"){
 }
 
 init()
-snpgdsVCF2GDS("merged.vcf", "dataset2.gds")
+# input file can be vcf or vcf.gz
+snpgdsVCF2GDS("truffle_407.no_anno.snps.Q500.vcf.gz", "dataset2.gds")
 plot_relatedness_picture("samples.txt")

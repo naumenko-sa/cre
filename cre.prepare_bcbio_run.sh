@@ -28,7 +28,7 @@ cd ..
 variant_regions=""
 
 #default template
-template=~/cre/cre.bcbio.templates.wes.yaml
+template=~/cre/config/cre.bcbio.templates.wes.yaml
 
 if [ -n "$2" ]
 then
