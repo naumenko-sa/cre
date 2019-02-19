@@ -8,6 +8,7 @@ details:
     mark_duplicates: true
     save_diskspace: true
     tools_on:
+    - gemini
     - svplots
     - qualimap
     - vep_splicesite_annotations
