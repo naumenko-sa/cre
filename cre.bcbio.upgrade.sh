@@ -1,12 +1,48 @@
 #!/bin/bash
 
-# compute nodes do not have internet access, 
-# qnodes do have internet access, but it is better to run on a data node, because nohups are dying on qlogins
+# nohups are dying on qlogins, better use data nodes for data
+# data nodes does not have git
 
-# fresh install
+# fresh install of the second bcbio instance:
+# mv ~/.conda/environments.txt ~/.conda/environments.default.txt - move back
+#export PATH=/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/bin
+#export PYTHONPATH=
+#which python
+#wget https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/bcbio_nextgen_install.py
+
+#echo "Installing to " $1
+# install data later
+#module load python/2.7.15
+#which bash
+#python bcbio_nextgen_install.py $1 --tooldir $1 --genomes GRCh37 --aligners bwa --isolate --nodata
+
+########################################################################
+# installation for Sam
+# fresh install with human and mouse genome
+
+# to check what enviroments were picked up during the installation
+# conda info --envs --json
+# check file ~/.conda/environments.txt - it has environment from all installations - they can interfere
+
 # wget https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/bcbio_nextgen_install.py
-# python bcbio_nextgen_install.py /usr/local/share/bcbio --tooldir=/usr/local \
-#  --genomes GRCh37 --aligners bwa --aligners bowtie2
+#export PYTHONPATH=/hpf/largeprojects/lauryl/bcbio110/anaconda/lib/python2.7
+
+#PATH=/hpf/largeprojects/lauryl/bcbio110/anaconda/bin
+#PATH=${PATH}:/usr/local/bin:/opt/moab/bin:/home/naumenko/cre:/home/naumenko/crt:/home/naumenko/crg:/home/naumenko/tools/mc-4.8.16/bin:/home/naumenko/jkent_tools
+#PATH=${PATH}:/home/naumenko/bioscripts:.:/home/naumenko/.aspera/connect/bin:/usr/local/bin:/usr/lib64/qt-3.3/bin:/opt/moab/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin
+#PATH=${PATH}:/opt/ibutils/bin:/sbin:/usr/sbin:/sbin:/usr/sbin
+
+#export PATH
+
+#echo $PATH
+#echo $PYTHONPATH
+#which python
+
+#python bcbio_nextgen_install.py /hpf/largeprojects/lauryl/bcbio110 --tooldir=/hpf/largeprojects/lauryl/bcbio110 --genomes mm10 --aligners bwa --isolate
+		  
+#bcbio_nextgen.py upgrade -u skip --tools --tooldir /hpf/largeprojects/lauryl/bcbio110
+#bcbio_nextgen.py upgrade -u skip --data --genomes mm10 --datatarget variation --datatarget vep
+#########################################################################
 
 #upgrade code to stable version
 #bcbio_nextgen.py upgrade -u stable
@@ -14,7 +50,7 @@
 #bcbio_nextgen.py upgrade -u development
 
 #upgrade tools
-#bcbio_nextgen.py upgrade -u skip --tools
+bcbio_nextgen.py upgrade -u skip --tools
 
 #check tools
 #bcbio_conda list | grep vep
@@ -42,4 +78,4 @@
 #mouse
 #bcbio_nextgen.py upgrade -u skip --genomes mm10 --datatarget rnaseq --cores 5
 
-bcbio_nextgen.py upgrade -u skip --genomes hg38 --datatarget gnomad
+#bcbio_nextgen.py upgrade -u skip --genomes hg38 --datatarget gnomad
