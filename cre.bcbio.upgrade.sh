@@ -50,10 +50,7 @@
 #bcbio_nextgen.py upgrade -u development
 
 #upgrade tools
-bcbio_nextgen.py upgrade -u skip --tools
-
-#check tools
-#bcbio_conda list | grep vep
+#bcbio_nextgen.py upgrade -u skip --tools
 
 #bcbio_nextgen.py upgrade  --data
 #upgrade data - it upgrades gemini, cadd, rnaseq if they were installed before
