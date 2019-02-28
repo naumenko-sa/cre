@@ -75,4 +75,4 @@
 #mouse
 #bcbio_nextgen.py upgrade -u skip --genomes mm10 --datatarget rnaseq --cores 5
 
-#bcbio_nextgen.py upgrade -u skip --genomes hg38 --datatarget gnomad
+bcbio_nextgen.py upgrade -u skip --genomes hg38 --datatarget gemini
