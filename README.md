@@ -155,6 +155,7 @@ vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 * cre.coverage.bamstats05.sh - calculate coverage
 * cre.fixit.sh - fixes sample names
 * cre.gemini_load.sh loads vep-annotated vcf to gemini db.
+* cre.get_hom_stretch.sh retrieves MAF<5% high quality variants from gemini.db and reports stretches of >9 HOM variants.
 * cre.gnomad_scores.R - download and parse gnomad scores.
 * cre.immunopanels.R - annotates CRE report with 6 immunopanels.
 * cre.kinship.R - to plot relatedness (kinship) diagram for a group of samples. Sometimes helps to detect and solve mislabelling.
@@ -162,6 +163,8 @@ vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 * cre.rtg.validate.sh - validates NA12878 calls vs genome in a bottle callset with RTG and a bed file
 * cre.sh - master script to produce variant reports from bcbio output
 * cre.topmed.R - pull variant frequency from TopMed having rs_id
+* cre.roh.h3m2.sh: a robust method of ROH/LOH analysis with h3m2, calls variants, accounts for exonic regions, LD, plots picture.
+* cre.roh.naive.sh: retrieves MAF<5% high quality variants from gemini.db and reports stretches of >9 HOM variants.
 * cre.vcf.has2dp.sh fixes input vcf file from HAS pipeline (Illumina, TCAG) filling DP field
 * omim.sh
 * orphanet.sh
