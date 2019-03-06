@@ -5,8 +5,8 @@ Excel variant report generator and scripts to process WES data (cram/bam/fastq -
 
   1. Install **bcbio-nextgen**.
   
-  * [https://bcbio-nextgen.readthedocs.io/en/latest/contents/installation.html](Installation manual)
-  * [https://github.com/naumenko-sa/cre/blob/master/cre.bcbio.upgrade.sh](Installation examples)
+  * (Installation manual)[https://bcbio-nextgen.readthedocs.io/en/latest/contents/installation.html]
+  * (Installation and update examples)[https://github.com/naumenko-sa/cre/blob/master/cre.bcbio.upgrade.sh]
 
   Use HPC or server. Add bcbio to PATH and PYTHONPATH in .bash_profile:
 ```
@@ -159,7 +159,7 @@ vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 * cre.prepare_bcbio_run.sh
 * cre.bam.validate.sh
 * cre.bam.remove_decoy_reads.sh - removes decoy reads for grch37d5 with VariantBam and grep.
-* cre.bcbio.upgrade.sh
+* cre.bcbio.upgrade.sh - examples of bcbio installation and upgrade
 * cre.coverage.bamstats05.sh - calculate coverage
 * cre.fixit.sh - fixes sample names
 * cre.gemini_load.sh loads vep-annotated vcf to gemini db.
