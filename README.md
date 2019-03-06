@@ -3,11 +3,19 @@ Excel variant report generator and scripts to process WES data (cram/bam/fastq -
 
 # 0. Installation
 
-  1. Install **Bcbio**.
-
-  Use HPC or server. Add bcbio to PATH. bcbio installs many other useful tools (including java and R) and datasets through bioconda and cloudbiolinux.
+  1. Install **bcbio-nextgen**.
   
-  2. Clone **cre** to ~/cre and add it to PATH.  
+  * [https://bcbio-nextgen.readthedocs.io/en/latest/contents/installation.html](Installation manual)
+  * [https://github.com/naumenko-sa/cre/blob/master/cre.bcbio.upgrade.sh](Installation examples)
+
+  Use HPC or server. Add bcbio to PATH and PYTHONPATH in .bash_profile:
+```
+export PATH=[installation_path]/tools/bcbio/bin:[installation_path]/tools/bcbio/anaconda/bin:$PATH
+export PYTHONPATH=[installation_path]/tools/bcbio/anaconda/lib/python2.7:$PYTHONPATH
+```
+  bcbio installs many other useful tools (including java and R) and datasets through bioconda and cloudbiolinux.
+  
+  2. Clone **cre** to ~/cre and add it to PATH.
   3. (Optional) Install/update OMIM.
 
     By default CRE uses [cre/data/omim.txt](../master/data/omim.txt) and [cre/data/omim.inheritance.csv](../master/data/omim.inheritance.csv).

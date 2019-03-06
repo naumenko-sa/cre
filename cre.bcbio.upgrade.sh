@@ -70,7 +70,7 @@
 #bcbio_nextgen.py upgrade -u skip --genomes hg38 --datatarget gnomad
 
 #rnaseq
-bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget rnaseq
+#bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget rnaseq
 
 #mouse
 #bcbio_nextgen.py upgrade -u skip --genomes mm10 --datatarget rnaseq --cores 5

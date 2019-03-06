@@ -1,8 +1,14 @@
 #!/bin/bash
 # submits bcbio project(=case=family) to the queue with n threads
+# parameters:
+# - project
+# - (optional) threads [default=7]
+# - (optional) testing=1
+# usage:
+# qsub ~/cre/bcbio.pbs -v project=<project>
+
 # adjust ppn and walltime depending on the project
 # experience is that the best combination for WES and SK HPC is 7cores/50G
-
 # wgs alignment: -v threads=40 -l mem=150G,vmem=150G, bigmem nodes=512G RAM + 64 cores, 2 nodes - crashes w memory error, 40 threads is too much
 
 #PBS -l walltime=240:00:00,nodes=1:ppn=7
@@ -10,7 +16,8 @@
 #PBS -d .
 #PBS -l vmem=50g,mem=50g
 
-echo "START: " `date`
+echo "STARTED: " `date`
+#nodes node* are cloud nodes and ra/rb are real nodes
 echo "NODE: " `hostname`
 
 if [ -z $threads ]
@@ -24,6 +31,14 @@ then
     project=$1
 fi
 
+# testing environment of bcbio
+if [ -n $testing ] && [ $testing -eq 1 ]
+then
+    . /hpf/largeprojects/ccmbio/naumenko/tools/bcbio_testing/.test_profile
+    echo "Using test bcbio instance"
+    which bcbio_nextgen.py
+    bcbio_nextgen.py --version
+fi
 echo "Running bcbio for " $project " with " $threads " threads"
 
 cd $project/work
@@ -32,4 +47,4 @@ bcbio_nextgen.py ../config/${project}.yaml -n $threads
 
 cd ../../
 
-echo "END: " `date`
+echo "FINISHED: " `date`
