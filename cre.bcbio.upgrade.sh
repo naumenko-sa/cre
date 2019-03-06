@@ -44,6 +44,8 @@
 # upgrade tools
 # bcbio_nextgen.py upgrade -u skip --tools
 #########################################################################
+bcbio_nextgen.py upgrade -u skip --aligners bwa --aligners star --aligners hisat2 --aligners rtg
+#########################################################################
 # upgrades gemini, cadd, rnaseq if they were installed before, for all references
 # bcbio_nextgen.py upgrade --data
 
