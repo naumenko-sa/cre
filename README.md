@@ -16,6 +16,15 @@ export PYTHONPATH=[installation_path]/tools/bcbio/anaconda/lib/python2.7:$PYTHON
   bcbio installs many other useful tools (including java and R) and datasets through bioconda and cloudbiolinux.
   
   2. Clone **cre** to ~/cre and add it to PATH.
+```
+cd
+git clone https://github.com/naumenko-sa/cre
+```
+.bash_profile:
+```
+export PATH=~/cre:$PATH
+```
+
   3. (Optional) Install/update OMIM.
 
     By default CRE uses [cre/data/omim.txt](../master/data/omim.txt) and [cre/data/omim.inheritance.csv](../master/data/omim.inheritance.csv).
