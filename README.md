@@ -55,8 +55,7 @@ export PYTHONPATH=[installation_path]/tools/bcbio/anaconda/lib/python2.7:$PYTHON
 
 By default, bcbio does not have decoy in grch37 reference, decoy is supported only in grch38. Using decoy improves FDR by ~0.5%. Two step approach could be applied to use decoy in bcbio https://github.com/bcbio/bcbio-nextgen/issues/2489:
 - install custom grch37d5 reference with decoy:  [cre.bcbio.custom_genome.sh](../master/cre.bcbio.custom_genome.sh)
-- run alignment step vs grch37d5 reference: 
-```cre.prepare_bcbio_run.sh <project> align_decoy```
+- run alignment step vs grch37d5 reference: `cre.prepare_bcbio_run.sh <project> align_decoy`
 - keep bam file aligned vs grch37d5 for storage
 - run variant calling with noalt_calling and bam_clean: remove_extracontigs (SV calling in WGS required additional processing of decoy aligned bam file, see crg).
 - when saving project to the storage, use bam files aligned to decoy
