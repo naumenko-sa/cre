@@ -5,8 +5,8 @@ Excel variant report generator and scripts to process WES data (cram/bam/fastq -
 
   1. Install **bcbio-nextgen**.
   
-  * (Installation manual)[https://bcbio-nextgen.readthedocs.io/en/latest/contents/installation.html]
-  * (Installation and update examples)[https://github.com/naumenko-sa/cre/blob/master/cre.bcbio.upgrade.sh]
+  *  [Installation manual](https://bcbio-nextgen.readthedocs.io/en/latest/contents/installation.html)
+  *  [Installation and update examples](https://github.com/naumenko-sa/cre/blob/master/cre.bcbio.upgrade.sh)
 
   Use HPC or server. Add bcbio to PATH and PYTHONPATH in .bash_profile:
 ```
