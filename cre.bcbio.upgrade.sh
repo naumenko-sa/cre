@@ -1,4 +1,8 @@
 #!/bin/bash
+#PBS -l walltime=23:00:00,nodes=1:ppn=10
+#PBS -joe .
+#PBS -d .
+#PBS -l vmem=10g,mem=10g
 
 # nohups are dying on qlogin nodes, data nodes are better for long data installation runs
 #######################################################################
@@ -44,7 +48,10 @@
 # upgrade tools
 # bcbio_nextgen.py upgrade -u skip --tools
 #########################################################################
-bcbio_nextgen.py upgrade -u skip --aligners bwa --aligners star --aligners hisat2 --aligners rtg
+. /hpf/largeprojects/ccmbio/naumenko/tools/bcbio_testing/.test_profile
+which bcbio_nextgen.py
+bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners star --cores 20
+#--aligners hisat2 --aligners rtg
 #########################################################################
 # upgrades gemini, cadd, rnaseq if they were installed before, for all references
 # bcbio_nextgen.py upgrade --data
