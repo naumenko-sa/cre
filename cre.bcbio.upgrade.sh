@@ -50,7 +50,7 @@
 #########################################################################
 . /hpf/largeprojects/ccmbio/naumenko/tools/bcbio_testing/.test_profile
 which bcbio_nextgen.py
-bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners star --cores 20
+bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners star --cores 10
 #--aligners hisat2 --aligners rtg
 #########################################################################
 # upgrades gemini, cadd, rnaseq if they were installed before, for all references
