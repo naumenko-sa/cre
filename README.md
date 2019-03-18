@@ -172,6 +172,7 @@ vcf.platypus.getNV.sh ${family}-platypus-annotated-decomposed.vcf.gz
 * cre.coverage.bamstats05.sh - calculate coverage
 * cre.fixit.sh - fixes sample names
 * cre.gemini_load.sh loads vep-annotated vcf to gemini db.
+* cre.gemini.get_variants4gene.sh - pull all varaints for a specific gene.
 * cre.gnomad_scores.R - download and parse gnomad scores.
 * cre.immunopanels.R - annotates CRE report with 6 immunopanels.
 * cre.kinship.R - to plot relatedness (kinship) diagram for a group of samples. Sometimes helps to detect and solve mislabelling.
