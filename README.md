@@ -108,7 +108,7 @@ Current directory should have a list of projects in projects.txt.
 6.2 [Report example for Ashkenazim trio from NIST](https://drive.google.com/open?id=0B_bLL10GwDnsN29vY3RRdGlXMWM). \
 6.3 [gemini.gemini2txt.sh](../master/gemini.gemini2txt.sh) [project-ensembl.db] - dumps a gemini database into text file. \
 6.4 [gemini.variant_impacts.sh](../master/gemini.variant_impacts.sh) [project-ensembl.db] dumps variant impacts from gemini. \
-6.5 creates a vcf file with rare and potentially harmful variants, the same set of variants will be shown in the excel report \
+6.5 creates a vcf file with rare and potentially deleterious variants, the same set of variants is in the excel report.
 ```
 cat ${family}-ensemble.db.txt | cut -f 23,24  | sed 1d | sed s/chr// > ${family}-ensemble.db.txt.positions
     bcftools view -R ${family}-ensemble.db.txt.positions -o ${family}.vcf.gz -O z ${family}-ensemble-annotated-decomposed.vcf.gz
