@@ -88,11 +88,12 @@ Project should have a folder project_name in the current directory.
 * Multiple projects: `qsub -t 1-N ~/cre/bcbio.array.pbs`
 Current directory should have a list of projects in projects.txt.
 
-# 5. Clean result dir and create project.csv report: `qsub ~/cre/cre.sh -v family=[family],cleanup=1`
-  During the cleanup step:
-  * moves project results and sample bam files to family dir
-  * removes work and final dirs from bcbio project
-  * removes gemini databases for individual callers (we need only ensemble gemini database)
+# 5. Clean result dir and create project.csv report: 
+
+`qsub ~/cre/cre.sh -v family=[family],cleanup=1`
+ * moves project results and sample bam files to family dir
+ * removes work and final dirs from bcbio project
+ * removes gemini databases for individual callers (we need only ensemble gemini database)
 
   During the report generation step:
   * dumps variants from gemini database to tab text file
