@@ -2,7 +2,7 @@
 #PBS -l walltime=240:00:00,nodes=1:ppn=30
 #PBS -joe .
 #PBS -d .
-#PBS -l vmem=31g,mem=31g
+#PBS -l vmem=100g,mem=100g
 
 . /hpf/largeprojects/ccmbio/naumenko/tools/bcbio_testing/.test_profile
 which bcbio_nextgen.py

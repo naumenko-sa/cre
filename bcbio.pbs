@@ -3,7 +3,7 @@
 # parameters:
 # - project
 # - (optional) threads [default=7]
-# - (optional) testing=1
+# - (optional) testing=T
 # usage:
 # qsub ~/cre/bcbio.pbs -v project=<project>
 
@@ -32,7 +32,7 @@ then
 fi
 
 # testing environment of bcbio
-if [ -n $testing ] && [ $testing -eq 1 ]
+if [ -n $testing ] && [ $testing == "T" ]
 then
     . /hpf/largeprojects/ccmbio/naumenko/tools/bcbio_testing/.test_profile
     echo "Using test bcbio instance"
