@@ -1,6 +1,6 @@
 #!/bin/bash
 # runs of HETEROZYGOUS VARIANTS MAF 5% variant in proband (CH0620) affected sib (CH0621) and in both
-# filters DP=50, QUAL>=500
+# filters for WGS DP=50, QUAL>=100
 # gt_types 1 = HET
 # usage:
 # cre.roh.naive.sh sample gemini.db [maf=0.05]
@@ -16,12 +16,12 @@ if [ -n "$3" ]
 then
     maf=$3
 fi
-
-gemini query -q "select chrom,start+1 as pos, ref, alt,impact,qual,depth, gene, max_aaf_all as maf, gts."$sample",gt_types."$sample",gt_alt_depths."$sample" from variants where
-type='snp' and depth>=10 and qual>=100 and max_aaf_all<="$maf --gt-filter "gt_types."$sample" != 2" $2 | sed s/"\t"/","/g | sort -t "," -k1,1n -k2,2n \
-| tee -a $sample.roh_variants.tsv | awk -F "," '
+#depth for 3 samples
+gemini query -q "select chrom,start+1 as pos, ref, alt,impact,qual,depth, gene, max_aaf_all as maf, gts."$sample",gt_types."$sample",gt_alt_depths."$sample" from variants where 
+type='snp' and depth>=30 and qual>=100 and max_aaf_all<="$maf --gt-filter "gt_types."$sample" != 2" $2 | sed s/"\t"/","/g | sort -t "," -k1,1n -k2,2n \
+| tee -a $sample.rohet_variants.csv | awk -F "," '
 BEGIN{
-    prev=1;
+    prev_genotype=0;
     prev_gene="";
     prev_chrom="";
     stretch_length_variants=0;
@@ -38,7 +38,7 @@ BEGIN{
 	stretch_genes="";
 	prev_gene="";
     }else{
-        if(prev==0){
+        if(prev_genotype==1){
 	    stretch_length_variants=stretch_length_variants+1;
 	    stretch_length_bp=$2-stretch_id+1;
 	    if ($8 != prev_gene && $8 != ""){
@@ -53,7 +53,7 @@ BEGIN{
     	    prev_gene=$8;
 	};
     }
-    prev=genotype;
+    prev_genotype=genotype;
     prev_chrom=$1;
     print $0","stretch_length_variants","stretch_length_bp","stretch_id",\""stretch_genes"\"";
 }' | grep -v "0$" | awk -F ',' '{ if ($13>=10) print $0;}' \

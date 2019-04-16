@@ -6,18 +6,29 @@
 
 # nohups are dying on qlogin nodes, data nodes are better for long data installation runs
 #######################################################################
-# fresh install of the second bcbio instance:
+# fresh install of new bcbio instance:
+# 1. Don't mix with old environments
 # mv ~/.conda/environments.txt ~/.conda/environments.default.txt - move back
 # export PATH=/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/bin
 # export PYTHONPATH=
-# which python
 # wget https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/bcbio_nextgen_install.py
-
 # echo "Installing to " $1
-# install data later
 # module load python/2.7.15
-# which bash
+# which python
 # python bcbio_nextgen_install.py $1 --tooldir $1 --genomes GRCh37 --aligners bwa --isolate --nodata
+# 2. Use the new environment: 
+# .test_profile:
+# export PATH=$HOME/cre:$HOME/crt:$HOME/crg:/hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/anaconda/bin:$HOME/tools/mc-4.8.16/bin:$HOME/jkent_tools:$HOME/bioscripts:.:/usr/local/bin:/opt/moab/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin
+# export PYTHONPATH=/hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/anaconda/lib/python3.6
+. /hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/.test_profile
+# 3. Upgrade tools. If tooldir was set before, no need to specify it again
+which bcbio_nextgen.py
+bcbio_nextgen.py upgrade -u skip --tools --tooldir $1
+# 4. Install data
+# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners bwa --cores 10
+# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners star --cores 10
+# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners hisat2 --cores 10
+# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners rtg --cores 10
 ########################################################################
 # fresh installation for Sam with human and mouse genome
 
@@ -48,13 +59,8 @@
 # upgrade tools
 # bcbio_nextgen.py upgrade -u skip --tools
 #########################################################################
-. /hpf/largeprojects/ccmbio/naumenko/tools/bcbio_testing/.test_profile
-which bcbio_nextgen.py
-bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners star --cores 10
-#--aligners hisat2 --aligners rtg
-#########################################################################
 # upgrades gemini, cadd, rnaseq if they were installed before, for all references
-# bcbio_nextgen.py upgrade --data
+#bcbio_nextgen.py upgrade --data
 
 # VEP is upgraded quite often ~2-3 months - when upgrading tools it looks for new VEP cache
 # bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget vep
