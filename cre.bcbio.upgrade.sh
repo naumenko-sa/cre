@@ -9,21 +9,22 @@
 # fresh install of new bcbio instance:
 # 1. Don't mix with old environments
 # mv ~/.conda/environments.txt ~/.conda/environments.default.txt - move back
-# export PATH=/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/bin
-# export PYTHONPATH=
-# wget https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/bcbio_nextgen_install.py
-# echo "Installing to " $1
-# module load python/2.7.15
-# which python
-# python bcbio_nextgen_install.py $1 --tooldir $1 --genomes GRCh37 --aligners bwa --isolate --nodata
+ export PATH=/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/bin
+ export PYTHONPATH=
+ wget https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/bcbio_nextgen_install.py
+ echo "Installing to " $1
+ module load python/2.7.15
+ which python
+ python bcbio_nextgen_install.py $1 --tooldir $1 --genomes GRCh37 --aligners bwa 
+ #--isolate --nodata
 # 2. Use the new environment: 
 # .test_profile:
 # export PATH=$HOME/cre:$HOME/crt:$HOME/crg:/hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/anaconda/bin:$HOME/tools/mc-4.8.16/bin:$HOME/jkent_tools:$HOME/bioscripts:.:/usr/local/bin:/opt/moab/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin
 # export PYTHONPATH=/hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/anaconda/lib/python3.6
-. /hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/.test_profile
+#. /hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/.test_profile
 # 3. Upgrade tools. If tooldir was set before, no need to specify it again
-which bcbio_nextgen.py
-bcbio_nextgen.py upgrade -u skip --tools --tooldir $1
+# which bcbio_nextgen.py
+# bcbio_nextgen.py upgrade -u skip --tools --tooldir $1
 # 4. Install data
 # bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners bwa --cores 10
 # bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners star --cores 10
