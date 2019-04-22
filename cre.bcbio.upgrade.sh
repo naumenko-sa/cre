@@ -4,9 +4,10 @@
 #PBS -d .
 #PBS -l vmem=10g,mem=10g
 
+date
 # nohups are dying on qlogin nodes, data nodes are better for long data installation runs
 # data2 has modules, data7 does not.
-#######################################################################
+######################################################################
 # fresh install of new bcbio instance:
 # 1. Don't mix with old environments
 # mv ~/.conda/environments.txt ~/.conda/environments.default.txt - move back
@@ -14,25 +15,61 @@
 # export PYTHONPATH=
 # wget https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/bcbio_nextgen_install.py
 # echo "Installing to " $1
-# module load python/2.7.12 - not working just plain python from the system is better
-# which python
-# echo $PYTHONPATH
+# module load python/2.7.12 - not working, just plain python from the system is better
+which python
+echo $PYTHONPATH
 # python bcbio_nextgen_install.py $1 --tooldir $1 --genomes GRCh37 --aligners bwa
  #--isolate --nodata
+######################################################################
 # 2. Use the new environment: 
-# .test_profile:
+# create a .test_profile:
 # export PATH=$HOME/cre:$HOME/crt:$HOME/crg:/hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/anaconda/bin:$HOME/tools/mc-4.8.16/bin:$HOME/jkent_tools:$HOME/bioscripts:.:/usr/local/bin:/opt/moab/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin
 # export PYTHONPATH=/hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/anaconda/lib/python3.6
 . /hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/.test_profile
+######################################################################
 # 3. Upgrade tools. If tooldir was set before, no need to specify it again
-#which bcbio_nextgen.py
-#bcbio_nextgen.py upgrade -u skip --tools --tooldir $1
-# 4. Install data
-bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners bwa --cores 10
+which bcbio_nextgen.py
+#bcbio_nextgen.py upgrade -u skip --tools 
+#--tooldir $1
+######################################################################
+# 4. Install indices
+# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners bwa --cores 10
 # bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners star --cores 10
 # bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners hisat2 --cores 10
 # bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners rtg --cores 10
-########################################################################
+#########################################################################
+# 5. upgrade code to the latest stable version
+# bcbio_nextgen.py upgrade -u stable
+# upgrade code to development
+# bcbio_nextgen.py upgrade -u development
+#########################################################################
+# 6. data installation/upgrade 
+# GRCh37, hg38, mm10
+# data installation takes a lot of time (gnomad, dbnsfp) it is better to have data and just upgrade bcbio code
+# 1.1.5 - a huge update to python3, installed from scratch
+
+# upgrades data installed before (gemini, cadd) for all references
+# bcbio_nextgen.py upgrade --data
+
+# VEP is upgraded quite often ~2-3 months - when upgrading tools it looks for new VEP cache
+# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget vep
+
+# gemini ~3h for GRCh37
+# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget gemini
+# --genomes hg38
+
+# cadd is in dbnsfp
+# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget cadd
+# --genomes hg38
+
+# gnomad
+bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget gnomad
+# bcbio_nextgen.py upgrade -u skip --genomes hg38 --datatarget gnomad
+
+# rnaseq
+# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget rnaseq
+
+######################################################################
 # fresh installation for Sam with human and mouse genome
 
 # to check what enviroments were picked up during the installation
@@ -47,41 +84,8 @@ bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners bwa --cores 10
 # PATH=${PATH}:/opt/ibutils/bin:/sbin:/usr/sbin:/sbin:/usr/sbin
 # export PATH
 
-# echo $PATH
-# echo $PYTHONPATH
-# which python
-
 # python bcbio_nextgen_install.py /hpf/largeprojects/lauryl/bcbio110 --tooldir=/hpf/largeprojects/lauryl/bcbio110 --genomes mm10 --aligners bwa --isolate
 # bcbio_nextgen.py upgrade -u skip --tools --tooldir /hpf/largeprojects/lauryl/bcbio110
 # bcbio_nextgen.py upgrade -u skip --data --genomes mm10 --datatarget variation --datatarget vep
-#########################################################################
-# upgrade code to the latest stable version
-# bcbio_nextgen.py upgrade -u stable
-# upgrade code to development
-# bcbio_nextgen.py upgrade -u development
-# upgrade tools
-# bcbio_nextgen.py upgrade -u skip --tools
-#########################################################################
-# upgrades gemini, cadd, rnaseq if they were installed before, for all references
-#bcbio_nextgen.py upgrade --data
 
-# VEP is upgraded quite often ~2-3 months - when upgrading tools it looks for new VEP cache
-# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget vep
-
-# gemini
-# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget gemini
-# --genomes hg38
-
-# cadd
-# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget cadd
-# --genomes hg38
-
-# gnomad
-# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget gnomad
-# bcbio_nextgen.py upgrade -u skip --genomes hg38 --datatarget gnomad
-
-# rnaseq
-# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget rnaseq
-
-# mouse
-# bcbio_nextgen.py upgrade -u skip --genomes mm10 --datatarget rnaseq --cores 5
+date
