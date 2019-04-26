@@ -92,6 +92,19 @@ sQuery=$sQuery"hgvsc as Nucleotide_change_ensembl,\
         where \
 	        (dp >= "$depth_threshold" or dp = '' or dp is null) "$severity_filter" and gnomad_af_popmax <= "$max_af
 
-#echo $sQuery
-
-gemini query --header -q "$sQuery" $file
+s_gt_filter=''
+if [ -n "$denovo" ] && [ "$denovo" == 1 ]
+then
+    # https://www.biostars.org/p/359117/
+    proband=`gemini query -q "select name from samples where phenotype=2" $file`
+    mom=`gemini query -q "select name from samples where phenotype=1 and sex=2" $file`
+    dad=`gemini query -q "select name from samples where phenotype=1 and sex=1" $file`
+    
+    s_gt_filter="gt_types."$proband" == HET and gt_types."$dad" == HOM_REF and gt_types."$mom" == HOM_REF"
+    #(gt_types."$proband" == HOM_ALT and gt_types."$dad" == HOM_REF and gt_types."$mom" == HET)"
+    # otherwise a lot of trash variants
+    sQuery=$sQuery" and qual>=500"
+    gemini query -q "$sQuery" --gt-filter "$s_gt_filter" --header $file
+else
+    gemini query --header -q "$sQuery" $file
+fi

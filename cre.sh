@@ -1,14 +1,14 @@
 #!/bin/bash
-
 ####################################################################################################
 #   keeps only important files from bcbio run: qc, vcf, gemini, bam
 #   creates csv report for small variants
 
 #   parameters:
-# 	family = [family_id] (=project_id=case_id=folder_name, main result file should be family/family-ensemble.db)
-# 	cleanup= [0|1] default = 0
-# 	make_report=[0|1] default = 1, don't make report for WGS analysis first
-# 	type = [ wes.regular (default) | wes.synonymous | wes.fast | rnaseq | wgs | annotate (only for cleaning)]
+#	family = [family_id] (=project_id=case_id=folder_name, main result file should be family/family-ensemble.db)
+#	cleanup= [0|1] default = 0
+#	make_report=[0|1] default = 1, don't make report for WGS analysis first
+# 	type = [ wes.regular (default) | wes.synonymous | wes.fast | rnaseq | wgs | annotate (only for cleaning) | 
+# 	    denovo (all rare variants in wgs, proband should have phenotype=2, parents=phenotype1 also sex for parents in gemini.db) ]
 #	max_af = af filter, default = 0.01
 ####################################################################################################
 
@@ -127,6 +127,8 @@ function f_make_report
 {
     cd $family
 
+    echo "Type="$type
+
     if [ "$type" == "rnaseq" ]
     then
 	   export depth_threshold=5
@@ -134,7 +136,7 @@ function f_make_report
 	   export depth_threshold=10
     fi
 
-    if [ "$type" == "wgs" ] || [ "$type" == "rnaseq" ]
+    if [ "$type" == "wgs" ] || [ "$type" == "rnaseq" ] || [ "$type" == "denovo" ]
     then
 	   export severity_filter=ALL
     elif [ "$type" == "wes.synonymous" ]
@@ -143,13 +145,21 @@ function f_make_report
     else
 	   export severity_filter=HIGHMED
     fi
+    
+    if [ "$type" == "denovo" ]
+    then
+	export denovo=1
+    fi
 
     cre.gemini2txt.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variants.txt
     cre.gemini.variant_impacts.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variant_impacts.txt
 
     for f in *.vcf.gz
     do
+	if [ ! -f $f.tbi ]
+	then 
 	   tabix $f
+	fi
     done
 
     # report filtered vcf for import in phenotips

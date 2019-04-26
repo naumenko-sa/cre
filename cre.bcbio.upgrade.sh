@@ -16,8 +16,6 @@ date
 # wget https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/bcbio_nextgen_install.py
 # echo "Installing to " $1
 # module load python/2.7.12 - not working, just plain python from the system is better
-which python
-echo $PYTHONPATH
 # python bcbio_nextgen_install.py $1 --tooldir $1 --genomes GRCh37 --aligners bwa
  #--isolate --nodata
 ######################################################################
@@ -26,6 +24,8 @@ echo $PYTHONPATH
 # export PATH=$HOME/cre:$HOME/crt:$HOME/crg:/hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/anaconda/bin:$HOME/tools/mc-4.8.16/bin:$HOME/jkent_tools:$HOME/bioscripts:.:/usr/local/bin:/opt/moab/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin
 # export PYTHONPATH=/hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/anaconda/lib/python3.6
 . /hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/.test_profile
+which python
+echo $PYTHONPATH
 ######################################################################
 # 3. Upgrade tools. If tooldir was set before, no need to specify it again
 which bcbio_nextgen.py
@@ -62,9 +62,12 @@ which bcbio_nextgen.py
 # bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget cadd
 # --genomes hg38
 
-# gnomad
-bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget gnomad
+# gnomad 14h
+# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget gnomad
 # bcbio_nextgen.py upgrade -u skip --genomes hg38 --datatarget gnomad
+
+# dbnsfp
+bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget dbnsfp
 
 # rnaseq
 # bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget rnaseq
