@@ -63,11 +63,11 @@ which bcbio_nextgen.py
 # --genomes hg38
 
 # gnomad 14h
-# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget gnomad
+bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget gnomad
 # bcbio_nextgen.py upgrade -u skip --genomes hg38 --datatarget gnomad
 
 # dbnsfp
-bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget dbnsfp
+# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget dbnsfp
 
 # rnaseq
 # bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget rnaseq

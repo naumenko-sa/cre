@@ -19,8 +19,9 @@ then
     maf=$3
 fi
 #depth is for 3 samples
-gemini query -q "select chrom,start+1 as pos, ref, alt,impact,qual,depth, gene, max_aaf_all as maf, gts."$sample",gt_types."$sample",gt_alt_depths."$sample" from variants where 
-type='snp' and depth>=10 and qual>=500 and max_aaf_all<="$maf --gt-filter "gt_types."$sample" != 2" $2 | grep -v chrGL | sed s/chr// | sed s/"\t"/","/g | sort -t "," -k1,1 -k2,2n \
+# depth is in old databases
+gemini query -q "select chrom,start+1 as pos, ref, alt,impact,qual,dp, gene, max_aaf_all as maf, gts."$sample",gt_types."$sample",gt_alt_depths."$sample" from variants where 
+type='snp' and dp>=10 and qual>=500 and max_aaf_all<="$maf --gt-filter "gt_types."$sample" != 2" $2 | grep -v chrGL | sed s/chr// | sed s/"\t"/","/g | sort -t "," -k1,1 -k2,2n \
 | tee -a $sample.rohet_variants.csv | awk -F "," '
 BEGIN{
     prev_genotype=0;

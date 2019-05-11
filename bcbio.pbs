@@ -32,7 +32,7 @@ then
 fi
 
 # testing environment of bcbio
-if [ -n $testing ] && [ $testing == "T" ]
+if [ -n $testing ] && [ "$testing" == "T" ]
 then
     . /hpf/largeprojects/ccmbio/naumenko/tools/bcbio_testing/.test_profile
     echo "Using test bcbio instance"
