@@ -1,5 +1,7 @@
 #!/bin/bash
 # prepares full chomosome test set for gnomad to test ggd recipe
+mkdir txtmp
+cd txtmp
 prefix=gnomad.exomes.r2.1.sites.grch38.chr
 for chrom in $(seq 1 22;echo X Y)
 do
@@ -8,3 +10,4 @@ do
   bgzip -f ${prefix}${chrom}_noVEP.vcf
   tabix ${prefix}${chrom}_noVEP.vcf.gz
 done
+cd ..
