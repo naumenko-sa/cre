@@ -1,3 +1,7 @@
+## 0.0.1
+- initial release, compatible with bcbio_1.1.5 and gnomad2.1
+
+## previous notes
 - 2018-11-07: new gnomad obseverved/expected scores instead of pLi and exac_missense. cre.gnomad_scores.R
 - 2018-11-02: added back Gerp_score, updated OMIM
 - 2017-09-22: added Info_refseq and Maf_exac to the database report
