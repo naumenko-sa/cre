@@ -34,7 +34,7 @@ fi
 # testing environment of bcbio
 if [ -n $testing ] && [ "$testing" == "T" ]
 then
-    . /hpf/largeprojects/ccmbio/naumenko/tools/bcbio_testing/.test_profile
+    . /hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/.test_profile
     echo "Using test bcbio instance"
     which bcbio_nextgen.py
     bcbio_nextgen.py --version

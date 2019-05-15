@@ -29,12 +29,12 @@ echo $PYTHONPATH
 ######################################################################
 # 3. Upgrade tools. If tooldir was set before, no need to specify it again
 which bcbio_nextgen.py
-#bcbio_nextgen.py upgrade -u skip --tools 
+# bcbio_nextgen.py upgrade -u skip --tools 
 #--tooldir $1
 ######################################################################
 # 4. Install indices
 # bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners bwa --cores 10
-# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners star --cores 10
+bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners star --cores 10
 # bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners hisat2 --cores 10
 # bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners rtg --cores 10
 #########################################################################
@@ -63,14 +63,14 @@ which bcbio_nextgen.py
 # --genomes hg38
 
 # gnomad 14h
-bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget gnomad
+# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget gnomad
 # bcbio_nextgen.py upgrade -u skip --genomes hg38 --datatarget gnomad
 
 # dbnsfp
 # bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget dbnsfp
 
 # rnaseq
-# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget rnaseq
+bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget rnaseq
 
 ######################################################################
 # fresh installation for Sam with human and mouse genome
