@@ -1,4 +1,4 @@
-## 0.0.1
+## 0.0.1 (15 May 2019)
 - initial release, compatible with bcbio_1.1.5 and gnomad2.1
 
 ## previous notes
