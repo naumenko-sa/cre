@@ -6,8 +6,8 @@ details:
     ensemble:
       numpass: 2
       use_filtered: false
-    realign: true
-    recalibrate: true
+    realign: false
+    recalibrate: false
     mark_duplicates: true
     save_diskspace: true
     tools_on:
@@ -16,8 +16,6 @@ details:
     - qualimap
     - vep_splicesite_annotations
     - noalt_calling
-    tools_off:
-    - gatk4
     variantcaller:
     - gatk-haplotype
     - samtools
