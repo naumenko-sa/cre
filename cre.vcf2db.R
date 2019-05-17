@@ -1,17 +1,14 @@
 # variant report generator
 # Rscript ~/cre/cre.vcf2.db.R <family> noncoding|default=NULL,coding
+# description of columns: 
+# https://docs.google.com/document/d/1zL4QoINtkUd15a0AK4WzxXoTWp2MRcuQ9l_P9-xSlS4/edit?usp=sharing
 add_placeholder <- function(variants, column_name, placeholder){
     variants[,column_name] <- with(variants, placeholder)
     return(variants)
 }
 
-get_variants_from_file <- function (filename){
-    variants <- read.delim(filename, stringsAsFactors = F)
-    return(variants)
-}
-
 # returns Hom / Het / - (for HOM reference)
-genotype2zygocity <- function (genotype_str, ref){
+genotype2zygosity <- function (genotype_str, ref){
     # test
     # genotype_str = "A|A|B"
     # genotype_str = "./." - call not possible
@@ -21,8 +18,7 @@ genotype2zygocity <- function (genotype_str, ref){
     # greedy
     genotype_str <- gsub("|", "/", genotype_str, fixed = T)
     genotype_str <- gsub("./.", "Insufficient_coverage", genotype_str, fixed = T)
-    #genotype_str = gsub(".","NO_CALL",genotype_str,fixed=T)
-      
+    
     if(grepl("Insufficient_coverage", genotype_str)){
       result <- genotype_str
     }else{
@@ -43,45 +39,26 @@ genotype2zygocity <- function (genotype_str, ref){
 # output : family.ensemble.txt
 create_report <- function(family, samples){
     file <- paste0(family, ".variants.txt")
-    variants <- get_variants_from_file(file)
+    variants <- read_delim(file, delim = "\t")
     
     impact_file <- paste0(family, ".variant_impacts.txt")
-    impacts <- get_variants_from_file(impact_file)
-    
-    # temporarily due to https://github.com/quinlan-lab/vcf2db/issues/48
-    # fixed in vcf2db
-    #transcripts_genes = read.csv("~/cre/data/genes.transcripts.csv")
-    #variants$Ensembl_gene_id=NULL
-    #variants$Ensembl_transcript_id1=variants$Ensembl_transcript_id
-    
-    #for (i in 1:nrow(variants)){
-    #    variant_id = variants[i,"Variant_id"]
-    #    #variant_id="4489"
-    #    variant_impacts = subset(impacts, variant_id == variant_id & gene == variants[i,"Gene"])
-    #    variant_impacts = variant_impacts[order(variant_impacts$transcript),]
-        
-    #    if (nrow(variant_impacts)>0){
-    #        variants[i,"Ensembl_transcript_id1"] = variant_impacts[1,"transcript"]
-    #    }
-    #    ar = strsplit(variants[i,"Ensembl_transcript_id1"],".",fixed=T)
-    #    variants[i,"Ensembl_transcript_id1"] = ar[[1]][1]
-    #}
-    
-    #variants = merge(variants,transcripts_genes,by.x='Ensembl_transcript_id1',by.y="Ensembl_transcript_id",all.x=T)
+    impacts <- read_delim(impact_file, delim = "\t")
     
     #Column1 - Position
-    variants$Position <- with(variants, paste(Chrom, Pos, sep = ':'))
+    variants <- variants %>% mutate(Position = paste(Chrom, Pos, sep = ':'))
     
     #Column2 - UCSC link
     sUCSC1 <- "=HYPERLINK(\"http://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&hgt.out3=10x&position="
     sUCSC2 <- "\",\"UCSC_link\")"
-    variants$UCSC_Link <- with(variants, paste(sUCSC1, Position, sUCSC2, sep = ''))
+    
+    variants <- variants %>% mutate(UCSC_Link = paste(sUCSC1, Position, sUCSC2, sep = ''))
 
     # Column3 = GNOMAD_Link
-    variants$GNOMAD_POS <- with(variants, paste(Chrom,Pos,Ref,Alt, sep='-'))
     sGNOMAD1 <- "=HYPERLINK(\"http://gnomad.broadinstitute.org/variant/"
     sGNOMAD2 <- "\",\"GNOMAD_link\")"
-    variants$GNOMAD_Link <- with(variants, paste(sGNOMAD1, GNOMAD_POS, sGNOMAD2, sep = ''))
+    variants <- variants %>%
+        mutate(GNOMAD_POS = paste(Chrom, Pos, Ref, Alt, sep='-')) %>% 
+        mutate(GNOMAD_Link = paste(sGNOMAD1, GNOMAD_POS, sGNOMAD2, sep = ''))
 
     # Columns 4,5: Ref,Alt
 
@@ -89,32 +66,30 @@ create_report <- function(family, samples){
     variants$Gene[variants$Gene == ""] <- NA
     
     # Column 6 - Zygosity, column 8 - Burden
-    # use new loader vcf2db.py - with flag  to load plain text
-    # for genotype and depth - Noah
-    # otherwise have to decode BLOB 
-    # snappy decompression
-    # https://github.com/arq5x/gemini/issues/700
-    # https://github.com/lulyon/R-snappy
     for(sample in samples){
-        #DEBUG: gene = IL20RA
-        #sample=samples[1]
+        #DEBUG: 
+        #gene = IL20RA
+        sample <- samples[1]
         
-        zygocity_column_name <- paste0("Zygosity.", sample)
-        #t = lapply(variants[,paste0("gts.",sample),"Ref"],genotype2zygocity)
-        #t = lapply(variants[,paste0("gts.",sample),"Ref"],genotype2zygocity)
-        t <- unlist(mapply(genotype2zygocity, variants[,paste0("gts.",sample)], 
-                           variants[,"Ref"]))
-        variants[,zygocity_column_name] <- unlist(t)
-    
+        zygosity_column_name <- paste0("Zygosity.", sample)
+        genotype_column_name <- paste0("gts.", sample)
+        quo_test <- enquo("Ref")
+        variants$Zygosity.WES_NA12878_202214 <- NULL
+        variants <- variants %>% rename(!!genotype_column_name := test)
+        
+        variants <- variants %>% mutate(!!zygosity_column_name := !!genotype_column_name)
+        (!!zygosity_column_name := str_length(!!quo_test))
+        variants$test_zygosity <- NULL
+                                        
         burden_column_name <- paste0("Burden.", sample)
         # calculating Burden using gene rather then Ensembl_gene_id - request from Matt
         t <- subset(variants, 
-                    get(zygocity_column_name) == 'Hom' | get(zygocity_column_name) == 'Het',
-                    select = c("Gene", zygocity_column_name))
-        # counts from plyr
-        df_burden <- count(t, "Gene")    
+                    get(zygosity_column_name) == 'Hom' | get(zygosity_column_name) == 'Het',
+                    select = c("Gene", zygosity_column_name))
+        # count from plyr
+        df_burden <- plyr::count(t, "Gene")    
         colnames(df_burden)[2] <- burden_column_name
-        variants <- merge(variants, df_burden, all.x = T)
+        variants <- left_join(variants, df_burden, by = c("Gene"))
         variants[,burden_column_name][is.na(variants[,burden_column_name])] <- 0
         variants[,burden_column_name][is.na(variants$Gene)] <-0
     }
@@ -124,33 +99,28 @@ create_report <- function(family, samples){
     # Column10 = Variation
     
     # Column11 =  Info
-    variants <- add_placeholder(variants, "Info", "Info")
+    variants <- add_column(variants, Info = rep("Info", nrow(variants)))
     
     for (i in 1:nrow(variants)){
-        #debug: i=1  
-        v_id <- variants[i,"Variant_id"]
+        #debug: 
+        i=1  
+        v_id <- pull(variants, Variant_id)[i]
         gene <- variants[i,"Gene"]
         #for WES reports we need only coding impacts in the info field, for WGS we need all
-        if (coding){
-            gene_impacts <- subset(impacts, variant_id == v_id & is_coding == 1,
-                                   select = c("exon", "hgvsc", "hgvsp"))
-        }else{
-            gene_impacts <- subset(impacts, variant_id == v_id, 
-                                   select = c("exon", "hgvsc", "hgvsp"))
-        }
+        gene_impacts <- impacts %>%
+            filter(variant_id == v_id) %>% 
+            select(exon, hgvsc, hgvsp)
+        if (coding) gene_impacts <- gene_impacts %>% filter(is_coding == 1)
         
         gene_impacts$gene <- rep(gene, nrow(gene_impacts))
-        
         gene_impacts$exon[gene_impacts$exon==''] <- 'NA'
-        
-        gene_impacts <- gene_impacts[c("gene", "exon", "hgvsc", "hgvsp")]
+        gene_impacts <- gene_impacts %>% select(gene, exon, hgvsc, hgvsp)
         
         if (nrow(gene_impacts) > 0){
             v_impacts <- paste0(gene_impacts$gene, ":exon", gene_impacts$exon,
                                 ":", gene_impacts$hgvsc, ":", gene_impacts$hgvsp)
             s_impacts <- paste(v_impacts, collapse = ",")
-        }
-        else s_impacts <- 'NA'
+        }else s_impacts <- NA
       
         variants[i,"Info"] <- s_impacts
     }
@@ -193,10 +163,8 @@ create_report <- function(family, samples){
     # Column17 = Ensembl_gene_id
 
     # Column18 = Gene_description
-    gene_descriptions <- read.delim2(paste0(default_tables_path,"/ensembl_w_description.txt"), 
-                                     stringsAsFactors = F)
-    variants <- merge(variants, gene_descriptions, by.x = "Ensembl_gene_id",
-                      by.y = "ensembl_gene_id", all.x = T)
+    gene_descriptions <- read_csv(paste0(default_tables_path, "/ensembl_genes_w_description.txt"))
+    variants <- left_join(variants, gene_descriptions, by = c("Ensembl_gene_id" = "ensembl_gene_id"))
     
     # Column19 - Omim_gene_description
     omim_file_name <- paste0(default_tables_path,"/omim.txt")
@@ -588,7 +556,7 @@ merge_reports <- function(family, samples){
     select_and_write2(ensemble, samples, paste0(family, ".merge_reports"))
 }
 
-annotate_w_care4rare <- function(family,samples){
+annotate_w_care4rare <- function(family, samples){
     variants <- read.csv(paste0(family, ".merge_reports.csv"), stringsAsFactors = F)
   
     variants$superindex <- with(variants, paste(Position, Ref, Alt, sep='-'))
@@ -631,46 +599,40 @@ annotate_w_care4rare <- function(family,samples){
 
 load_tables <- function(debug = F){
     print(paste0("Debug:", debug))
-    #debug
-    if (debug == T){
+    if (debug){
         seen_in_c4r_counts.txt <- "seen_in_c4r_counts.txt"
         seen_in_c4r_samples.txt <- "seen_in_c4r_samples.txt"
         hgmd.csv <- "hgmd.csv"
     }else{
-        seen_in_c4r_counts.txt <- paste0(c4r_database_path,"/seen_in_c4r_counts.txt")    
-        seen_in_c4r_samples.txt <- paste0(c4r_database_path,"/seen_in_c4r_samples.txt")
-        hgmd.csv <- paste0(c4r_database_path,"/hgmd.csv")
+        seen_in_c4r_counts.txt <- paste0(c4r_database_path, "/seen_in_c4r_counts.txt")    
+        seen_in_c4r_samples.txt <- paste0(c4r_database_path, "/seen_in_c4r_samples.txt")
+        hgmd.csv <- paste0(c4r_database_path, "/hgmd.csv")
     }
     
     if (file.exists(seen_in_c4r_counts.txt)){
-        seen_in_c4r_counts <<- read.delim(seen_in_c4r_counts.txt, stringsAsFactors=F)
-    }else{
-        print("No C4R counts found")
-    }
+        seen_in_c4r_counts <<- read_delim(seen_in_c4r_counts.txt, delim = "\t")
+    }else print("No C4R counts found")
     
     if (file.exists(seen_in_c4r_samples.txt)){
-        seen_in_c4r_samples <<- read.delim(seen_in_c4r_samples.txt, stringsAsFactors=F)
-    }else{
-        print("No C4R samples found")
-    }
+        seen_in_c4r_samples <<- read_delim(seen_in_c4r_samples.txt, delim = "\t")
+    }else print("No C4R samples found")
     
     if (file.exists(hgmd.csv)){
-        hgmd <- read.csv(hgmd.csv,stringsAsFactors = F,header = F)
-        colnames(hgmd) <- c("chrom","pos","HGMD_id","ref","alt","HGMD_gene","HGMD_tag","author",
-                           "allname","vol","page","year","pmid")
-        hgmd$superindex <- with(hgmd,paste0(chrom,':',pos,'-',ref,'-',alt))
-        hgmd$HGMD_ref <- with(hgmd,paste(author,allname,vol,page,year,"PMID:",pmid,sep = ' '))
-        hgmd <<- hgmd[,c("superindex","HGMD_id","HGMD_gene","HGMD_tag","HGMD_ref")]
-    }else{
-        print("No HGMD database")
-    }
+        hgmd <<- read_csv(hgmd.csv, 
+                         col_names = c("chrom", "pos", "HGMD_id", "ref", "alt", "HGMD_gene",
+                                       "HGMD_tag", "author", "allname","vol","page", "year", "pmid")) %>% 
+                mutate(superindex = paste0(chrom, ':', pos, '-', ref, '-', alt),
+                       HGMD_ref = paste(author, allname, vol, page, year, "PMID:", pmid, sep = ' ')) %>% 
+                select(c(superindex, HGMD_id, HGMD_gene, HGMD_tag, HGMD_ref))
+    }else print("No HGMD database")
 }
 
 # creates clinical report - more conservative filtering and less columns
-clinical_report <- function(project,samples){
+clinical_report <- function(project, samples){
     report_file_name <- paste0(project,".wes.",Sys.Date(),".csv")
-    full_report <- read.csv(report_file_name, header = T, stringsAsFactors = F)
     
+    full_report <- read_csv(report_file_name)
+    #full_report <- mutate(full_report, max_alt = max(get(paste0("Alt_depths.", samples))))
     full_report$max_alt <- with(full_report, pmax(get(paste0("Alt_depths.", samples))))
     
     filtered_report <- subset(full_report, 
@@ -712,15 +674,10 @@ clinical_report <- function(project,samples){
     write.csv(filtered_report, paste0(project, ".wes.clinical.", Sys.Date(), ".csv"), row.names = F)
 }
 
-library(stringr)
-library(data.table)
-library(plyr)
+library(tidyverse)
+library(data.table) #what for?
 default_tables_path <- "~/cre/data"
 c4r_database_path <- "/hpf/largeprojects/ccm_dccforge/dccforge/results/database"
-
-# R substitutes "-" with "." in sample names in columns so fix this in samples.txt
-# sample names starting with letters should be prefixed by X in *.table
-# for correct processing. most of them start with numbers, and R adds X automatically
 
 args <- commandArgs(trailingOnly = T)
 family <- args[1]
@@ -731,11 +688,10 @@ debug <- F
 
 setwd(family)
 
-samples <- unlist(read.table("samples.txt", stringsAsFactors = F))
-samples <- gsub("-", ".", samples)
-    
+samples <- read_lines("samples.txt")
+
 load_tables(debug)
-create_report(family,samples)
+create_report(family, samples)
 merge_reports(family,samples)
 annotate_w_care4rare(family,samples)
 clinical_report(family,samples)

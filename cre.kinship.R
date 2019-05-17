@@ -118,7 +118,7 @@ plot_relatedness_picture <- function(samples.txt = "samples.txt"){
     #LD based SNP pruning
     set.seed(1000)
     #default threshold is 0.2, for many samples it should be relaxed to 0.5
-    snpset <- snpgdsLDpruning(genofile, ld.threshold = 0.5, sample.id = samples)
+    snpset <- snpgdsLDpruning(genofile, ld.threshold = 0.2, sample.id = samples)
     snpset.id <- unlist(snpset)
 
     #pca
@@ -169,5 +169,5 @@ plot_relatedness_picture <- function(samples.txt = "samples.txt"){
 
 init()
 # input file can be vcf or vcf.gz
-snpgdsVCF2GDS("truffle_407.no_anno.snps.Q500.vcf.gz", "dataset2.gds")
+snpgdsVCF2GDS("837-gatk-haplotype-annotated-decomposed.q500.vcf.gz", "dataset2.gds")
 plot_relatedness_picture("samples.txt")
