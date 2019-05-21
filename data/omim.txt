@@ -1,4 +1,4 @@
-Ensembl_gene_id	Omim_gene_description	
+Ensembl_gene_id	Omim_gene_description
 ENSG00000000419	Congenital disorder of glycosylation, type Ie, 608799 (3), Autosomal recessive
 ENSG00000000971	Basal laminar drusen, 126700 (3), Autosomal dominant; Complement factor H deficiency, 609814 (3), Autosomal recessive, Autosomal dominant; {Hemolytic uremic syndrome, atypical, susceptibility to, 1}, 235400 (3), Autosomal recessive, Autosomal dominant; {Macular degeneration, age-related, 4}, 610698 (3)
 ENSG00000001084	Hemolytic anemia due to gamma-glutamylcysteine synthetase deficiency, 230450 (3), Autosomal recessive; {Myocardial infarction, susceptibility to}, 608446 (3)

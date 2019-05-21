@@ -1,4 +1,4 @@
-Ensembl_gene_id	Orphanet	
+Ensembl_gene_id	Orphanet
 ENSG00000000419	DPM1-CDG
 ENSG00000000971	Atypical hemolytic-uremic syndrome with H factor anomaly,De novo thrombotic microangiopathy after kidney transplantation,Dense deposit disease,Familial drusen,HELLP syndrome,Immunodeficiency with factor H anomaly,Immunoglobulin-mediated membranoproliferative glomerulonephritis
 ENSG00000001084	Gamma-glutamylcysteine synthetase deficiency
@@ -116,11 +116,11 @@ ENSG00000023839	Dubin-Johnson syndrome
 ENSG00000025708	Mitochondrial neurogastrointestinal encephalomyopathy
 ENSG00000025796	Isolated polycystic liver disease
 ENSG00000026025	Pulverulent cataract
-ENSG00000026103	Autoimmune lymphoproliferative syndrome,Autoimmune lymphoproliferative syndrome,Behçet disease,Oligoarticular juvenile idiopathic arthritis,Rheumatoid factor-negative juvenile idiopathic arthritis,Vogt-Koyanagi-Harada disease
+ENSG00000026103	Autoimmune lymphoproliferative syndrome,Autoimmune lymphoproliferative syndrome,Behï¿½et disease,Oligoarticular juvenile idiopathic arthritis,Rheumatoid factor-negative juvenile idiopathic arthritis,Vogt-Koyanagi-Harada disease
 ENSG00000026297	Cystic leukoencephalopathy without megalencephaly
 ENSG00000027697	Autosomal dominant mendelian susceptibility to mycobacterial diseases due to partial IFNgammaR1 deficiency,Autosomal recessive mendelian susceptibility to mycobacterial diseases due to partial IFNgammaR1 deficiency,Mendelian susceptibility to mycobacterial diseases due to complete IFNgammaR1 deficiency
 ENSG00000027847	Ehlers-Danlos syndrome, progeroid type,Reunion Island Larsen syndrome
-ENSG00000028137	Classic mycosis fungoides,Sézary syndrome
+ENSG00000028137	Classic mycosis fungoides,Sï¿½zary syndrome
 ENSG00000029534	8p11.2 deletion syndrome,Hereditary spherocytosis
 ENSG00000029639	Mitochondrial non-syndromic sensorineural deafness
 ENSG00000030304	Fetal akinesia deformation sequence,Postsynaptic congenital myasthenic syndromes
@@ -286,7 +286,7 @@ ENSG00000072110	Autosomal dominant macrothrombocytopenia
 ENSG00000072121	Autosomal recessive spastic paraplegia type 15
 ENSG00000072163	Autosomal recessive limb-girdle muscular dystrophy type 2W
 ENSG00000072195	Autosomal recessive centronuclear myopathy
-ENSG00000072210	Sjögren-Larsson syndrome
+ENSG00000072210	Sjï¿½gren-Larsson syndrome
 ENSG00000072274	TFRC-related combined immunodeficiency
 ENSG00000072364	Cognitive impairment-coarse facies-heart defects-obesity-pulmonary involvement-short stature-skeletal dysplasia syndrome
 ENSG00000072501	Cornelia de Lange syndrome,Wiedemann-Steiner syndrome
@@ -304,7 +304,7 @@ ENSG00000073734	Benign recurrent intrahepatic cholestasis type 2,Intrahepatic ch
 ENSG00000073921	Precursor T-cell acute lymphoblastic leukemia
 ENSG00000074047	Alobar holoprosencephaly,Combined pituitary hormone deficiencies, genetic forms,Lobar holoprosencephaly,Microform holoprosencephaly,Midline interhemispheric variant of holoprosencephaly,Postaxial polydactyly-anterior pituitary anomalies-facial dysmorphism syndrome,Semilobar holoprosencephaly,Septopreoptic holoprosencephaly
 ENSG00000074181	CADASIL,Infantile myofibromatosis,Lateral meningocele syndrome
-ENSG00000074582	Björnstad syndrome,GRACILE syndrome,Isolated CoQ-cytochrome C reductase deficiency,Renal tubulopathy-encephalopathy-liver failure syndrome
+ENSG00000074582	Bjï¿½rnstad syndrome,GRACILE syndrome,Isolated CoQ-cytochrome C reductase deficiency,Renal tubulopathy-encephalopathy-liver failure syndrome
 ENSG00000074621	Congenital stationary night blindness
 ENSG00000074695	Combined deficiency of factor V and factor VIII
 ENSG00000074803	Antenatal Bartter syndrome
@@ -481,7 +481,7 @@ ENSG00000094914	Triple A syndrome
 ENSG00000095002	Constitutional mismatch repair deficiency syndrome,Lynch syndrome,Muir-Torre syndrome
 ENSG00000095015	46,XY complete gonadal dysgenesis,46,XY partial gonadal dysgenesis
 ENSG00000095209	Osteogenesis imperfecta type 4
-ENSG00000095380	Spondyloepimetaphyseal dysplasia, Geneviève type
+ENSG00000095380	Spondyloepimetaphyseal dysplasia, Geneviï¿½ve type
 ENSG00000095397	Autosomal recessive non-syndromic sensorineural deafness type DFNB,Usher syndrome type 2
 ENSG00000095464	Achromatopsia,Progressive cone dystrophy
 ENSG00000095485	Autosomal recessive cerebellar ataxia due to CWF19L1 deficiency
@@ -585,7 +585,7 @@ ENSG00000101311	Hereditary acrokeratotic poikiloderma, Weary type,Kindler syndro
 ENSG00000101327	Spinocerebellar ataxia type 23
 ENSG00000101333	Auriculocondylar syndrome
 ENSG00000101346	Dowling-Degos disease
-ENSG00000101347	Aicardi-Goutières syndrome,Chilblain lupus
+ENSG00000101347	Aicardi-Goutiï¿½res syndrome,Chilblain lupus
 ENSG00000101361	Spinocerebellar ataxia type 36
 ENSG00000101365	Retinitis pigmentosa
 ENSG00000101384	Alagille syndrome due to 20p12 microdeletion,Alagille syndrome due to a JAG1 point mutation,Tetralogy of Fallot
@@ -609,7 +609,7 @@ ENSG00000101966	X-linked lymphoproliferative disease
 ENSG00000101981	Mild hemophilia B,Moderately severe hemophilia B,Severe hemophilia B,Symptomatic form of hemophilia B in female carriers
 ENSG00000101986	Adrenomyeloneuropathy,CADDS,X-linked cerebral adrenoleukodystrophy
 ENSG00000101997	3C syndrome
-ENSG00000102001	Cone rod dystrophy,Congenital stationary night blindness,Åland Islands eye disease
+ENSG00000102001	Cone rod dystrophy,Congenital stationary night blindness,ï¿½land Islands eye disease
 ENSG00000102003	X-linked non-syndromic intellectual disability
 ENSG00000102024	X-linked osteoporosis with fractures
 ENSG00000102030	Microphthalmia, Lenz type,Premature aging appearance-developmental delay-cardiac arrhythmia syndrome
@@ -658,10 +658,10 @@ ENSG00000103150	Malonic aciduria
 ENSG00000103197	Autosomal dominant polycystic kidney disease type 1 with tuberous sclerosis,Lymphangioleiomyomatosis,Tuberous sclerosis complex
 ENSG00000103227	Familial chylomicronemia syndrome
 ENSG00000103241	Congenital alveolar capillary dysplasia
-ENSG00000103249	Albers-Schönberg osteopetrosis,Autosomal recessive malignant osteopetrosis,Intermediate osteopetrosis
+ENSG00000103249	Albers-Schï¿½nberg osteopetrosis,Autosomal recessive malignant osteopetrosis,Intermediate osteopetrosis
 ENSG00000103264	Autosomal recessive non-syndromic intellectual disability
 ENSG00000103266	Autosomal recessive cerebellar ataxia due to STUB1 deficiency
-ENSG00000103313	Behçet disease,Familial Mediterranean fever,Intermittent hydrarthrosis
+ENSG00000103313	Behï¿½et disease,Familial Mediterranean fever,Intermittent hydrarthrosis
 ENSG00000103316	Autosomal dominant non-syndromic sensorineural deafness type DFNA
 ENSG00000103335	Dehydrated hereditary stomatocytosis
 ENSG00000103356	Leukoencephalopathy-thalamus and brainstem anomalies-high lactate syndrome
@@ -708,8 +708,8 @@ ENSG00000104826	Leydig cell hypoplasia due to LHB deficiency
 ENSG00000104833	Hypomyelination with atrophy of basal ganglia and cerebellum,Primary dystonia, DYT4 type
 ENSG00000104835	Hyperuricemia-pulmonary hypertension-renal failure-alkalosis syndrome
 ENSG00000104884	COFS syndrome,Trichothiodystrophy,Xeroderma pigmentosum,Xeroderma pigmentosum-Cockayne syndrome complex
-ENSG00000104889	Aicardi-Goutières syndrome
-ENSG00000104899	Persistent Müllerian duct syndrome
+ENSG00000104889	Aicardi-Goutiï¿½res syndrome
+ENSG00000104899	Persistent Mï¿½llerian duct syndrome
 ENSG00000104936	Steinert myotonic dystrophy
 ENSG00000104973	Autosomal recessive non-syndromic intellectual disability,Charcot-Marie-Tooth disease type 2B2,Congenital cataract-microcephaly-nevus flammeus simplex-severe intellectual disability syndrome
 ENSG00000105048	Amish nemaline myopathy
@@ -808,7 +808,7 @@ ENSG00000107485	Hypoparathyroidism-deafness-renal disease syndrome,Precursor B-c
 ENSG00000107521	Hermansky-Pudlak syndrome with pulmonary fibrosis
 ENSG00000107537	Refsum disease
 ENSG00000107566	Autosomal recessive spastic paraplegia type 62
-ENSG00000107611	Gräsbeck-Imerslund disease
+ENSG00000107611	Grï¿½sbeck-Imerslund disease
 ENSG00000107736	Autosomal recessive non-syndromic sensorineural deafness type DFNB,Usher syndrome type 1
 ENSG00000107745	Proximal myopathy with extrapyramidal signs
 ENSG00000107779	Familial colorectal cancer Type X,Generalized juvenile polyposis/juvenile polyposis coli,Hereditary mixed polyposis syndrome,Juvenile polyposis of infancy
@@ -860,7 +860,7 @@ ENSG00000108953	17p13.3 microduplication syndrome,Clear cell sarcoma of kidney,D
 ENSG00000108963	Craniofacial dysplasia-short stature-ectodermal anomalies-intellectual disability syndrome
 ENSG00000109062	Dominant hypophosphatemia with nephrolithiasis or osteoporosis
 ENSG00000109063	Autosomal dominant multiple pterygium syndrome,Digitotalar dysmorphism,Freeman-Sheldon syndrome,Sheldon-Hall syndrome
-ENSG00000109099	Acute inflammatory demyelinating polyradiculoneuropathy,Charcot-Marie-Tooth disease type 1A,Charcot-Marie-Tooth disease type 1E,Dejerine-Sottas syndrome,Hereditary neuropathy with liability to pressure palsies,Hereditary neuropathy with liability to pressure palsies,Roussy-Lévy syndrome
+ENSG00000109099	Acute inflammatory demyelinating polyradiculoneuropathy,Charcot-Marie-Tooth disease type 1A,Charcot-Marie-Tooth disease type 1E,Dejerine-Sottas syndrome,Hereditary neuropathy with liability to pressure palsies,Hereditary neuropathy with liability to pressure palsies,Roussy-Lï¿½vy syndrome
 ENSG00000109101	Alymphoid cystic thymic dysgenesis
 ENSG00000109103	Cone rod dystrophy,Idiopathic CD4 lymphocytopenia
 ENSG00000109132	Haddad syndrome,Neuroblastoma,Ondine syndrome
@@ -879,7 +879,7 @@ ENSG00000109738	Hereditary hyperekplexia
 ENSG00000109775	Hip dysplasia, Beukes type
 ENSG00000109819	Amyotrophic lateral sclerosis
 ENSG00000109846	Alpha-B crystallin-related late-onset distal myopathy,Early-onset lamellar cataract,Early-onset nuclear cataract,Early-onset posterior polar cataract,Familial isolated dilated cardiomyopathy,Fatal infantile hypertonic myofibrillar myopathy
-ENSG00000109861	Haim-Munk syndrome,Papillon-Lefèvre syndrome
+ENSG00000109861	Haim-Munk syndrome,Papillon-Lefï¿½vre syndrome
 ENSG00000109906	Acute promyelocytic leukemia
 ENSG00000109927	Autosomal dominant non-syndromic sensorineural deafness type DFNA,Autosomal recessive non-syndromic sensorineural deafness type DFNB
 ENSG00000109929	Lathosterolosis
@@ -994,7 +994,7 @@ ENSG00000113494	Familial  hyperprolactinemia,Multiple fibroadenoma of the breast
 ENSG00000113522	Hereditary breast and ovarian cancer syndrome,Nijmegen breakage syndrome-like disorder
 ENSG00000113569	Familial atrial fibrillation
 ENSG00000113580	Glucocorticoid resistance
-ENSG00000113594	Stüve-Wiedemann syndrome
+ENSG00000113594	Stï¿½ve-Wiedemann syndrome
 ENSG00000113600	Immunodeficiency due to a late component of complement deficiency
 ENSG00000113643	RARS-related autosomal recessive hypomyelinating leukodystrophy
 ENSG00000113721	Acroosteolysis-keloid-like lesions-premature aging syndrome,Bilateral striopallidodentate calcinosis,Chronic myelomonocytic leukemia,Infantile myofibromatosis,Myeloid neoplasm associated with PDGFRB rearrangement,Primary hypereosinophilic syndrome,Unclassified chronic myeloproliferative disease
@@ -1043,7 +1043,7 @@ ENSG00000115204	Navajo neurohepatopathy
 ENSG00000115211	Congenital or early infantile CACH syndrome,Cree leukoencephalopathy,Juvenile or adult CACH syndrome,Late infantile CACH syndrome,Ovarioleukodystrophy
 ENSG00000115221	Alopecia-intellectual disability syndrome,Hypocalcified amelogenesis imperfecta,Hypoplastic amelogenesis imperfecta
 ENSG00000115266	Sotos syndrome
-ENSG00000115267	Aicardi-Goutières syndrome,Singleton-Merten dysplasia
+ENSG00000115267	Aicardi-Goutiï¿½res syndrome,Singleton-Merten dysplasia
 ENSG00000115268	B-cell chronic lymphocytic leukemia
 ENSG00000115275	MOGS-CDG
 ENSG00000115286	Isolated complex I deficiency,Leigh syndrome with leukodystrophy
@@ -1084,7 +1084,7 @@ ENSG00000116039	Autosomal recessive distal renal tubular acidosis
 ENSG00000116062	Constitutional mismatch repair deficiency syndrome,Lynch syndrome,Muir-Torre syndrome
 ENSG00000116096	Dopa-responsive dystonia due to sepiapterin reductase deficiency
 ENSG00000116106	Amyotrophic lateral sclerosis
-ENSG00000116127	Alström syndrome
+ENSG00000116127	Alstrï¿½m syndrome
 ENSG00000116132	Agnathia-holoprosencephaly-situs inversus syndrome
 ENSG00000116133	Desmosterolosis
 ENSG00000116171	Leukoencephalopathy-dystonia-motor neuropathy syndrome
@@ -1156,7 +1156,7 @@ ENSG00000118260	Melanoma of soft tissue
 ENSG00000118271	ATTRV122I amyloidosis,ATTRV30M amyloidosis
 ENSG00000118402	Congenital ichthyosis-intellectual disability-spastic quadriplegia syndrome,Spinocerebellar ataxia type 34,Stargardt disease
 ENSG00000118495	Paternal uniparental disomy of chromosome 6,Transient neonatal diabetes mellitus
-ENSG00000118503	Hereditary pediatric Behçet-like disease
+ENSG00000118503	Hereditary pediatric Behï¿½et-like disease
 ENSG00000118513	Acute basophilic leukemia,Angiocentric glioma,Precursor T-cell acute lymphoblastic leukemia
 ENSG00000118520	Argininemia
 ENSG00000118523	Diffuse cutaneous systemic sclerosis,Limited cutaneous systemic sclerosis
@@ -1213,8 +1213,8 @@ ENSG00000120539	Autosomal thrombocytopenia with normal platelets
 ENSG00000120659	Autosomal recessive malignant osteopetrosis
 ENSG00000120693	Heritable pulmonary arterial hypertension
 ENSG00000120699	Pontocerebellar hypoplasia type 1
-ENSG00000120708	Granular corneal dystrophy type I,Granular corneal dystrophy type II,Lattice corneal dystrophy type I,Microcystic corneal dystrophy,Reis-Bücklers corneal dystrophy,Thiel-Behnke corneal dystrophy
-ENSG00000120725	Marinesco-Sjögren syndrome
+ENSG00000120708	Granular corneal dystrophy type I,Granular corneal dystrophy type II,Lattice corneal dystrophy type I,Microcystic corneal dystrophy,Reis-Bï¿½cklers corneal dystrophy,Thiel-Behnke corneal dystrophy
+ENSG00000120725	Marinesco-Sjï¿½gren syndrome
 ENSG00000120729	Autosomal dominant limb-girdle muscular dystrophy type 1A,Distal myotilinopathy,Spheroid body myopathy
 ENSG00000120802	Familial isolated dilated cardiomyopathy
 ENSG00000120903	Autosomal dominant nocturnal frontal lobe epilepsy
@@ -1596,7 +1596,7 @@ ENSG00000134812	Congenital intrinsic factor deficiency
 ENSG00000134851	TMEM165-CDG
 ENSG00000134853	Chronic eosinophilic leukemia,Gastrointestinal stromal tumor,Myeloid neoplasm associated with PDGFRA rearrangement,Precursor B-cell acute lymphoblastic leukemia,Primary hypereosinophilic syndrome
 ENSG00000134871	Familial porencephaly
-ENSG00000134882	Behçet disease
+ENSG00000134882	Behï¿½et disease
 ENSG00000134899	COFS syndrome,Xeroderma pigmentosum,Xeroderma pigmentosum-Cockayne syndrome complex
 ENSG00000134900	Autoimmune hemolytic anemia-autoimmune thrombocytopenia-primary immunodeficiency syndrome
 ENSG00000134910	STT3A-CDG
@@ -1611,7 +1611,7 @@ ENSG00000135338	Leber congenital amaurosis,Severe early-childhood-onset retinal 
 ENSG00000135341	Cardiospondylocarpofacial syndrome,Frontometaphyseal dysplasia
 ENSG00000135365	Potocki-Shaffer syndrome
 ENSG00000135406	Amyotrophic lateral sclerosis
-ENSG00000135409	Persistent Müllerian duct syndrome
+ENSG00000135409	Persistent Mï¿½llerian duct syndrome
 ENSG00000135424	Congenital fiber-type disproportion myopathy,Congenital muscular dystrophy with integrin alpha-7 deficiency
 ENSG00000135437	Fundus albipunctatus,Retinitis punctata albescens
 ENSG00000135443	Pure hair and nail ectodermal dysplasia
@@ -1637,14 +1637,14 @@ ENSG00000135902	Lethal multiple pterygium syndrome,Postsynaptic congenital myast
 ENSG00000135903	Alveolar rhabdomyosarcoma,Craniofacial-deafness-hand syndrome,Waardenburg syndrome type 1,Waardenburg syndrome type 3
 ENSG00000135917	Biotin-responsive basal ganglia disease,Infantile spams-psychomotor retardation-progressive brain atrophy-basal ganglia disease syndrome,Leigh syndrome with leukodystrophy,Thiamine-responsive encephalopathy
 ENSG00000135924	Charcot-Marie-Tooth disease type 2T,Young adult-onset distal hereditary motor neuropathy
-ENSG00000135925	Autosomal recessive hypohidrotic ectodermal dysplasia,Odonto-onycho-dermal dysplasia,Oligodontia,Schöpf-Schulz-Passarge syndrome
+ENSG00000135925	Autosomal recessive hypohidrotic ectodermal dysplasia,Odonto-onycho-dermal dysplasia,Oligodontia,Schï¿½pf-Schulz-Passarge syndrome
 ENSG00000135929	Cerebrotendinous xanthomatosis
 ENSG00000135956	Clear cell renal carcinoma,Hereditary pheochromocytoma-paraganglioma
 ENSG00000135960	Autosomal dominant hypohidrotic ectodermal dysplasia,Autosomal recessive hypohidrotic ectodermal dysplasia
 ENSG00000136003	Hereditary myopathy with lactic acidosis due to ISCU deficiency
 ENSG00000136051	Autosomal recessive non-syndromic intellectual disability
 ENSG00000136068	Atelosteogenesis type I,Atelosteogenesis type III,Autosomal dominant Larsen syndrome,Boomerang dysplasia,Spondylocarpotarsal synostosis
-ENSG00000136104	Aicardi-Goutières syndrome
+ENSG00000136104	Aicardi-Goutiï¿½res syndrome
 ENSG00000136143	Mitochondrial DNA depletion syndrome, encephalomyopathic form with methylmalonic aciduria
 ENSG00000136144	Reticular dystrophy of the retinal pigment epithelium
 ENSG00000136156	ABri amyloidosis,ADan amyloidosis,Retinal dystrophy with inner retinal dysfunction and ganglion cell anomalies
@@ -1661,7 +1661,7 @@ ENSG00000136535	2q24 microdeletion syndrome
 ENSG00000136573	MODY
 ENSG00000136574	46,XY partial gonadal dysgenesis,8p23.1 microdeletion syndrome,Atrial septal defect, ostium secundum type,Complete atrioventricular canal-Fallot tetralogy syndrome,Complete atrioventricular canal-left heart obstruction syndrome,Complete atrioventricular canal-ventricle hypoplasia syndrome,Familial atrial fibrillation,Partial atrioventricular canal,Tetralogy of Fallot
 ENSG00000136631	Congenital neutropenia-myelofibrosis-nephromegaly syndrome
-ENSG00000136634	Behçet disease,Immune dysregulation-inflammatory bowel disease-arthritis-recurrent infections syndrome
+ENSG00000136634	Behï¿½et disease,Immune dysregulation-inflammatory bowel disease-arthritis-recurrent infections syndrome
 ENSG00000136689	Sterile multifocal osteomyelitis with periostitis and pustulosis
 ENSG00000136695	Acrodermatitis continua suppurativa of Hallopeau,DITRA,Generalized pustular psoriasis,Pustulosis palmaris et plantaris
 ENSG00000136698	Biliary atresia with splenic malformation syndrome,Congenitally uncorrected transposition of the great arteries,Situs ambiguus
@@ -1673,7 +1673,7 @@ ENSG00000136802	Autosomal agammaglobulinemia
 ENSG00000136827	Early-onset generalized limb-onset dystonia,Myoclonus-dystonia syndrome
 ENSG00000136854	Dravet syndrome,Early infantile epileptic encephalopathy
 ENSG00000136861	Autosomal recessive primary microcephaly
-ENSG00000136869	Behçet disease
+ENSG00000136869	Behï¿½et disease
 ENSG00000136872	Hereditary fructose intolerance
 ENSG00000136875	Retinitis pigmentosa
 ENSG00000136881	Familial hypercholanemia
@@ -1741,7 +1741,7 @@ ENSG00000138347	Familial isolated dilated cardiomyopathy,Familial isolated restr
 ENSG00000138363	AICA-ribosiduria
 ENSG00000138375	Schimke immuno-osseous dysplasia
 ENSG00000138376	Hereditary breast and ovarian cancer syndrome
-ENSG00000138378	Behçet disease,Oligoarticular juvenile idiopathic arthritis,Pediatric systemic lupus erythematosus,Rheumatoid factor-negative juvenile idiopathic arthritis
+ENSG00000138378	Behï¿½et disease,Oligoarticular juvenile idiopathic arthritis,Pediatric systemic lupus erythematosus,Rheumatoid factor-negative juvenile idiopathic arthritis
 ENSG00000138379	Myostatin-related muscle hypertrophy
 ENSG00000138413	Enchondromatosis,Giant cell glioblastoma,Gliosarcoma,Maffucci syndrome,Metaphyseal chondromatosis with D-2-hydroxyglutaric aciduria
 ENSG00000138435	Lethal multiple pterygium syndrome,Postsynaptic congenital myasthenic syndromes,Postsynaptic congenital myasthenic syndromes
@@ -1774,7 +1774,7 @@ ENSG00000139180	Leigh syndrome with leukodystrophy
 ENSG00000139190	Autosomal dominant spastic ataxia type 1
 ENSG00000139193	Autosomal recessive lymphoproliferative disease
 ENSG00000139197	Infantile Refsum disease,Neonatal adrenoleukodystrophy,Rhizomelic chondrodysplasia punctata type 5,Zellweger syndrome
-ENSG00000139219	Achondrogenesis type 2,Autosomal dominant rhegmatogenous retinal detachment,Czech dysplasia, metatarsal type,Dysspondyloenchondromatosis,Familial avascular necrosis of femoral head,Hypochondrogenesis,Kniest dysplasia,Legg-Calvé-Perthes disease,Mild spondyloepiphyseal dysplasia due to COL2A1 mutation with early-onset osteoarthritis,Multiple epiphyseal dysplasia, Beighton type,Platyspondylic dysplasia, Torrance type,Spondyloepimetaphyseal dysplasia congenita, Strudwick type,Spondyloepiphyseal dysplasia congenita,Spondyloepiphyseal dysplasia, Stanescu type,Spondylometaphyseal dysplasia, 'corner fracture' type,Spondylometaphyseal dysplasia, Schmidt type,Spondyloperipheral dysplasia-short ulna syndrome,Stickler syndrome type 1,Weissenbacher- Zweymuller syndrome
+ENSG00000139219	Achondrogenesis type 2,Autosomal dominant rhegmatogenous retinal detachment,Czech dysplasia, metatarsal type,Dysspondyloenchondromatosis,Familial avascular necrosis of femoral head,Hypochondrogenesis,Kniest dysplasia,Legg-Calvï¿½-Perthes disease,Mild spondyloepiphyseal dysplasia due to COL2A1 mutation with early-onset osteoarthritis,Multiple epiphyseal dysplasia, Beighton type,Platyspondylic dysplasia, Torrance type,Spondyloepimetaphyseal dysplasia congenita, Strudwick type,Spondyloepiphyseal dysplasia congenita,Spondyloepiphyseal dysplasia, Stanescu type,Spondylometaphyseal dysplasia, 'corner fracture' type,Spondylometaphyseal dysplasia, Schmidt type,Spondyloperipheral dysplasia-short ulna syndrome,Stickler syndrome type 1,Weissenbacher- Zweymuller syndrome
 ENSG00000139304	Autosomal recessive non-syndromic sensorineural deafness type DFNB
 ENSG00000139318	Kallmann syndrome,Normosmic congenital hypogonadotropic hypogonadism
 ENSG00000139323	Cone rod dystrophy
@@ -1917,7 +1917,7 @@ ENSG00000143614	Severe intellectual disability-poor language-strabismus-grimacin
 ENSG00000143622	Noonan syndrome
 ENSG00000143627	Hemolytic anemia due to red cell pyruvate kinase deficiency
 ENSG00000143632	Childhood-onset nemaline myopathy,Congenital fiber-type disproportion myopathy,Congenital myopathy with excess of thin filaments,Intermediate nemaline myopathy,Progressive scapulohumeroperoneal distal myopathy,Rigid spine syndrome,Severe congenital nemaline myopathy,Typical nemaline myopathy,Zebra body myopathy
-ENSG00000143669	Attenuated Chédiak-Higashi syndrome,Chédiak-Higashi syndrome
+ENSG00000143669	Attenuated Chï¿½diak-Higashi syndrome,Chï¿½diak-Higashi syndrome
 ENSG00000143768	Situs ambiguus
 ENSG00000143801	Early-onset autosomal dominant Alzheimer disease,Familial isolated dilated cardiomyopathy
 ENSG00000143815	Greenberg dysplasia,Regressive spondylometaphyseal dysplasia,Reynolds syndrome
@@ -2086,7 +2086,7 @@ ENSG00000151694	Neonatal inflammatory skin and bowel disease
 ENSG00000151702	Ewing sarcoma,Extraskeletal Ewing sarcoma,Isolated delta-storage pool disease,Jacobsen syndrome,Paris-Trousseau thrombocytopenia,Peripheral primitive neuroectodermal tumor
 ENSG00000151704	Antenatal Bartter syndrome
 ENSG00000151729	Autosomal dominant progressive external ophthalmoplegia,Congenital cataract-hypertrophic cardiomyopathy-mitochondrial myopathy syndrome
-ENSG00000151779	Fever-associated acute infantile liver failure syndrome,Short stature-optic atrophy-Pelger-Huët anomaly syndrome
+ENSG00000151779	Fever-associated acute infantile liver failure syndrome,Short stature-optic atrophy-Pelger-Huï¿½t anomaly syndrome
 ENSG00000151806	West syndrome
 ENSG00000151835	Autosomal recessive spastic ataxia of Charlevoix-Saguenay
 ENSG00000151849	Autosomal recessive primary microcephaly,Seckel syndrome
@@ -2151,7 +2151,7 @@ ENSG00000154743	Pontocerebellar hypoplasia type 2
 ENSG00000154764	Fuhrmann syndrome,Phocomelia, Schinzel type
 ENSG00000154767	Xeroderma pigmentosum
 ENSG00000154781	Severe hypotonia-psychomotor developmental delay-strabismus-cardiac septal defect syndrome
-ENSG00000154803	Birt-Hogg-Dubé syndrome,Familial spontaneous pneumothorax
+ENSG00000154803	Birt-Hogg-Dubï¿½ syndrome,Familial spontaneous pneumothorax
 ENSG00000154856	Hypotrichosis simplex
 ENSG00000154864	Arthrogryposis with oculomotor limitation and electroretinal anomalies,Gordon syndrome,Marden-Walker syndrome
 ENSG00000154997	Giant cell glioblastoma,Gliosarcoma
@@ -2245,7 +2245,7 @@ ENSG00000158815	Kallmann syndrome,Normosmic congenital hypogonadotropic hypogona
 ENSG00000158828	Young-onset Parkinson disease
 ENSG00000158864	Isolated complex I deficiency,Leigh syndrome with cardiomyopathy,Leigh syndrome with leukodystrophy
 ENSG00000158874	AApoAII amyloidosis
-ENSG00000158887	Autosomal dominant Charcot-Marie-Tooth disease type 2I,Autosomal dominant Charcot-Marie-Tooth disease type 2J,Autosomal dominant intermediate Charcot-Marie-Tooth disease type D,Autosomal dominant intermediate Charcot-Marie-Tooth disease with neuropathic pain,Charcot-Marie-Tooth disease type 1B,Dejerine-Sottas syndrome,Roussy-Lévy syndrome
+ENSG00000158887	Autosomal dominant Charcot-Marie-Tooth disease type 2I,Autosomal dominant Charcot-Marie-Tooth disease type 2J,Autosomal dominant intermediate Charcot-Marie-Tooth disease type D,Autosomal dominant intermediate Charcot-Marie-Tooth disease with neuropathic pain,Charcot-Marie-Tooth disease type 1B,Dejerine-Sottas syndrome,Roussy-Lï¿½vy syndrome
 ENSG00000159023	Hereditary elliptocytosis
 ENSG00000159063	ALG8-CDG
 ENSG00000159079	Primary ciliary dyskinesia
@@ -2285,11 +2285,11 @@ ENSG00000160323	Congenital thrombotic thrombocytopenic purpura
 ENSG00000160602	Infantile nephronophthisis,Renal-hepatic-pancreatic dysplasia
 ENSG00000160654	Combined immunodeficiency due to CD3gamma deficiency
 ENSG00000160695	VPS11-related autosomal recessive hypomyelinating leukodystrophy
-ENSG00000160710	Aicardi-Goutières syndrome,Dyschromatosis symmetrica hereditaria,Familial infantile bilateral striatal necrosis
+ENSG00000160710	Aicardi-Goutiï¿½res syndrome,Dyschromatosis symmetrica hereditaria,Familial infantile bilateral striatal necrosis
 ENSG00000160716	Autosomal dominant nocturnal frontal lobe epilepsy
 ENSG00000160746	Adult-onset autosomal recessive cerebellar ataxia
 ENSG00000160752	Disseminated superficial actinic porokeratosis
-ENSG00000160789	Atypical Werner syndrome,Autosomal dominant Emery-Dreifuss muscular dystrophy,Autosomal dominant limb-girdle muscular dystrophy type 1B,Autosomal recessive Emery-Dreifuss muscular dystrophy,Autosomal semi-dominant severe lipodystrophic laminopathy,Charcot-Marie-Tooth disease type 2B1,Congenital muscular dystrophy due to LMNA mutation,Dilated cardiomyopathy-hypergonadotropic hypogonadism syndrome,Familial dilated cardiomyopathy with conduction defect due to LMNA mutation,Familial isolated arrhythmogenic ventricular dysplasia, biventricular form,Familial isolated arrhythmogenic ventricular dysplasia, left dominant form,Familial isolated arrhythmogenic ventricular dysplasia, right dominant form,Familial partial lipodystrophy, Dunnigan type,Familial partial lipodystrophy, Köbberling type,Heart-hand syndrome, Slovenian type,Hutchinson-Gilford progeria syndrome,Laminopathy type Decaudain-Vigouroux,Left ventricular noncompaction,LMNA-related cardiocutaneous progeria syndrome,Mandibuloacral dysplasia with type A lipodystrophy,Progeria-associated arthropathy,Restrictive dermopathy
+ENSG00000160789	Atypical Werner syndrome,Autosomal dominant Emery-Dreifuss muscular dystrophy,Autosomal dominant limb-girdle muscular dystrophy type 1B,Autosomal recessive Emery-Dreifuss muscular dystrophy,Autosomal semi-dominant severe lipodystrophic laminopathy,Charcot-Marie-Tooth disease type 2B1,Congenital muscular dystrophy due to LMNA mutation,Dilated cardiomyopathy-hypergonadotropic hypogonadism syndrome,Familial dilated cardiomyopathy with conduction defect due to LMNA mutation,Familial isolated arrhythmogenic ventricular dysplasia, biventricular form,Familial isolated arrhythmogenic ventricular dysplasia, left dominant form,Familial isolated arrhythmogenic ventricular dysplasia, right dominant form,Familial partial lipodystrophy, Dunnigan type,Familial partial lipodystrophy, Kï¿½bberling type,Heart-hand syndrome, Slovenian type,Hutchinson-Gilford progeria syndrome,Laminopathy type Decaudain-Vigouroux,Left ventricular noncompaction,LMNA-related cardiocutaneous progeria syndrome,Mandibuloacral dysplasia with type A lipodystrophy,Progeria-associated arthropathy,Restrictive dermopathy
 ENSG00000160791	Susceptibility/resistance to HIV infection
 ENSG00000160796	Gray platelet syndrome
 ENSG00000160801	Blomstrand lethal chondrodysplasia,Eiken syndrome,Enchondromatosis,Metaphyseal chondrodysplasia, Jansen type,Primary failure of tooth eruption
@@ -2319,8 +2319,8 @@ ENSG00000162399	Autosomal recessive non-syndromic sensorineural deafness type DF
 ENSG00000162430	Classic multiminicore myopathy,Congenital fiber-type disproportion myopathy,Desmin-related myopathy with Mallory body-like inclusions,Rigid spine syndrome
 ENSG00000162438	Hereditary chronic pancreatitis,Tropical pancreatitis
 ENSG00000162551	Adult hypophosphatasia,Childhood-onset hypophosphatasia,Infantile hypophosphatasia,Odontohypophosphatasia,Perinatal lethal hypophosphatasia,Prenatal benign hypophosphatasia
-ENSG00000162552	Müllerian aplasia and hyperandrogenism,SERKAL syndrome
-ENSG00000162594	Behçet disease
+ENSG00000162552	Mï¿½llerian aplasia and hyperandrogenism,SERKAL syndrome
+ENSG00000162594	Behï¿½et disease
 ENSG00000162599	1p31p32 microdeletion syndrome
 ENSG00000162614	Familial isolated dilated cardiomyopathy
 ENSG00000162631	Atypical Rett syndrome
@@ -2366,7 +2366,7 @@ ENSG00000163536	Familial encephalopathy with neuroserpin inclusion bodies
 ENSG00000163541	Fatal infantile lactic acidosis with methylmalonic aciduria
 ENSG00000163554	Hereditary elliptocytosis,Hereditary spherocytosis
 ENSG00000163581	Glycogen storage disease due to GLUT2 deficiency
-ENSG00000163599	Adult-onset myasthenia gravis,Autoimmune lymphoproliferative syndrome due to CTLA4 haploinsuffiency,Classic mycosis fungoides,Granulomatosis with polyangiitis,Sézary syndrome
+ENSG00000163599	Adult-onset myasthenia gravis,Autoimmune lymphoproliferative syndrome due to CTLA4 haploinsuffiency,Classic mycosis fungoides,Granulomatosis with polyangiitis,Sï¿½zary syndrome
 ENSG00000163600	Common variable immunodeficiency
 ENSG00000163631	Congenital analbuminemia
 ENSG00000163635	Spinocerebellar ataxia type 7
@@ -2385,7 +2385,7 @@ ENSG00000163795	Retinitis pigmentosa
 ENSG00000163817	Iminoglycinuria
 ENSG00000163818	Bardet-Biedl syndrome
 ENSG00000163820	Early-onset nuclear cataract,Total early-onset cataract
-ENSG00000163823	Behçet disease
+ENSG00000163823	Behï¿½et disease
 ENSG00000163898	Hypotrichosis simplex,Woolly hair
 ENSG00000163902	Acute myeloid leukemia with inv3(p21;q26.2) or t(3;3)(p21;q26.2)
 ENSG00000163913	Cranioectodermal dysplasia
@@ -2413,10 +2413,10 @@ ENSG00000164182	Isolated complex I deficiency,Leigh syndrome with leukodystrophy
 ENSG00000164190	5p13 microduplication syndrome,Cornelia de Lange syndrome
 ENSG00000164199	Usher syndrome type 2
 ENSG00000164209	Hereditary motor and sensory neuropathy type 6
-ENSG00000164252	Klippel-Trénaunay syndrome
+ENSG00000164252	Klippel-Trï¿½naunay syndrome
 ENSG00000164258	Isolated complex I deficiency,Leigh syndrome with leukodystrophy
 ENSG00000164266	Hereditary chronic pancreatitis,Tropical pancreatitis
-ENSG00000164307	Behçet disease
+ENSG00000164307	Behï¿½et disease
 ENSG00000164342	Herpes simplex encephalitis
 ENSG00000164344	Congenital prekallikrein deficiency
 ENSG00000164362	Clear cell sarcoma of kidney,Dyskeratosis congenita,Familial melanoma,Hoyeraal-Hreidarsson syndrome,Idiopathic aplastic anemia,Idiopathic pulmonary fibrosis
@@ -2506,7 +2506,7 @@ ENSG00000166035	Hyperlipidemia due to hepatic triglyceride lipase deficiency
 ENSG00000166037	Mosaic variegated aneuploidy syndrome
 ENSG00000166068	Legius syndrome
 ENSG00000166086	Porencephaly-microcephaly-bilateral congenital cataract syndrome
-ENSG00000166126	Gräsbeck-Imerslund disease
+ENSG00000166126	Grï¿½sbeck-Imerslund disease
 ENSG00000166147	Acromicric dysplasia,Familial thoracic aortic aneurysm and aortic dissection,Geleophysic dysplasia,Glaucoma-ectopia-microspherophakia-stiff joints-short stature syndrome,Isolated ectopia lentis,Marfan syndrome type 1,Neonatal Marfan syndrome,Progeroid and marfanoid aspect-lipodystrophy syndrome,Shprintzen-Goldberg syndrome,Stiff skin syndrome,Weill-Marchesani syndrome
 ENSG00000166167	Split hand-split foot malformation
 ENSG00000166189	Hermansky-Pudlak syndrome without pulmonary fibrosis
@@ -2637,7 +2637,7 @@ ENSG00000168646	AXIN2-related attenuated familial adenomatous polyposis,Oligodon
 ENSG00000168685	Omenn syndrome,T-B+ severe combined immunodeficiency due to IL-7Ralpha deficiency
 ENSG00000168769	Acquired idiopathic sideroblastic anemia,Acute myeloid leukemia with multilineage dysplasia,Essential thrombocythemia,Polycythemia vera,Primary myelofibrosis,Refractory anemia,Refractory anemia with excess blasts
 ENSG00000168778	Joubert syndrome,Meckel syndrome
-ENSG00000168811	Behçet disease,Primary biliary cholangitis
+ENSG00000168811	Behï¿½et disease,Primary biliary cholangitis
 ENSG00000168827	Hepatoencephalopathy due to combined oxidative phosphorylation deficiency type 1
 ENSG00000168878	Infant acute respiratory distress syndrome,Neonatal acute respiratory distress due to SP-B deficiency
 ENSG00000168924	Wolf-Hirschhorn syndrome
@@ -2793,8 +2793,8 @@ ENSG00000172638	Autosomal recessive cutis laxa type 1,Lethal arteriopathy syndro
 ENSG00000172817	Autosomal recessive spastic paraplegia type 5A,Congenital bile acid synthesis defect type 3
 ENSG00000172867	Superficial epidermolytic ichthyosis
 ENSG00000172893	Smith-Lemli-Opitz syndrome
-ENSG00000172922	Aicardi-Goutières syndrome
-ENSG00000172936	Pyogenic bacterial infections due to MyD88 deficiency,Waldenström macroglobulinemia
+ENSG00000172922	Aicardi-Goutiï¿½res syndrome
+ENSG00000172936	Pyogenic bacterial infections due to MyD88 deficiency,Waldenstrï¿½m macroglobulinemia
 ENSG00000172943	X-linked intellectual disability, Siderius type
 ENSG00000172987	Ochoa syndrome
 ENSG00000173039	Ependymoma
@@ -2939,7 +2939,7 @@ ENSG00000178449	Isolated cytochrome C oxidase deficiency
 ENSG00000178522	Hypoplastic amelogenesis imperfecta
 ENSG00000178537	Carnitine-acylcarnitine translocase deficiency
 ENSG00000178538	Dysequilibrium syndrome
-ENSG00000178562	Classic mycosis fungoides,Sézary syndrome
+ENSG00000178562	Classic mycosis fungoides,Sï¿½zary syndrome
 ENSG00000178568	Amyotrophic lateral sclerosis
 ENSG00000178573	Cataract-microcornea syndrome,Cerulean cataract,Pulverulent cataract
 ENSG00000178623	Primary sclerosing cholangitis
@@ -3051,7 +3051,7 @@ ENSG00000183421	Bartsocas-Papas syndrome
 ENSG00000183423	Congenital stationary night blindness
 ENSG00000183454	Continuous spikes and waves during sleep,Early-onset epileptic encephalopathy and intellectual disability due to GRIN2A mutation,Landau-Kleffner syndrome,Rolandic epilepsy,Rolandic epilepsy-speech dyspraxia syndrome
 ENSG00000183513	Fatal infantile cytochrome C oxidase deficiency
-ENSG00000183542	Behçet disease
+ENSG00000183542	Behï¿½et disease
 ENSG00000183605	Growth and developmental delay-hypotonia-vision impairment-lactic acidosis syndrome
 ENSG00000183638	Occult macular dystrophy
 ENSG00000183691	Brachydactyly type B2,Multiple synostoses syndrome,Proximal symphalangism,Stapes ankylosis with broad thumbs and toes,Tarsal-carpal coalition syndrome
@@ -3125,7 +3125,7 @@ ENSG00000185825	CADDS,Severe motor and intellectual disabilities-sensorineural d
 ENSG00000185900	Congenital muscular dystrophy with cerebellar involvement,Limb-girdle muscular dystrophy due to POMK deficiency,Walker-Warburg syndrome
 ENSG00000185920	Alobar holoprosencephaly,Gorlin syndrome,Lobar holoprosencephaly,Microform holoprosencephaly,Midline interhemispheric variant of holoprosencephaly,Monosomy 9q22.3,Semilobar holoprosencephaly,Septopreoptic holoprosencephaly
 ENSG00000185946	Isolated growth hormone deficiency type IA
-ENSG00000185960	Langer mesomelic dysplasia,Léri-Weill dyschondrosteosis,SHOX-related short stature
+ENSG00000185960	Langer mesomelic dysplasia,Lï¿½ri-Weill dyschondrosteosis,SHOX-related short stature
 ENSG00000185963	Autosomal dominant childhood-onset proximal spinal muscular atrophy with contractures
 ENSG00000185974	Congenital stationary night blindness,Oguchi disease
 ENSG00000186010	Differentiated thyroid carcinoma,Leigh syndrome with leukodystrophy
@@ -3460,7 +3460,7 @@ ENSG00000213398	Familial LCAT deficiency,Fish-eye disease
 ENSG00000213614	Tay-Sachs disease, B1 variant,Tay-Sachs disease, B variant, adult form,Tay-Sachs disease, B variant, infantile form,Tay-Sachs disease, B variant, juvenile form
 ENSG00000213619	Isolated complex I deficiency,Leigh syndrome with leukodystrophy
 ENSG00000213638	Intellectual disability-strabismus syndrome
-ENSG00000213689	Aicardi-Goutières syndrome,Chilblain lupus,Retinal vasculopathy and cerebral leukoencephalopathy
+ENSG00000213689	Aicardi-Goutiï¿½res syndrome,Chilblain lupus,Retinal vasculopathy and cerebral leukoencephalopathy
 ENSG00000213741	Blackfan-Diamond anemia
 ENSG00000213853	Familial idiopathic steroid-resistant nephrotic syndrome with minimal changes,Idiopathic steroid-sensitive nephrotic syndrome with diffuse mesangial proliferation,Idiopathic steroid-sensitive nephrotic syndrome with focal segmental hyalinosis,Idiopathic steroid-sensitive nephrotic syndrome with minimal change
 ENSG00000213892	Autosomal dominant non-syndromic sensorineural deafness type DFNA
@@ -3479,7 +3479,7 @@ ENSG00000215301	Precursor T-cell acute lymphoblastic leukemia,X-linked intellect
 ENSG00000215417	Feingold syndrome type 2
 ENSG00000215612	Oculoauricular syndrome, Schorderet type
 ENSG00000215644	GCGR-related hyperglucagonemia
-ENSG00000217930	Autosomal recessive spondylometaphyseal dysplasia, Mégarbané type
+ENSG00000217930	Autosomal recessive spondylometaphyseal dysplasia, Mï¿½garbanï¿½ type
 ENSG00000218336	Colobomatous microphthalmia
 ENSG00000221819	Differentiated thyroid carcinoma
 ENSG00000221829	Fanconi anemia
@@ -3506,7 +3506,7 @@ ENSG00000233927	Blackfan-Diamond anemia
 ENSG00000234414	Partial chromosome Y deletion
 ENSG00000234438	Childhood-onset nemaline myopathy
 ENSG00000234616	Childhood absence epilepsy,Juvenile myoclonic epilepsy
-ENSG00000234745	Abacavir toxicity,Allopurinol toxicity,Behçet disease,Flucloxacilline toxicity,Phenytoin or carbamazepine toxicity,Pulmonary arterial hypertension associated with connective tissue disease,Stevens-Johnson syndrome,Takayasu arteritis
+ENSG00000234745	Abacavir toxicity,Allopurinol toxicity,Behï¿½et disease,Flucloxacilline toxicity,Phenytoin or carbamazepine toxicity,Pulmonary arterial hypertension associated with connective tissue disease,Stevens-Johnson syndrome,Takayasu arteritis
 ENSG00000234906	Familial apolipoprotein C-II deficiency
 ENSG00000235718	Microphthalmia-retinitis pigmentosa-foveoschisis-optic disc drusen syndrome,Nanophthalmia
 ENSG00000236320	Autosomal dominant thrombocytopenia with platelet secretion defect
@@ -3530,12 +3530,12 @@ ENSG00000243649	Atypical hemolytic-uremic syndrome with B factor anomaly
 ENSG00000243989	Neurological conditions associated with aminoacylase 1 deficiency
 ENSG00000244005	Severe neonatal lactic acidosis due to NFS1-ISD11 complex deficiency
 ENSG00000244038	DDOST-CDG
-ENSG00000244040	Behçet disease
+ENSG00000244040	Behï¿½et disease
 ENSG00000244045	TMEM199-CDG
 ENSG00000244165	Narcolepsy-cataplexy syndrome
 ENSG00000244414	Atypical hemolytic-uremic syndrome with anti-factor H antibodies,C3 glomerulonephritis,Dense deposit disease
 ENSG00000244486	Van den Ende-Gupta syndrome
-ENSG00000244731	Behçet disease,Immunodeficiency due to a classical component pathway complement deficiency
+ENSG00000244731	Behï¿½et disease,Immunodeficiency due to a classical component pathway complement deficiency
 ENSG00000244734	Beta-thalassemia intermedia,Beta-thalassemia major,Delta-beta-thalassemia,Dominant beta-thalassemia,Heinz body anemia,Hemoglobin C-beta-thalassemia syndrome,Hemoglobin C disease,Hemoglobin D disease,Hemoglobin E-beta-thalassemia syndrome,Hemoglobin E disease,Hemoglobin Lepore-beta-thalassemia syndrome,Hemoglobin M disease,Hereditary persistence of fetal hemoglobin-beta-thalassemia syndrome,Hereditary persistence of fetal hemoglobin-sickle cell disease syndrome,Sickle cell anemia,Sickle cell-beta-thalassemia disease syndrome,Sickle cell-hemoglobin C disease syndrome,Sickle cell-hemoglobin D disease syndrome,Sickle cell-hemoglobin E disease syndrome
 ENSG00000244752	Cataract-microcornea syndrome,Cerulean cataract,Early-onset nuclear cataract,Early-onset posterior subcapsular cataract,Early-onset sutural cataract,Pulverulent cataract,Total early-onset cataract
 ENSG00000245848	Acute myeloid leukemia with CEBPA somatic mutations,Acute myeloid leukemia with t(8;21)(q22;q22) translocation,Inherited acute myeloid leukemia
@@ -3600,4 +3600,4 @@ ENSG00000277893	46,XY disorder of sex development due to 5-alpha-reductase 2 def
 ENSG00000278570	Goldmann-Favre syndrome,Retinitis pigmentosa
 ENSG00000280757	Facioscapulohumeral dystrophy
 ENSG00000281344	HELLP syndrome
-ENSG00000283122,Paternal uniparental disomy of chromosome 6,Transient neonatal diabetes mellitus
+ENSG00000283122,Paternal uniparental disomy of chromosome 6,Transient neonatal diabetes mellitus	
