@@ -538,13 +538,12 @@ merge_reports <- function(family, samples){
 }
 
 annotate_w_care4rare <- function(family, samples){
-    variants <- read.csv(paste0(family, ".merge_reports.csv"), stringsAsFactors = F)
+    variants <- read_csv(paste0(family, ".merge_reports.csv"), col_types = cols(.default="c"))
   
     variants$superindex <- with(variants, paste(Position, Ref, Alt, sep='-'))
     
     if(exists("seen_in_c4r_counts")){
-        variants <- merge(variants, seen_in_c4r_counts, by.x = "superindex", 
-                          by.y = "Position.Ref.Alt", all.x = T)
+        variants <- left_join(variants, seen_in_c4r_counts, by = c("superindex" = "Position-Ref-Alt"))
         variants$Frequency_in_C4R <- variants$Frequency
         variants$Frequency <- NULL
     }
@@ -552,8 +551,7 @@ annotate_w_care4rare <- function(family, samples){
     variants$Frequency_in_C4R[is.na(variants$Frequency_in_C4R)] <- 0
     
     if(exists("seen_in_c4r_samples")){
-        variants <- merge(variants,seen_in_c4r_samples,by.x = "superindex", 
-                          by.y = "Position.Ref.Alt", all.x = T)
+        variants <- left_join(variants, seen_in_c4r_samples, by = c("superindex" = "Position-Ref-Alt"))
         variants$Seen_in_C4R_samples <- variants$Samples
     }
     
@@ -564,15 +562,13 @@ annotate_w_care4rare <- function(family, samples){
         variants$HGMD_id <- NULL
         variants$HGMD_ref <- NULL
         variants$HGMD_tag <- NULL
-        variants <- merge(variants, hgmd, by.x = "superindex", 
-                          by.y = "superindex", all.x = T, all.y = F)
+        variants <- left_join(variants, hgmd, by = c("superindex" = "superindex"))
         variants$HGMD_gene <- NULL
         
-        hgmd.genes <- as.data.frame(unique(sort(hgmd$HGMD_gene)))
+        hgmd.genes <- tibble(unique(sort(hgmd$HGMD_gene)))
         hgmd.genes <- cbind(hgmd.genes, hgmd.genes)
         colnames(hgmd.genes) <- c("index", "HGMD_gene")
-        variants <- merge(variants, hgmd.genes, by.x = "Gene", by.y = "index",
-                          all.x = T, all.y = F)
+        variants <- left_join(variants, hgmd.genes, by = c("Gene" = "index"))
     }
     
     select_and_write2(variants, samples, paste0(family, ".wes.", Sys.Date()))
@@ -598,6 +594,7 @@ load_tables <- function(debug = F){
         seen_in_c4r_samples <<- read_delim(seen_in_c4r_samples.txt, delim = "\t")
     }else print("No C4R samples found")
     
+    # check hgmd parsing!
     if (file.exists(hgmd.csv)){
         hgmd <<- read_csv(hgmd.csv, 
                          col_names = c("chrom", "pos", "HGMD_id", "ref", "alt", "HGMD_gene",
