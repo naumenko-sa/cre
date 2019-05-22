@@ -625,36 +625,32 @@ load_tables <- function(debug = F){
 # creates clinical report - more conservative filtering and less columns
 clinical_report <- function(project, samples){
     report_file_name <- paste0(project,".wes.",Sys.Date(),".csv")
-    
-    full_report <- read_csv(report_file_name)
+    full_report <- read_csv(report_file_name, col_types = cols(.default = "c"))
     #full_report <- mutate(full_report, max_alt = max(get(paste0("Alt_depths.", samples))))
     full_report$max_alt <- with(full_report, pmax(get(paste0("Alt_depths.", samples))))
     
-    filtered_report <- subset(full_report, 
-               Quality > 1000 & Gnomad_af_popmax < 0.005 & Frequency_in_C4R < 6 & max_alt >=20,
-               select = c("Position", "GNOMAD_Link", "Ref", "Alt", "Gene", paste0("Zygosity.", samples), 
-                          paste0("Burden.",samples),
-                        "Variation", "Info", "Refseq_change", "Omim_gene_description", "Omim_inheritance",
-                        "Orphanet", "Clinvar", "Frequency_in_C4R",
-                        "Gnomad_af_popmax", "Gnomad_af", "Gnomad_ac", "Gnomad_hom",
-                        "Sift_score", "Polyphen_score", "Cadd_score", "Vest3_score", "Revel_score",
-                        "Imprinting_status", "Pseudoautosomal")
-               )
+    # no burden
+    filtered_report <- full_report %>% filter (Quality > 1000 & Gnomad_af_popmax < 0.005 & Frequency_in_C4R < 6 & max_alt >=20) %>% 
+               select(Position, GNOMAD_Link, Ref, Alt, Gene, one_of(paste0("Zygosity.", samples)),
+                          Variation, Info, Refseq_change, Omim_gene_description, 
+                      Omim_inheritance, Orphanet, Clinvar, Frequency_in_C4R, Gnomad_af_popmax, 
+                      Gnomad_af, Gnomad_ac, Gnomad_hom, Sift_score, Polyphen_score, Cadd_score, 
+                      Vest3_score, Revel_score, Imprinting_status, Pseudoautosomal)
     
     # recalculate burden using the filtered report
     for(sample in samples){
         zygosity_column_name <- paste0("Zygosity.", sample)
         burden_column_name <- paste0("Burden.", sample)
-        t <- subset(filtered_report, 
-                    get(zygosity_column_name) == 'Hom' | get(zygosity_column_name) == 'Het',
-                    select = c("Gene", zygosity_column_name))
-        # count is from plyr
-        df_burden <- count(t, "Gene")    
-        colnames(df_burden)[2] <- burden_column_name
-        filtered_report[,burden_column_name] <- NULL
-        filtered_report <- merge(filtered_report, df_burden, all.x = T)
-        filtered_report[,burden_column_name][is.na(filtered_report[, burden_column_name])] <- 0
-        filtered_report[,burden_column_name][is.na(filtered_report$Gene)] <-0
+        # calculating Burden using gene rather then Ensembl_gene_id - request from Matt
+        burden <- filtered_report %>% 
+            filter(pull(filtered_report, zygosity_column_name) == 'Hom' | pull(filtered_report, zygosity_column_name) == 'Het') %>% 
+            dplyr::select(Gene) %>% 
+            group_by(Gene) %>% summarise(!!burden_column_name := n()) %>% filter(!is.na(Gene))
+        
+        filtered_report <- filtered_report %>% left_join(burden, by = c("Gene" = "Gene"))
+        
+        filtered_report <- filtered_report %>% mutate(!!burden_column_name := replace_na(pull(filtered_report, burden_column_name), 0))
+        filtered_report$Gene <- filtered_report$Gene %>% replace_na("0")
     }
     
     #order columns
@@ -666,7 +662,7 @@ clinical_report <- function(project, samples){
       "Sift_score", "Polyphen_score", "Cadd_score", "Vest3_score", "Revel_score",
       "Imprinting_status", "Pseudoautosomal")]
 
-    write.csv(filtered_report, paste0(project, ".wes.clinical.", Sys.Date(), ".csv"), row.names = F)
+    write_excel_csv(filtered_report, paste0(project, ".wes.clinical.", Sys.Date(), ".csv"))
 }
 
 library(tidyverse)
@@ -679,7 +675,7 @@ family <- args[1]
 
 coding <- if(is.null(args[2])) T else F
 
-debug <- T
+debug <- F
 
 setwd(family)
 
