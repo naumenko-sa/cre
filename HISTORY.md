@@ -1,3 +1,6 @@
+## 0.0.2 (21 May 2019)
+- bug fixes, WES report generated for NA12878 looks ok
+
 ## 0.0.1 (15 May 2019)
 - initial release, compatible with bcbio_1.1.5 and gnomad2.1
 
