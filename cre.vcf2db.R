@@ -38,7 +38,13 @@ create_report <- function(family, samples){
     variants <- read_delim(file, delim = "\t", col_types = cols(.default = "c"))
     
     impact_file <- paste0(family, ".variant_impacts.txt")
-    impacts <- read_delim(impact_file, delim = "\t")
+    impacts <- read_delim(impact_file, delim = "\t", col_types = cols(.default = "c"))
+    
+    variants$Ensembl_gene_id <- NULL
+    genes_transcripts <- read_csv("~/cre/data/genes.transcripts.ens_only.csv") %>% 
+        select(-external_gene_name)
+    
+    variants <- variants %>% left_join(genes_transcripts, by = c("Ensembl_transcript_id" = "Ensembl_transcript_id"))
     
     #Column1 - Position
     variants <- variants %>% mutate(Position = paste(Chrom, Pos, sep = ':'))
@@ -59,7 +65,7 @@ create_report <- function(family, samples){
     # Columns 4,5: Ref,Alt
 
     # Column6 - Gene
-    variants$Gene[variants$Gene == ""] <- "NA"
+    variants$Gene[variants$Gene == ""] <- NA
     
     # Column 6 - Zygosity, 
     # column 8 - Burden
@@ -84,7 +90,7 @@ create_report <- function(family, samples){
         variants <- variants %>% left_join(burden, by = c("Gene" = "Gene"))
         
         variants <- variants %>% mutate(!!burden_column_name := replace_na(pull(variants, burden_column_name), 0))
-        variants$Gene <- replace_na("0")
+        variants$Gene <- variants$Gene %>% replace_na("0")
     }
     
     # Column9 = gts
@@ -95,7 +101,7 @@ create_report <- function(family, samples){
     variants <- add_column(variants, Info = rep("Info", nrow(variants)))
     for (i in 1:nrow(variants)){
         # debug: 
-        # i=1
+        # i=3
         v_id <- pull(variants, Variant_id)[i]
         gene <- variants[i, "Gene"]
         # for WES reports we need only coding impacts in the info field, for WGS we need all
@@ -109,7 +115,18 @@ create_report <- function(family, samples){
             v_impacts <- paste0(coding_impacts$gene, ":exon", coding_impacts$exon,
                                 ":", coding_impacts$hgvsc, ":", coding_impacts$hgvsp)
             s_impacts <- paste(v_impacts, collapse = ",")
-        }else s_impacts <- NA
+        }else{
+            highmed_impacts <- impacts %>% 
+                filter(variant_id == v_id, impact_severity %in% c("HIGH", "MED")) %>% 
+                select(gene, hgvsc, spliceregion)
+            if (nrow(highmed_impacts > 0)){
+                v_impacts <- paste0(highmed_impacts$gene, ":", highmed_impacts$hgvsc, ":", 
+                                highmed_impacts$spliceregion)
+                s_impacts <- paste(v_impacts, collapse = ",")
+            }
+            else
+                s_impacts <- NA
+        }
         variants[i, "Info"] <- s_impacts
     }
     
@@ -147,15 +164,15 @@ create_report <- function(family, samples){
 
     # Column18 = Gene_description
     gene_descriptions <- read_csv(paste0(default_tables_path, "/ensembl_genes_w_description.csv"))
-    variants <- left_join(variants, gene_descriptions, by = c("Ensembl_gene_id" = "ensembl_gene_id"))
-    
+    variants <- left_join(variants, gene_descriptions, by = c("Ensembl_gene_id" = "ensembl_gene_id")) %>% 
+        rename(Gene_description = gene_description)
     # Column19 - Omim_gene_description
     omim_file_name <- paste0(default_tables_path,"/omim.txt")
     
     if (file.exists(omim_file_name)){
 	    omim <- read_tsv(omim_file_name)
 	    variants <- variants %>% left_join(omim, by = c("Ensembl_gene_id" = "Ensembl_gene_id"))
-	    variants$Omim_gene_description <- replace_na(0)
+	    variants$Omim_gene_description <- variants$Omim_gene_description %>% replace_na(0)
     }
         
     # Column20 - Omim_inheritance 
@@ -173,7 +190,7 @@ create_report <- function(family, samples){
     if (file.exists(orphanet_file_name)){
 	    orphanet <- read_csv(orphanet_file_name)
 	    variants <- variants %>% left_join(orphanet, by = c("Ensembl_gene_id" = "Ensembl_gene_id"))
-	    variants$Orphanet <- replace_na(0)
+	    variants$Orphanet <- variants$Orphanet %>% replace_na(0)
     }
     
     # Column 22 - Clinvar
@@ -662,7 +679,7 @@ family <- args[1]
 
 coding <- if(is.null(args[2])) T else F
 
-debug <- F
+debug <- T
 
 setwd(family)
 
