@@ -1,3 +1,6 @@
+## 0.0.4 (23 May 2019)
+- fixed a bug in clinvar column
+
 ## 0.0.3 (21 May 2019)
 - bug fixes, WES report generated for NA12878 looks ok
 

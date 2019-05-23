@@ -34,7 +34,7 @@ which bcbio_nextgen.py
 ######################################################################
 # 4. Install indices
 # bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners bwa --cores 10
-bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners star --cores 10
+# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners star --cores 10
 # bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners hisat2 --cores 10
 # bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners rtg --cores 10
 #########################################################################
@@ -70,7 +70,7 @@ bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners star --cores 10
 # bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget dbnsfp
 
 # rnaseq
-bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget rnaseq
+# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget rnaseq
 
 ######################################################################
 # fresh installation for Sam with human and mouse genome

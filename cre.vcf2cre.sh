@@ -25,6 +25,8 @@
 ##INFO=<ID=DP,Number=1,Type=Integer,Description="Approximate read depth; some reads may have been filtered">
 # gunzip -c 331606_S1.flt.nochr.vcf.gz | grep -v "^#"  | grep PASS | sed s/":DPI:"/":DP:"awk -F ':' '{print $0"\tDP="$9}' | awk -F "\t" '{print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$11";"$8"\t"$9"\t"$10}' >> 331606.vcf
 
+. /hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/.test_profile
+
 bname=`basename $original_vcf .vcf.gz`
 
 echo "###############################################"

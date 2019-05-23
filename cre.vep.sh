@@ -20,6 +20,8 @@ then
     threads=5
 fi
 
+. /hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/.test_profile
+
 bname=`basename $vcf .vcf.gz`
 
 #find reference
@@ -38,14 +40,12 @@ echo "Threads:" $threads
 #    --plugin SpliceRegion --sift b --polyphen b --hgvs --shift_hgvs 1 --merged \
 #    | sed '/^#/! s/;;/;/g' | bgzip -c > $bname.vepeffects.vcf.gz
 
-unset PERL5LIB && export PATH=/hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/anaconda/bin:"$PATH" && \
-    /hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/anaconda/bin/vep --vcf -o stdout \
+unset PERL5LIB && vep --vcf -o stdout \
     -i $vcf --fork $threads --species homo_sapiens --no_stats --cache --offline --dir ${reference}/vep --symbol --numbers --biotype --total_length \
     --canonical --gene_phenotype --ccds --uniprot --domains --regulatory --protein --tsl --appris --af --max_af --af_1kg --af_esp --af_gnomad --pubmed --variant_class \
     --allele_number \
     --fasta ${reference}/seq/GRCh37.fq.gz \
     --plugin LoF,human_ancestor_fa:${reference}/human_ancestor.fa.gz,loftee_path:$vep_reference \
-    --plugin G2P,file:/hpf/largeprojects/ccmbio/naumenko/validation/test_bcbio_runs/WES/variation/G2P.csv \
     --plugin MaxEntScan,/hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/anaconda/share/maxentscan-0_2004.04.21-1 \
     --plugin SpliceRegion --sift b --polyphen b --hgvsg --hgvs --shift_hgvs 1 --merged \
     | sed '/^#/! s/;;/;/g' | bgzip -c > $bname.vepeffects.vcf.gz
