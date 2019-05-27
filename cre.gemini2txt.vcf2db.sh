@@ -4,7 +4,7 @@
 #  when using v.chr = g.chr AND v.gene = g.gene it becomes very slow
 #  by default bcbio writes PASS only variants to the database
 
-#  example call: cre.gemini2txt.sh S28-ensemble.db 5 ALL
+#  example call: cre.gemini2txt.sh S28-ensemble.db 5 ALL 0.01
 #  when using vcfanno/vcfdb loader some fields are different
 #  for some reason \n in the query string does not work here
 

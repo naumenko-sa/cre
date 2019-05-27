@@ -23,17 +23,18 @@ date
 # create a .test_profile:
 # export PATH=$HOME/cre:$HOME/crt:$HOME/crg:/hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/anaconda/bin:$HOME/tools/mc-4.8.16/bin:$HOME/jkent_tools:$HOME/bioscripts:.:/usr/local/bin:/opt/moab/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin
 # export PYTHONPATH=/hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/anaconda/lib/python3.6
-. /hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/.test_profile
+. /hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/.profile115
 which python
 echo $PYTHONPATH
 ######################################################################
 # 3. Upgrade tools. If tooldir was set before, no need to specify it again
 which bcbio_nextgen.py
-# bcbio_nextgen.py upgrade -u skip --tools 
+bcbio_nextgen.py upgrade -u skip --tools
 #--tooldir $1
 ######################################################################
 # 4. Install indices
-# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners bwa --cores 10
+# genomes = {GRCh37, hg38}
+# bcbio_nextgen.py upgrade -u skip --genomes hg38 --aligners bwa --cores 10
 # bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners star --cores 10
 # bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners hisat2 --cores 10
 # bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --aligners rtg --cores 10
@@ -49,7 +50,7 @@ which bcbio_nextgen.py
 # 1.1.5 - a huge update to python3, installed from scratch
 
 # upgrades data installed before (gemini, cadd) for all references
-# bcbio_nextgen.py upgrade --data
+bcbio_nextgen.py upgrade --data --genomes GRCh37
 
 # VEP is upgraded quite often ~2-3 months - when upgrading tools it looks for new VEP cache
 # bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget vep
