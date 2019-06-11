@@ -33,7 +33,7 @@ then
     project=$1
 fi
 
-. /hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/.test_profile
+. /hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/.profile115
 echo "Using test bcbio instance"
 which bcbio_nextgen.py
 bcbio_nextgen.py --version
