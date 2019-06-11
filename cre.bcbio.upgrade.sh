@@ -29,7 +29,7 @@ echo $PYTHONPATH
 ######################################################################
 # 3. Upgrade tools. If tooldir was set before, no need to specify it again
 which bcbio_nextgen.py
-bcbio_nextgen.py upgrade -u skip --tools
+# bcbio_nextgen.py upgrade -u skip --tools
 #--tooldir $1
 ######################################################################
 # 4. Install indices
@@ -50,7 +50,7 @@ bcbio_nextgen.py upgrade -u skip --tools
 # 1.1.5 - a huge update to python3, installed from scratch
 
 # upgrades data installed before (gemini, cadd) for all references
-bcbio_nextgen.py upgrade --data --genomes GRCh37
+# bcbio_nextgen.py upgrade --data --genomes GRCh37
 
 # VEP is upgraded quite often ~2-3 months - when upgrading tools it looks for new VEP cache
 # bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget vep
@@ -71,7 +71,7 @@ bcbio_nextgen.py upgrade --data --genomes GRCh37
 # bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget dbnsfp
 
 # rnaseq
-# bcbio_nextgen.py upgrade -u skip --genomes GRCh37 --datatarget rnaseq
+bcbio_nextgen.py upgrade -u skip --genomes hg38 --datatarget rnaseq
 
 ######################################################################
 # fresh installation for Sam with human and mouse genome
