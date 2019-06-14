@@ -468,12 +468,13 @@ merge_reports <- function(family, samples){
     platypus_file <- paste0(family, "-platypus-annotated-decomposed.table")
     if(file.exists(platypus_file)){
         platypus <- read.delim(platypus_file, stringsAsFactors = F)
-        platypus$superindex <- with(platypus, paste(paste0(CHROM,":",POS), REF, ALT, sep = '-'))
-        platypus[c("CHROM", "POS", "REF", "ALT")] <- NULL
-        ensemble <- merge(ensemble, platypus, by.x = "superindex", by.y = "superindex", 
+        if (nrow(platypus) > 0){
+            platypus$superindex <- with(platypus, paste(paste0(CHROM,":",POS), REF, ALT, sep = '-'))
+    	    platypus[c("CHROM", "POS", "REF", "ALT")] <- NULL
+    	    ensemble <- merge(ensemble, platypus, by.x = "superindex", by.y = "superindex", 
                           all.x = T, all.y = F)
     
-        for (i in 1:nrow(ensemble)){
+	    for (i in 1:nrow(ensemble)){
           #if(grepl("NA",ensemble[i,"Trio_coverage"])) - wrong, may be 10/10/NA in gatk
           #if (ensemble[i,"Trio_coverage"]=="NA/NA/NA")
             if (str_count(ensemble[i,"Trio_coverage"],"NA") == length(samples)){
@@ -503,6 +504,7 @@ merge_reports <- function(family, samples){
                     n_sample <- n_sample + 1
                 }
           }
+        }
       }
     
       for (sample in samples){
