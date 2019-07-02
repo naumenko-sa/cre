@@ -102,6 +102,16 @@ Current directory should have a list of projects in projects.txt.
   * gets coverage from GATK Haplotype calls, freebayes, and platypus
   * build excel report based on gemini variants table, variant impacts, coverage information and some other fields.
 
+# 5a. QC checks
+ * Check the variant count for each sample in project and compare it to historical data.
+ * If the variant counts are not in the "normal" range - run the coverage report to check for any coverage related issues using the command below
+ 
+ `qsub ~/bioscripts/scripts/bam.coverage.sh -v bam=[bam_file],bed=[path to exome bed file]`
+ 
+ * Generate coverage report for every abormal sample in the project using the command above.
+ * Report any sample with abnormal coverage.
+ * In addition to the coverage reports, one can also check multiqc for tr/tv ratio, raw sequence quality etc, and/or run relatedness checks for some families.
+ 
 # 6. Step 5 in detail
 
 6.1 [Report description](https://docs.google.com/document/d/1zL4QoINtkUd15a0AK4WzxXoTWp2MRcuQ9l_P9-xSlS4/edit?usp=sharing).\
