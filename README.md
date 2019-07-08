@@ -74,7 +74,7 @@ we can discover a useful non-coding variant. No sense to filter them out during 
 * use basespace-cli to dump bcl files to HPC, then do 1b.
 
 ## 3b. Input is Illumina run (bcl files).
-* create a sample sheet and run [bcl2fq.sh](../master/bcl2fq.sh).
+* create a sample sheet and run [bcl2fq.sh](../master/bcl2fq.sh). For Agilent barcodes look at the [last table](https://www.agilent.com/cs/library/usermanuals/Public/G7530-90000.pdf).
 
 ## 3c. Input is cram file.
 * Run [cram2fq.sh](../master/cram2.fq). 
