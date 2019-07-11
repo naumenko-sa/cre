@@ -119,7 +119,7 @@ create_report <- function(family, samples){
             highmed_impacts <- impacts %>% 
                 filter(variant_id == v_id, impact_severity %in% c("HIGH", "MED")) %>% 
                 select(gene, hgvsc, spliceregion)
-            if (nrow(highmed_impacts > 0)){
+            if (nrow(highmed_impacts) > 0){
                 v_impacts <- paste0(highmed_impacts$gene, ":", highmed_impacts$hgvsc, ":", 
                                 highmed_impacts$spliceregion)
                 s_impacts <- paste(v_impacts, collapse = ",")
