@@ -5,7 +5,7 @@
 # variant_report.csv is the output of cre has Ensembl_gene_id, 
 # panel.csv = gene panel with ensembl_gene_id column
 filter_variants <- function(variant_report.csv, panel.csv, output.csv){
-    variants <- read.csv(variant_report.csv, stringsAsFactors = F)    
+    variants <- read.csv(variant_report.csv, stringsAsFactors = F)
     panel <- read.csv(panel.csv, stringsAsFactors = F)
     variants.panel <- variants[variants$Ensembl_gene_id %in% panel$ensembl_gene_id,]
     write.csv(variants.panel, output.csv, row.names = F)
@@ -36,8 +36,8 @@ filter_variants_genomics_england_panel <- function(variant_report.csv, panel.tsv
 
 args = commandArgs(trailingOnly = T)
 
-if (is.null(args[4])){
-    filter_variants(args[1], args[2], args[3])
-}else{
-    filter_variants_genomics_england_panel(args[1], args[2], args[3])
-}
+#if (is.null(args[4])){
+filter_variants(args[1], args[2], args[3])
+#}else{
+#    filter_variants_genomics_england_panel(args[1], args[2], args[3])
+#}
