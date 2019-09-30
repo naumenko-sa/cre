@@ -20,7 +20,7 @@ then
     threads=5
 fi
 
-. /hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/.test_profile
+. /hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/.profile115
 
 bname=`basename $vcf .vcf.gz`
 
@@ -44,7 +44,7 @@ unset PERL5LIB && vep --vcf -o stdout \
     -i $vcf --fork $threads --species homo_sapiens --no_stats --cache --offline --dir ${reference}/vep --symbol --numbers --biotype --total_length \
     --canonical --gene_phenotype --ccds --uniprot --domains --regulatory --protein --tsl --appris --af --max_af --af_1kg --af_esp --af_gnomad --pubmed --variant_class \
     --allele_number \
-    --fasta ${reference}/seq/GRCh37.fq.gz \
+    --fasta ${reference}/seq/GRCh37.fa.gz \
     --plugin LoF,human_ancestor_fa:${reference}/human_ancestor.fa.gz,loftee_path:$vep_reference \
     --plugin MaxEntScan,/hpf/largeprojects/ccmbio/naumenko/tools/bcbio_1.1.5/anaconda/share/maxentscan-0_2004.04.21-1 \
     --plugin SpliceRegion --sift b --polyphen b --hgvsg --hgvs --shift_hgvs 1 --merged \

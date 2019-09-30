@@ -207,7 +207,8 @@ function f_make_report
         vcf.gatk.get_depth.sh $fprefix.subset.vcf.gz $reference
     fi
 
-    #gemini.decompose.sh ${family}-platypus.vcf.gz
+    # gemini.decompose.sh ${family}-platypus.vcf.gz
+    # there might a case when platypus subset vcf is empty
     fprefix=${family}-platypus-annotated-decomposed
     if [ -f $fprefix.vcf.gz ]
     then
