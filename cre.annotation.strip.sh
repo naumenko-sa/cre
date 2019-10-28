@@ -1,16 +1,18 @@
 #!/bin/bash
 
+# also vt rminfo but it requires exact case matching
+
 bname=`basename $1 .vcf.gz`
-vt rminfo -t CSQ,ANN,af_adj_exac_afr,af_adj_exac_amr,af_adj_exac_eas,af_adj_exac_fin,af_adj_exac_nfe,af_adj_exac_oth,af_adj_exac_sas,\
-af_exac_all,ac_exac_all,an_exac_all,ac_adj_exac_afr,an_adj_exac_afr,ac_adj_exac_amr,an_adj_exac_amr,ac_adj_exac_eas,an_adj_exac_eas,\
-ac_adj_exac_fin,an_adj_exac_fin,ac_adj_exac_nfe,an_adj_exac_nfe,ac_adj_exac_oth,an_adj_exac_oth,ac_adj_exac_sas,an_adj_exac_sas,\
-common_pathogenic,max_aaf_all,num_exac_Het,num_exac_Hom,rs_ids,af_1kg_amr,af_1kg_eas,af_1kg_sas,af_1kg_afr,af_1kg_eur,af_1kg_all,
-fitcons,encode_consensus_gm12878,encode_consensus_h1hesc,encode_consensus_helas3,encode_consensus_hepg2,encode_consensus_huvec,\
-encode_consensus_k562,dgv,hapmap1,hapmap2,gnomAD_AF,gnomAD_AFR_AF,gnomAD_AMR_AF,gnomAD_ASJ_AF,gnomAD_EAS_AF,gnomAD_FIN_AF,\
-gnomAD_NFE_AF,gnomAD_OTH_AF,gnomad_ac_es,gnomad_hom_es,gnomad_af_es,gnomad_an_es,gnomad_ac_gs,gnomad_hom_gs,gnomad_af_gs,\
-gnomad_an_gs,gnomad_ac,gnomad_af_popmax,gnomad_an,gnomad_af,clinvar_pathogenic,clinvar_sig,CADD_phred,phyloP20way_mammalian,\
-phastCons20way_mammalian,Vest3_score,Revel_score,Gerp_score,vcfanno_gnomad_ac_es,vcfanno_gnomad_hom_es,vcfanno_gnomad_af_es,\
-vcfanno_gnomad_an_es,vcfanno_gnomad_ac_gs,vcfanno_gnomad_hom_gs,vcfanno_gnomad_af_gs,vcfanno_gnomad_an_gs,vcfanno_gnomad_ac,\
-vcfanno_gnomad_af_popmax,vcfanno_gnomad_an,vcfanno_gnomad_af,gnomad_gc,gnomad_gc_female,gnomad_gc_male
+bcftools annotate -x  INFO/CSQ,INFO/ANN,INFO/af_adj_exac_afr,INFO/af_adj_exac_amr,INFO/af_adj_exac_eas,INFO/af_adj_exac_fin,INFO/af_adj_exac_nfe,INFO/af_adj_exac_oth,INFO/af_adj_exac_sas,\
+INFO/af_exac_all,INFO/ac_exac_all,INFO/an_exac_all,INFO/ac_adj_exac_afr,INFO/an_adj_exac_afr,INFO/ac_adj_exac_amr,INFO/an_adj_exac_amr,INFO/ac_adj_exac_eas,INFO/an_adj_exac_eas,\
+INFO/ac_adj_exac_fin,INFO/an_adj_exac_fin,INFO/ac_adj_exac_nfe,INFO/an_adj_exac_nfe,INFO/ac_adj_exac_oth,INFO/an_adj_exac_oth,INFO/ac_adj_exac_sas,INFO/an_adj_exac_sas,\
+INFO/common_pathogenic,INFO/max_aaf_all,INFO/num_exac_Het,INFO/num_exac_Hom,INFO/rs_ids,INFO/af_1kg_amr,INFO/af_1kg_eas,INFO/af_1kg_sas,INFO/af_1kg_afr,INFO/af_1kg_eur,INFO/af_1kg_all,
+INFO/fitcons,INFO/encode_consensus_gm12878,INFO/encode_consensus_h1hesc,INFO/encode_consensus_helas3,INFO/encode_consensus_hepg2,INFO/encode_consensus_huvec,\
+INFO/encode_consensus_k562,INFO/dgv,INFO/hapmap1,INFO/hapmap2,INFO/gnomAD_AF,INFO/gnomAD_AFR_AF,INFO/gnomAD_AMR_AF,INFO/gnomAD_ASJ_AF,INFO/gnomAD_EAS_AF,INFO/gnomAD_FIN_AF,\
+INFO/gnomAD_NFE_AF,INFO/gnomAD_OTH_AF,INFO/gnomad_ac_es,INFO/gnomad_hom_es,INFO/gnomad_af_es,INFO/gnomad_an_es,INFO/gnomad_ac_gs,INFO/gnomad_hom_gs,INFO/gnomad_af_gs,\
+INFO/gnomad_an_gs,INFO/gnomad_ac,INFO/gnomad_af_popmax,INFO/gnomad_an,INFO/gnomad_af,INFO/clinvar_pathogenic,INFO/clinvar_sig,INFO/CADD_phred,INFO/phyloP20way_mammalian,\
+INFO/phastCons20way_mammalian,INFO/Vest3_score,INFO/Revel_score,INFO/Gerp_score,INFO/vcfanno_gnomad_ac_es,INFO/vcfanno_gnomad_hom_es,INFO/vcfanno_gnomad_af_es,\
+INFO/vcfanno_gnomad_an_es,INFO/vcfanno_gnomad_ac_gs,INFO/vcfanno_gnomad_hom_gs,INFO/vcfanno_gnomad_af_gs,INFO/vcfanno_gnomad_an_gs,INFO/vcfanno_gnomad_ac,\
+INFO/vcfanno_gnomad_af_popmax,INFO/vcfanno_gnomad_an,INFO/vcfanno_gnomad_af,INFO/gnomad_gc,INFO/gnomad_gc_female,INFO/gnomad_gc_male
 	     $1 -o $bname.no_anno.vcf.gz
 tabix $bname.no_anno.vcf.gz
