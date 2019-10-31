@@ -15,6 +15,6 @@ INFO/gnomad_an_gs,INFO/gnomad_ac,INFO/gnomad_af_popmax,INFO/gnomad_an,INFO/gnoma
 INFO/phastCons20way_mammalian,INFO/Vest3_score,INFO/Revel_score,INFO/Gerp_score,INFO/vcfanno_gnomad_ac_es,INFO/vcfanno_gnomad_hom_es,INFO/vcfanno_gnomad_af_es,\
 INFO/vcfanno_gnomad_an_es,INFO/vcfanno_gnomad_ac_gs,INFO/vcfanno_gnomad_hom_gs,INFO/vcfanno_gnomad_af_gs,INFO/vcfanno_gnomad_an_gs,INFO/vcfanno_gnomad_ac,\
 INFO/vcfanno_gnomad_af_popmax,INFO/vcfanno_gnomad_an,INFO/vcfanno_gnomad_af,INFO/gnomad_gc,INFO/gnomad_gc_female,INFO/gnomad_gc_male\
-	     $1 -o $bname.no_anno.vcf.gz
+	     $1 -o -Oz $bname.no_anno.vcf.gz
 
 tabix $bname.no_anno.vcf.gz
