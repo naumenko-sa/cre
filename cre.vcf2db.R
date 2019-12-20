@@ -112,7 +112,7 @@ create_report <- function(family, samples){
                     get(zygocity_column_name) == 'Hom' | get(zygocity_column_name) == 'Het',
                     select = c("Gene", zygocity_column_name))
         # counts from plyr
-        df_burden <- count(t, "Gene")    
+        df_burden <- plyr::count(t, "Gene")    
         colnames(df_burden)[2] <- burden_column_name
         variants <- merge(variants, df_burden, all.x = T)
         variants[,burden_column_name][is.na(variants[,burden_column_name])] <- 0
@@ -139,8 +139,8 @@ create_report <- function(family, samples){
                                    select = c("exon", "hgvsc", "hgvsp"))
         }
         
-        gene_impacts$gene <- rep(gene, nrow(gene_impacts))
-        
+    gene_impacts$gene <- rep(gene, nrow(gene_impacts))
+    
         gene_impacts$exon[gene_impacts$exon==''] <- 'NA'
         
         gene_impacts <- gene_impacts[c("gene", "exon", "hgvsc", "hgvsp")]
@@ -199,21 +199,30 @@ create_report <- function(family, samples){
                       by.y = "ensembl_gene_id", all.x = T)
     
     # Column19 - Omim_gene_description
-    omim_file_name <- paste0(default_tables_path,"/omim.txt")
-    
+    #TEJA's changes begin
+    #omim_file_name <- paste0(default_tables_path,"/omim.txt")
+    omim_file_name <- paste0(default_tables_path,"/omim.gene.desc.csv")
     if (file.exists(omim_file_name)){
-	    omim <- read.delim2(omim_file_name, stringsAsFactors=F)
-	    variants <- merge(variants, omim, all.x=T)
-	    variants$Omim_gene_description[is.na(variants$Omim_gene_description)] <- 0
+	    #omim <- read.delim2(omim_file_name, stringsAsFactors=F)
+	    #variants <- merge(variants, omim, all.x=T)
+	    omim <- read.csv(omim_file_name, stringsAsFactors=F)
+        variants <- merge(variants, omim, by.x="Gene", by.y ="Gene_name", all.x=T)
+        variants <- merge(variants, omim, by.x="Ensembl_gene_id", by.y="ensembl_gene_id", all.x=T)
+        variants$Omim_gene_description <- coalesce(variants$Omim_gene_description.x, variants$Omim_gene_description.y)
+        variants$Omim_gene_description[is.na(variants$Omim_gene_description)] <- 0
     }
         
     # Column20 - Omim_inheritance 
-    omim_inheritance_file_name <- paste0(default_tables_path,"/omim.inheritance.csv")        
-    
+    #omim_inheritance_file_name <- paste0(default_tables_path,"/omim.inheritance.csv")        
+    omim_inheritance_file_name <- paste0(default_tables_path,"/omim.gene.inherit.csv")
     if (file.exists(omim_inheritance_file_name)){
 	    omim_inheritance <- read.csv(omim_inheritance_file_name, stringsAsFactors = F)
-	    variants <- merge(variants, omim_inheritance, all.x = T)
+	    #variants <- merge(variants, omim_inheritance, all.x = T)
+        variants <- merge(variants, omim_inheritance, by.x="Gene", by.y ="Gene_name", all.x=T)
+        variants <- merge(variants, omim_inheritance, by.x="Ensembl_gene_id", by.y="ensembl_gene_id", all.x=T)
+        variants$Omim_inheritance <- coalesce(variants$Omim_inheritance.x, variants$Omim_inheritance.y) 
     }
+    #END OF TEJA's CHANGES
 
     # Column 21 = Orphanet
     # previous name - orphanet.deduplicated.txt
@@ -519,7 +528,9 @@ merge_reports <- function(family, samples){
                     #sometimes freebayes has 10,10,10 for decomposed alleles
                     if (grepl(",", ensemble[i,field_bayes])){
                         ensemble[i,field_depth] <- strsplit(ensemble[i,field_bayes], ",", fixed = T)[[1]][1]
-                    }
+                    }else{ #teja
+                    ensemble[i, field_depth] <- ensemble[i, field_bayes]
+                    } #teja
                 }
                 n_sample <- 1
                 prefix <- ""
@@ -692,7 +703,7 @@ clinical_report <- function(project,samples){
                     get(zygosity_column_name) == 'Hom' | get(zygosity_column_name) == 'Het',
                     select = c("Gene", zygosity_column_name))
         # count is from plyr
-        df_burden <- count(t, "Gene")    
+        df_burden <- plyr::count(t, "Gene")    
         colnames(df_burden)[2] <- burden_column_name
         filtered_report[,burden_column_name] <- NULL
         filtered_report <- merge(filtered_report, df_burden, all.x = T)
@@ -715,6 +726,7 @@ clinical_report <- function(project,samples){
 library(stringr)
 library(data.table)
 library(plyr)
+library(dplyr)
 default_tables_path <- "~/cre/data"
 c4r_database_path <- "/hpf/largeprojects/ccm_dccforge/dccforge/results/database"
 

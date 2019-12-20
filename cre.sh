@@ -15,7 +15,7 @@
 #PBS -l walltime=20:00:00,nodes=1:ppn=1
 #PBS -joe .
 #PBS -d .
-#PBS -l vmem=20g,mem=20g
+#PBS -l vmem=40g,mem=40g
 
 # cleanup is different for wes.fast template - don't remove gatk db
 function f_cleanup
@@ -136,7 +136,7 @@ function f_make_report
 	   export depth_threshold=10
     fi
 
-    if [ "$type" == "wgs" ] || [ "$type" == "rnaseq" ] || [ "$type" == "denovo" ]
+    if [ "$type" == "wgs" ] || [ "$type" == "rnaseq" ] || [ "$type" == "denovo" ] || [ "$type" == "wes.all" ]
     then
 	   export severity_filter=ALL
     elif [ "$type" == "wes.synonymous" ]

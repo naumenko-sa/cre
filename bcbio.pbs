@@ -14,7 +14,7 @@
 #PBS -l walltime=240:00:00,nodes=1:ppn=7
 #PBS -joe .
 #PBS -d .
-#PBS -l vmem=50g,mem=50g
+#PBS -l vmem=70g,mem=70g
 
 echo "STARTED: " `date`
 #nodes node* are cloud nodes and ra/rb are real nodes

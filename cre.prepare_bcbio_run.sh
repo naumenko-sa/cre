@@ -1,6 +1,8 @@
 #!/bin/bash
 
+
 # prepares family for bcbio run when input files are family_sample.bam or family_sample_1/2.fq.gz
+
 family=$1
 
 # $2 = template type,

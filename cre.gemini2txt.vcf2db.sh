@@ -26,7 +26,7 @@ severity_threshold=$3
 
 max_af=$4
 
-gemini query -q "select name from samples" $file > samples.txt
+gemini query -q "select name from samples order by name" $file > samples.txt
 
 sQuery="select \
         chrom as Chrom,\
@@ -38,7 +38,7 @@ sQuery="select \
         dp as Depth,\
         qual as Quality,\
         gene as Gene,\
-        clinvar_sig as Clinvar,\
+        clinvar_pathogenic as Clinvar,\
         ensembl_gene_id as Ensembl_gene_id,\
         transcript as Ensembl_transcript_id,\
         aa_length as AA_position,\
