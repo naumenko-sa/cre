@@ -1,0 +1,247 @@
+﻿Gene,Imprinting_status,Imprinting_expressed_allele
+NDUFA4P1,Predicted,Paternal
+GFI1,Predicted,Paternal
+DIRAS3,Imprinted,Paternal
+FUCA1,Predicted,Paternal
+RNU5D-1,Imprinted,Paternal
+BMP8B,Predicted,Paternal
+DVL1,Predicted,Maternal
+TP73,Imprinted,Maternal
+WDR8,Predicted,Maternal
+RPL22,Predicted,Paternal
+PRDM16,Predicted,Paternal
+PEX10,Predicted,Maternal
+TMEM52,Predicted,Paternal
+HSPA6,Predicted,Maternal
+PTPN14,Predicted,Maternal
+OBSCN,Predicted,Paternal
+HIST3H2BB,Predicted,Maternal
+OR11L1,Predicted,Paternal
+LRRTM1,Imprinted,Paternal
+OTX1,Predicted,Maternal
+VAX2,Predicted,Maternal
+COMMD1,Not Imprinted,Biallelic
+CCDC85A,Predicted,Paternal
+CYP1B1,Predicted,Paternal
+ABCG8,Predicted,Maternal
+ZFP36L2,Predicted,Maternal
+GPR1,Imprinted,Paternal
+ZDBF2,Imprinted,Paternal
+TIGD1,Predicted,Paternal
+MYEOV2,Predicted,Paternal
+ALDH1L1,Predicted,Maternal
+ZIC1,Predicted,Maternal
+HES1,Predicted,Paternal
+FGFRL1,Predicted,Maternal
+KIAA1530,Predicted,Maternal
+SPON2,Predicted,Paternal
+NAP1L5,Imprinted,Paternal
+GAB1,Not Imprinted,Biallelic
+ADAMTS16,Predicted,Maternal
+CDH18,Predicted,Paternal
+CSF2,Predicted,Maternal
+VTRNA2-1,Imprinted,Paternal
+PRIM2,Conflicting Data,Biallelic
+BTNL2,Predicted,Maternal
+FAM50B,Imprinted,Paternal
+MRAP2,Predicted,Paternal
+C6orf117,Predicted,Paternal
+AIM1,Imprinted,Paternal
+LIN28B,Imprinted,Paternal
+PLAGL1,Imprinted,Paternal
+HYMAI,Imprinted,Paternal
+SLC22A2*,Imprinted,Maternal
+IGF2R,Conflicting Data,Biallelic
+SLC22A3*,Imprinted,Maternal
+BRP44L,Predicted,Paternal
+GRB10,Imprinted,Isoform Dependent
+DDC,Imprinted,Isoform Dependent
+GLI3,Predicted,Maternal
+HOXA5,Predicted,Maternal
+EVX1,Predicted,Paternal
+HOXA4,Predicted,Maternal
+HOXA2,Predicted,Maternal
+HOXA11,Predicted,Maternal
+HOXA3,Predicted,Maternal
+TMEM60,Predicted,Paternal
+MAGI2,Imprinted,Maternal
+PEG10,Imprinted,Paternal
+ASB4,Not Imprinted,Biallelic
+SGCE,Imprinted,Paternal
+CALCR,Provisional Data,Maternal
+PPP1R9A,Imprinted,Maternal
+PON1,Provisional Data,Maternal
+PON3,Not Imprinted,Biallelic
+PON2,Not Imprinted,Biallelic
+TFPI2,Imprinted,Maternal
+DLX5,Imprinted,Maternal
+CPA4,Imprinted,Maternal
+COPG2IT1,Imprinted,Paternal
+COPG2,Conflicting Data,Paternal
+MEST,Imprinted,Paternal
+MESTIT1,Imprinted,Paternal
+KLF14,Imprinted,Maternal
+FASTK,Predicted,Maternal
+SLC4A2,Predicted,Maternal
+PURG,Predicted,Paternal
+DLGAP2,Imprinted,Paternal
+NKAIN3,Predicted,Paternal
+LY6D,Predicted,Paternal
+GPT,Predicted,Maternal
+KCNK9,Imprinted,Maternal
+ZFAT-AS1,Imprinted,Paternal
+ZFAT,Imprinted,Paternal
+PEG13,Imprinted,Paternal
+GLIS3,Imprinted,Paternal
+APBA1,Predicted,Paternal
+C9orf85,Predicted,Paternal
+FLJ46321,Predicted,Maternal
+LMX1B,Predicted,Maternal
+C9orf116,Predicted,Paternal
+EGFL7,Predicted,Paternal
+PHPT1,Predicted,Maternal
+SFMBT2,Not Imprinted,Biallelic
+GATA3,Predicted,Paternal
+CTNNA3,Provisional Data,Maternal
+LDB1,Predicted,Maternal
+NKX6-2,Predicted,Maternal
+C10orf93,Predicted,Maternal
+VENTX,Predicted,Maternal
+PAOX,Predicted,Maternal
+C10orf91,Predicted,Maternal
+INPP5F V2,Imprinted,Paternal
+WT1-Alt trans,Imprinted,Paternal
+PKP3,Predicted,Maternal
+AMPD3,Not Imprinted,Biallelic
+KCNQ1OT1,Imprinted,Paternal
+OSBPL5,Imprinted,Maternal
+KCNQ1DN,Imprinted,Maternal
+ZNF215,Provisional Data,Maternal
+IGF2AS,Imprinted,Paternal
+B4GALNT4,Predicted,Maternal
+PHLDA2,Imprinted,Maternal
+NAP1L4,Unknown,Unknown
+TH,Unknown,Unknown
+TRPM5,Provisional Data,Paternal
+TSSC4,Not Imprinted,Biallelic
+TSPAN32,Not Imprinted,Biallelic
+IFITM1,Predicted,Maternal
+SLC22A18AS,Provisional Data,Maternal
+ASCL2,Not Imprinted,Biallelic
+H19,Imprinted,Maternal
+KCNQ1,Imprinted,Maternal
+IGF2,Imprinted,Paternal
+SLC22A18,Imprinted,Maternal
+INS,Imprinted,Paternal
+CD81,Not Imprinted,Biallelic
+CDKN1C,Imprinted,Maternal
+RAB1B,Predicted,Maternal
+ANO1,Imprinted,Maternal
+DHCR7,Not Imprinted,Biallelic
+ZC3H12C,Imprinted,Paternal
+KBTBD3,Predicted,Paternal
+SDHD,Conflicting Data,Paternal
+NTM,Imprinted,Maternal
+ABCC9,Predicted,Maternal
+RBP5,Imprinted,Maternal
+SLC26A10,Predicted,Maternal
+SLC38A4,Unknown,Unknown
+HOXC4,Predicted,Maternal
+HOXC9,Predicted,Maternal
+CDK4,Predicted,Maternal
+E2F7,Predicted,Maternal
+DCN,Unknown,Unknown
+FBRSL1,Predicted,Maternal
+KIAA1545,Predicted,Maternal
+HTR2A,Conflicting Data,Maternal
+RB1,Imprinted,Maternal
+FLJ40296,Predicted,Maternal
+FAM70B,Predicted,Maternal
+FOXG1,Predicted,Paternal
+FERMT2,Predicted,Paternal
+MEG3,Imprinted,Maternal
+DLK1,Imprinted,Paternal
+DIO3,Unknown,Unknown
+RTL1,Imprinted,Paternal
+MEG8,Imprinted,Maternal
+MAGEL2,Imprinted,Paternal
+NPAP1,Imprinted,Unknown
+MKRN3,Imprinted,Paternal
+UBE3A,Imprinted,Maternal
+ZNF127AS,Unknown,Unknown
+ATP10A,Imprinted,Maternal
+SNORD107,Imprinted,Paternal
+SNORD108,Imprinted,Paternal
+PWCR1,Imprinted,Paternal
+SNORD109A,Imprinted,Paternal
+SNORD116@,Imprinted,Paternal
+SNORD115@,Imprinted,Paternal
+SNORD115-48,Imprinted,Paternal
+SNORD109B,Imprinted,Paternal
+SNRPN,Imprinted,Paternal
+GABRA5,Conflicting Data,Paternal
+GABRB3,Conflicting Data,Paternal
+NDN,Imprinted,Paternal
+SNURF,Imprinted,Paternal
+GABRG3,Conflicting Data,Paternal
+SNORD64,Imprinted,Paternal
+GATM,Unknown,Unknown
+RASGRF1,Unknown,Unknown
+MIR184,Unknown,Unknown
+IRAIN,Imprinted,Paternal
+NAA60,Imprinted,Maternal
+ZNF597,Imprinted,Maternal
+SOX8,Predicted,Paternal
+SALL1,Predicted,Maternal
+C16orf57,Predicted,Maternal
+ACD,Predicted,Maternal
+FOXF1,Predicted,Maternal
+TMEM88,Predicted,Maternal
+PYY2,Predicted,Paternal
+HOXB2,Predicted,Maternal
+HOXB3,Predicted,Maternal
+LOC100131170,Predicted,Paternal
+IMPACT,Not Imprinted,Biallelic
+BRUNOL4,Predicted,Maternal
+FAM59A,Predicted,Paternal
+TCEB3C,Imprinted,Maternal
+PPAP2C,Predicted,Maternal
+DNMT1,Imprinted,Paternal
+CHMP2A,Predicted,Maternal
+TSHZ3,Predicted,Paternal
+CHST8,Predicted,Maternal
+ZNF225,Predicted,Paternal
+PEG3,Imprinted,Paternal
+ZIM2,Imprinted,Paternal
+MIMT1,Imprinted,Paternal
+LILRB4,Predicted,Maternal
+MZF1,Predicted,Maternal
+ZNF264,Unknown,Unknown
+ZNF229,Predicted,Maternal
+MIR371A,Imprinted,Paternal
+NLRP2,Imprinted,Maternal
+USP29,Unknown,Unknown
+ZIM3,Unknown,Unknown
+C20orf82,Predicted,Paternal
+ISM1,Predicted,Paternal
+PSIMCT-1,Imprinted,Paternal
+BLCAP,Imprinted,Isoform Dependent
+NNAT,Imprinted,Paternal
+HM13,Unknown,Unknown
+MCTS2,Imprinted,Paternal
+GDAP1L1,Imprinted,Paternal
+SGK2,Imprinted,Paternal
+GNAS,Imprinted,Isoform Dependent
+COL9A3,Predicted,Maternal
+L3MBTL,Imprinted,Paternal
+GNASAS,Imprinted,Paternal
+MIR298,Imprinted,Paternal
+SANG,Imprinted,Paternal
+MIR296,Imprinted,Paternal
+C20orf20,Predicted,Maternal
+SIM2,Predicted,Paternal
+DGCR6L,Imprinted,Random
+DGCR6,Imprinted,Random
+FLJ20464,Predicted,Paternal
+TSIX,Not Imprinted,Biallelic
+XIST,Not Imprinted,Biallelic
