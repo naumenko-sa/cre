@@ -21,5 +21,5 @@ cramtools fastq -Xmx10g -F $sample --skip-md5-check \
 		-I $cram \
 		-R /hpf/largeprojects/ccmbio/naumenko/tools/bcbio/genomes/Hsapiens/hg19/seq/hg19.fa
 
-mv $sample_1.fastq.gz $sample_1.fq.gz
-mv $sample_2.fastq.gz $sample_2.fq.gz
+mv ${sample}_1.fastq.gz ${sample}_1.fq.gz
+mv ${sample}_2.fastq.gz ${sample}_2.fq.gz
