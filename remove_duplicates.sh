@@ -12,6 +12,11 @@
 #PBS -d .
 #PBS -l vmem=20g,mem=20g
 
+I=$1
+bname=`basename $I .bam`
+O="${bname}.dedup.bam"
+M="${bname}.metrics.txt"
+
 unset JAVA_HOME
 export PATH=/hpf/largeprojects/ccmbio/naumenko/tools/bcbio/anaconda/bin:$PATH
 picard MarkDuplicates I=$I O=$O M=$M REMOVE_DUPLICATES=true VALIDATION_STRINGENCY=SILENT ASSUME_SORT_ORDER=coordinate
