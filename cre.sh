@@ -227,7 +227,7 @@ function f_make_report
         noncoding=""
     fi
 		
-    Rscript ~/cre/cre.vcf2db.R $family $noncoding
+    Rscript ~/cre/cre.vcf2db.R $family $noncoding $type
     
     cd $family
     #rm $family.create_report.csv $family.merge_reports.csv

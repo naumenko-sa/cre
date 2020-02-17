@@ -1,4 +1,8 @@
 # variant report generator
+
+# store date to be used when writing files
+datetime <- format(Sys.time(),"%Y-%m-%d_%H:%M:%S")
+
 # Rscript ~/cre/cre.vcf2.db.R <family> noncoding|default=NULL,coding
 add_placeholder <- function(variants, column_name, placeholder){
     variants[,column_name] <- with(variants, placeholder)
@@ -41,7 +45,7 @@ genotype2zygocity <- function (genotype_str, ref){
 }
 
 # output : family.ensemble.txt
-create_report <- function(family, samples){
+create_report <- function(family, samples,type){
     file <- paste0(family, ".variants.txt")
     variants <- get_variants_from_file(file)
     
@@ -385,7 +389,7 @@ fix_column_name <- function(column_name){
 }
 
 # merges ensembl, gatk-haplotype reports
-merge_reports <- function(family, samples){
+merge_reports <- function(family, samples, type){
     ensemble_file <- paste0(family, ".create_report.csv")
     ensemble <- read.csv(ensemble_file, stringsAsFactors = F)
     ensemble$superindex <- with(ensemble, paste(Position, Ref, Alt, sep = '-'))
@@ -599,7 +603,7 @@ merge_reports <- function(family, samples){
     select_and_write2(ensemble, samples, paste0(family, ".merge_reports"))
 }
 
-annotate_w_care4rare <- function(family,samples){
+annotate_w_care4rare <- function(family,samples,type){
     variants <- read.csv(paste0(family, ".merge_reports.csv"), stringsAsFactors = F)
   
     variants$superindex <- with(variants, paste(Position, Ref, Alt, sep='-'))
@@ -637,7 +641,7 @@ annotate_w_care4rare <- function(family,samples){
                           all.x = T, all.y = F)
     }
     
-    select_and_write2(variants, samples, paste0(family, ".wes.", Sys.Date()))
+    select_and_write2(variants, samples, paste0(family, ".wes.", type, datetime))
 }
 
 load_tables <- function(debug = F){
@@ -678,8 +682,8 @@ load_tables <- function(debug = F){
 }
 
 # creates clinical report - more conservative filtering and less columns
-clinical_report <- function(project,samples){
-    report_file_name <- paste0(project,".wes.",Sys.Date(),".csv")
+clinical_report <- function(project,samples,type){
+    report_file_name <- paste0(project,".wes.",type, datetime,".csv")
     full_report <- read.csv(report_file_name, header = T, stringsAsFactors = F)
     
     full_report$max_alt <- with(full_report, pmax(get(paste0("Alt_depths.", samples))))
@@ -720,7 +724,7 @@ clinical_report <- function(project,samples){
       "Sift_score", "Polyphen_score", "Cadd_score", "Vest3_score", "Revel_score",
       "Imprinting_status", "Pseudoautosomal")]
 
-    write.csv(filtered_report, paste0(project, ".wes.clinical.", Sys.Date(), ".csv"), row.names = F)
+    write.csv(filtered_report, paste0(project, ".wes.clinical.", type, datetime, ".csv"), row.names = F)
 }
 
 library(stringr)
@@ -739,6 +743,8 @@ family <- args[1]
 
 coding <- if(is.null(args[2])) T else F
 
+type <- if(is.null(args[3])) '' else args[3]
+
 debug <- F
 
 setwd(family)
@@ -747,9 +753,9 @@ samples <- unlist(read.table("samples.txt", stringsAsFactors = F))
 samples <- gsub("-", ".", samples)
     
 load_tables(debug)
-create_report(family,samples)
-merge_reports(family,samples)
-annotate_w_care4rare(family,samples)
-clinical_report(family,samples)
+create_report(family,samples,type)
+merge_reports(family,samples,type)
+annotate_w_care4rare(family,samples,type)
+clinical_report(family,samples,type)
 
 setwd("..")
