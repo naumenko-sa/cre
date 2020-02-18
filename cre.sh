@@ -234,6 +234,7 @@ function f_make_report
     then
         type="${type}.ad"
     fi
+
     if [ $keep_clinvar -eq 1 ]
     then
         type="${type}.clinvar"

@@ -745,17 +745,23 @@ coding <- if(is.null(args[2])) T else F
 
 type <- if(is.null(args[3])) '' else args[3]
 
-debug <- F
+debug <- T
 
+print(paste0("Running cre.vcf2db.R with inputs: ", args[1], args[2], args[3]))
 setwd(family)
 
 samples <- unlist(read.table("samples.txt", stringsAsFactors = F))
 samples <- gsub("-", ".", samples)
-    
+
+print("Loading tables")
 load_tables(debug)
+print("Creating report")
 create_report(family,samples,type)
+print("Merging reports")
 merge_reports(family,samples,type)
+print("Annotating Reports")
 annotate_w_care4rare(family,samples,type)
+print("Writing Clinical Report")
 clinical_report(family,samples,type)
 
 setwd("..")
