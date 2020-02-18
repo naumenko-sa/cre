@@ -743,9 +743,9 @@ family <- args[1]
 
 coding <- if(is.null(args[2])) T else F
 
-type <- if(is.null(args[3])) '' else args[3]
+type <- if(is.null(args[3])) 'NoType' else args[3]
 
-debug <- T
+debug <- F
 
 print(paste0("Running cre.vcf2db.R with inputs: ", args[1], args[2], args[3]))
 setwd(family)

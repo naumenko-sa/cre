@@ -123,44 +123,45 @@ else
     gemini query --header -q "$sQuery" $file
 fi
 
-# complement selection to add clinvar-annotated variants that were excluded
+# if $keep_clinvar is set, complement selection to add clinvar-annotated variants that were excluded
 # N.B. this will only work for below cases:
 #   type is unset, alt_depth_3=0
 #   type is unset, alt_depth_3=1
 #   type=wes.synonymous,alt_depth_3=0
 #   type=wes.synonymous,alt_depth_3=1
-if [[ "$severity_threshold" == "wes.synonymous" ]]
+if [ -n "$keep_clinvar" ] && [ "$keep_clinvar" == 1 ]
 then
-    # get all the samples that were excluded by filters earlier and check
-    # to see if they had a clinvar annotation
-    cQuery=$initialQuery # grab earlier field selection
-    cQuery=$cQuery" where (\
-    (gnomad_af_popmax > "$max_af " or (is_coding=0 and is_splicing=0)) \
-    or (gnomad_af_popmax <= "$max_af " and (is_coding=0 and is_splicing=0)) \
-    or (gnomad_af_popmax > "$max_af " and (is_coding=1 or is_splicing=0))\
-    ) and clinvar_sig <> ''"
-    if [ -n "$alt_depth_3" ] && [ "$alt_depth_3" == 1 ]
+    if [[ "$severity_threshold" == "wes.synonymous" ]]
     then
-        # here only want variants that were excluded previously (i.e all samples had < 3 alt depth)
-        s_gt_filter="(gt_alt_depths).(*).(<3).(all)"
-        #TODO: add Clinvar condition here
-        gemini query -q "$cQuery" --gt-filter "$c_gt_filter" $file
-    else
-        # just need to add the clinvar filter
-        gemini query -q "$cQuery" $file
-    fi
-else
-    # reversal of all previous filters (De morgan's laws for !(A && B && C) = (!A|!B|!C))
-    cQuery=$initialQuery # grab earlier specs
-    cQuery=$cQuery" where ((dp < ${depth_threshold} or impact_severity == 'LOW' or gnomad_af_popmax > ${max_af}) and clinvar_sig <> '')"
-    echo $cQuery
-    if [ -n "$alt_depth_3" ] && [ "$alt_depth_3" == 1 ]
+        cQuery=$initialQuery # grab earlier field selection
+        cQuery=$cQuery" where (\
+        (gnomad_af_popmax > "$max_af " or (is_coding=0 and is_splicing=0)) \
+        or (gnomad_af_popmax <= "$max_af " and (is_coding=0 and is_splicing=0)) \
+        or (gnomad_af_popmax > "$max_af " and (is_coding=1 or is_splicing=0))\
+        ) and clinvar_sig <> ''"
+        if [ -n "$alt_depth_3" ] && [ "$alt_depth_3" == 1 ]
         then
             # here only want variants that were excluded previously (i.e all samples had < 3 alt depth)
             s_gt_filter="(gt_alt_depths).(*).(<3).(all)"
+            #TODO: add Clinvar condition here
             gemini query -q "$cQuery" --gt-filter "$c_gt_filter" $file
+        else
+            # just need to add the clinvar filter
+            gemini query -q "$cQuery" $file
+        fi
     else
-        # just need to add the clinvar filter
-        gemini query -q "$cQuery" $file
+        # reversal of all previous filters (De morgan's laws for !(A && B && C) = (!A|!B|!C))
+        cQuery=$initialQuery # grab earlier specs
+        cQuery=$cQuery" where ((dp < ${depth_threshold} or impact_severity == 'LOW' or gnomad_af_popmax > ${max_af}) and clinvar_sig <> '')"
+        echo $cQuery
+        if [ -n "$alt_depth_3" ] && [ "$alt_depth_3" == 1 ]
+            then
+                # here only want variants that were excluded previously (i.e all samples had < 3 alt depth)
+                s_gt_filter="(gt_alt_depths).(*).(<3).(all)"
+                gemini query -q "$cQuery" --gt-filter "$c_gt_filter" $file
+        else
+            # just need to add the clinvar filter
+            gemini query -q "$cQuery" $file
+        fi
     fi
 fi
