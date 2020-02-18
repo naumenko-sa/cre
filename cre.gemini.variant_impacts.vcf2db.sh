@@ -18,6 +18,8 @@ depth_threshold=$2
 severity_threshold=$3
 
 max_af=$4
+alt_depth_3=$5
+keep_clinvar=$6
 
 if [[ "$severity_threshold" == 'ALL' ]]
 then
@@ -83,6 +85,13 @@ then
 #		 (gt_types."$proband" == )"
     sQuery=$sQuery" and qual>=500"
     gemini query -q "$sQuery" --gt-filter "$s_gt_filter" --header $file
+elif [ -n "$alt_depth_3" ] && [ "$alt_depth" == 1 ]
+then
+    s_gt_filter="(gt_alt_depths).(*).(>=3).(any)"
+		gemini query -q "$sQuery" --gt-filter "$s_gt_filter" --header $file
 else
     gemini query --header -q "$sQuery" $file
 fi
+
+# TODO: we are not adding back in the Clinvar variants here, but can by doing the same complmenet
+# model as in cre.gemini2txt.vcf2db.sh

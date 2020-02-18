@@ -10,6 +10,8 @@
 # 	type = [ wes.regular (default) | wes.synonymous | wes.fast | rnaseq | wgs | annotate (only for cleaning) | 
 # 	    denovo (all rare variants in wgs, proband should have phenotype=2, parents=phenotype1 also sex for parents in gemini.db) ]
 #	max_af = af filter, default = 0.01
+#   alt_depth_3 = [0|1] default = 0 # keep every variant where the alt depth is at least 3 in any sample
+#   keep_clinvar = [0|1] default = 0 # keep every variant with a clinvar annotation (even 'non-pathogenic', etc.)
 ####################################################################################################
 
 #PBS -l walltime=20:00:00,nodes=1:ppn=1
@@ -151,8 +153,8 @@ function f_make_report
 	export denovo=1
     fi
 
-    cre.gemini2txt.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variants.txt
-    cre.gemini.variant_impacts.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variant_impacts.txt
+    cre.gemini2txt.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af $alt_depth_3 $keep_clinvar > $family.variants.txt
+    cre.gemini.variant_impacts.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af $alt_depth_3 $keep_clinvar > $family.variant_impacts.txt
 
     for f in *.vcf.gz
     do
@@ -226,7 +228,17 @@ function f_make_report
     else
         noncoding=""
     fi
-		
+
+    # add the clinvar and ad settings to the type so the report is labelled
+    if [ $alt_depth_3 -eq 1 ]
+    then
+        type="${type}.ad"
+    fi
+    if [ $keep_clinvar -eq 1 ]
+    then
+        type="${type}.clinvar"
+    fi
+
     Rscript ~/cre/cre.vcf2db.R $family $noncoding $type
     
     cd $family
@@ -274,6 +286,18 @@ then
     max_af=0.01
 fi
 export max_af
+
+# don't call alt_depth_3 by default
+if [ -z $alt_depth_3 ] || [ $alt_depth_3 -ne 1 ]
+then
+    alt_depth_3=0
+fi
+
+# don't keep all clinvar by default
+if [ -z $keep_clinvar ] || [ $keep_clinvar -ne 1 ]
+then
+    keep_clinvar=0
+fi
 
 #make report by default
 if [ -z $make_report ] || [ $make_report -eq 1 ]
