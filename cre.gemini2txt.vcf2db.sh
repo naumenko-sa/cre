@@ -152,7 +152,8 @@ then
 else
     # reversal of all previous filters (De morgan's laws for !(A && B && C) = (!A|!B|!C))
     cQuery=$initialQuery # grab earlier specs
-    cQuery=$cQuery" where (dp < "$depth_threshold" or impact_severity == 'LOW' or gnomad_af_popmax > "$max_af ") and clinvar_sig <> ''"
+    cQuery=$cQuery" where ((dp < ${depth_threshold} or impact_severity == 'LOW' or gnomad_af_popmax > ${max_af}) and clinvar_sig <> '')"
+    echo $cQuery
     if [ -n "$alt_depth_3" ] && [ "$alt_depth_3" == 1 ]
         then
             # here only want variants that were excluded previously (i.e all samples had < 3 alt depth)
