@@ -96,7 +96,7 @@ initialQuery=$sQuery # keep the field selection part for later use
 #gnomad_af includes gnomad WGS
 if [ $alt_depth_3 -ne 1 ]
 then
-    sQuery=$sQuery" where (dp >= "${depth_threshold}" or dp = '' or dp is null) "${severity_filter}" and gnomad_af_popmax <= "{$max_af}""
+    sQuery=$sQuery" where (dp >= "${depth_threshold}" or dp = '' or dp is null) "${severity_filter}" and gnomad_af_popmax <= "${max_af}""
 else
     sQuery=$sQuery" where gnomad_af_popmax <= "${max_af}" "${severity_filter}""
 fi
