@@ -743,11 +743,11 @@ family <- args[1]
 
 coding <- if(is.null(args[2])) T else F
 
-type <- if(missing(args[3])) '' else args[3]
+type <- if(is.null(args[3])) '' else args[3]
 
 debug <- F
 
-print(paste0("Running cre.vcf2db.R with inputs: ", args[1], args[2], args[3]))
+print(paste0("Running cre.vcf2db.R with inputs: ", family, coding, type))
 setwd(family)
 
 samples <- unlist(read.table("samples.txt", stringsAsFactors = F))
