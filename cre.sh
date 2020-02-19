@@ -241,7 +241,7 @@ function f_make_report
     fi
 
     echo RUNNING AS TYPE: "${type}"
-    Rscript ~/cre/cre.vcf2db.R $family $noncoding $type
+    Rscript ~/cre/cre.vcf2db.R $family "${type}"
     
     cd $family
     #rm $family.create_report.csv $family.merge_reports.csv
