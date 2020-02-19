@@ -230,16 +230,17 @@ function f_make_report
     fi
 
     # add the clinvar and ad settings to the type so the report is labelled
-    if [ $alt_depth_3 -eq 1 ]
+    if [ "$alt_depth_3" -eq 1 ]
     then
-        type="${type}.ad"
+        type="${type}".ad
     fi
 
-    if [ $keep_clinvar -eq 1 ]
+    if [ "$keep_clinvar" -eq 1 ]
     then
-        type="${type}.clinvar"
+        type="${type}".clinvar
     fi
 
+    echo RUNNING AS TYPE: "${type}"
     Rscript ~/cre/cre.vcf2db.R $family $noncoding $type
     
     cd $family

@@ -96,9 +96,9 @@ initialQuery=$sQuery # keep the field selection part for later use
 #gnomad_af includes gnomad WGS
 if [ $alt_depth_3 -ne 1 ]
 then
-    sQuery=$sQuery" where (dp >= "$depth_threshold" or dp = '' or dp is null) "$severity_filter" and gnomad_af_popmax <= "$max_af
+    sQuery=$sQuery" where (dp >= "${depth_threshold}" or dp = '' or dp is null) "${severity_filter}" and gnomad_af_popmax <= "{$max_af}""
 else
-    sQuery=$sQuery" where gnomad_af_popmax <= "$max_af $severity_filter
+    sQuery=$sQuery" where gnomad_af_popmax <= "${max_af}" "${severity_filter}""
 fi
 
 s_gt_filter=''
@@ -118,7 +118,7 @@ elif [ -n "$alt_depth_3" ] && [ "$alt_depth_3" == 1 ]
 then
     # keep variant where the alt depth is >=3 in any one of the samples
     s_gt_filter="(gt_alt_depths).(*).(>=3).(any)"
-    gemini query -q "$sQuery" --gt-filter "$s_gt_filter" --header $file
+    gemini query -q "$sQuery" --gt-filter "${s_gt_filter}" --header $file
 else
     gemini query --header -q "$sQuery" $file
 fi
@@ -135,9 +135,9 @@ then
     then
         cQuery=$initialQuery # grab earlier field selection
         cQuery=$cQuery" where (\
-        (gnomad_af_popmax > "$max_af " or (is_coding=0 and is_splicing=0)) \
-        or (gnomad_af_popmax <= "$max_af " and (is_coding=0 and is_splicing=0)) \
-        or (gnomad_af_popmax > "$max_af " and (is_coding=1 or is_splicing=0))\
+        (gnomad_af_popmax > "${max_af}" or (is_coding=0 and is_splicing=0)) \
+        or (gnomad_af_popmax <= "${max_af}" and (is_coding=0 and is_splicing=0)) \
+        or (gnomad_af_popmax > "${max_af}" and (is_coding=1 or is_splicing=0))\
         ) and clinvar_sig <> ''"
         if [ -n "$alt_depth_3" ] && [ "$alt_depth_3" == 1 ]
         then
@@ -152,7 +152,7 @@ then
     else
         # reversal of all previous filters (De morgan's laws for !(A && B && C) = (!A|!B|!C))
         cQuery=$initialQuery # grab earlier specs
-        cQuery=$cQuery" where ((dp < ${depth_threshold} or impact_severity == 'LOW' or gnomad_af_popmax > ${max_af}) and clinvar_sig <> '')"
+        cQuery=$cQuery" where ((dp < "${depth_threshold}" or impact_severity == 'LOW' or gnomad_af_popmax > "${max_af}") and clinvar_sig <> '')"
         echo $cQuery
         if [ -n "$alt_depth_3" ] && [ "$alt_depth_3" == 1 ]
             then
