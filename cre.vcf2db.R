@@ -743,7 +743,7 @@ family <- args[1]
 
 coding <- if(is.null(args[2])) T else F
 
-type <- if(is.null(args[3])) 'NoType' else args[3]
+type <- if(missing(args[3])) '' else args[3]
 
 debug <- F
 
