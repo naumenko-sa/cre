@@ -1,7 +1,7 @@
 # variant report generator
 
 # store date to be used when writing files
-datetime <- format(Sys.time(),"%Y-%m-%d_%H:%M:%S")
+datetime <- format(Sys.time(),"%Y-%m-%d_%H-%M-%S")
 
 # Rscript ~/cre/cre.vcf2.db.R <family> noncoding|default=NULL,coding
 add_placeholder <- function(variants, column_name, placeholder){
