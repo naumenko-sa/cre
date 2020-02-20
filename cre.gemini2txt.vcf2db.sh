@@ -73,13 +73,10 @@ done < samples.txt
 # https://groups.google.com/forum/#!topic/gemini-variation/U3uEvWCzuQo
 # v.depth = 'None' see https://github.com/chapmanb/bcbio-nextgen/issues/1894
 
-if [[ "$severity_threshold" == "ALL" ]]
+if [[ "$severity_threshold" == 'ALL' || "$severity_threshold" == "wes.synonymous" ]]
 then
 #used for RNA-seq = 20k variants in the report
     severity_filter=""
-elif [[ "$severity_threshold" == "wes.synonymous" ]]
-then
-    severity_filter=" and (is_coding=1 or is_splicing=1)"
 #for WES = 1k variants in the report
 else
     severity_filter=" and impact_severity<>'LOW' "
