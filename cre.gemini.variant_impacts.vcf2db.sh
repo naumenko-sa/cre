@@ -21,14 +21,10 @@ max_af=$4
 alt_depth_3=$5
 keep_clinvar=$6
 
-if [[ "$severity_threshold" == 'ALL' ]]
+if [[ "$severity_threshold" == 'ALL' || "$severity_threshold" == "wes.synonymous" ]]
 then
-#used for RNA-seq = 20k variants in the report
+	  #used for RNA-seq = 20k variants in the report
     severity_filter=""
-#use for WES = 1k variants in the report
-elif [[ "$severity_threshold" == "wes.synonymous" ]]
-then
-    severity_filter="(v.is_coding=1 or v.is_splicing=1) and "
 else
     severity_filter="v.impact_severity<>'LOW' and "
 fi
