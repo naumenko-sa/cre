@@ -45,10 +45,10 @@ sQuery="select \
         exon as Exon,\
         domains as Protein_domains,\
         rs_ids as rsIDs,\
-        gnomad_af as Gnomad_af,\
-        gnomad_af_popmax as Gnomad_af_popmax,\
-        gnomad_ac as Gnomad_ac,\
-        gnomad_hom as Gnomad_hom,\
+        vcfanno_gnomad_af as Gnomad_af,\
+        vcfanno_gnomad_af_popmax as Gnomad_af_popmax,\
+        vcfanno_gnomad_ac as Gnomad_ac,\
+        vcfanno_gnomad_hom as Gnomad_hom,\
         sift_score as Sift_score,\
         polyphen_score as Polyphen_score,\
         cadd_phred as Cadd_score,\
@@ -90,7 +90,7 @@ sQuery=$sQuery"hgvsc as Nucleotide_change_ensembl,\
         old_multiallelic as Old_multiallelic
 		from variants \
         where \
-	        (dp >= "$depth_threshold" or dp = '' or dp is null) "$severity_filter" and gnomad_af_popmax <= "$max_af
+	        (dp >= "$depth_threshold" or dp = '' or dp is null) "$severity_filter" and vcfanno_gnomad_af_popmax <= "$max_af
 
 s_gt_filter=''
 if [ -n "$denovo" ] && [ "$denovo" == 1 ]

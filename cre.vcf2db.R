@@ -262,7 +262,7 @@ create_report <- function(family, samples){
     pseudoautosomal_file_name <- paste0(default_tables_path, "/pseudoautosomal.csv")
     pseudoautosomal <- read_csv(pseudoautosomal_file_name)
     variants <- left_join(variants, pseudoautosomal, by = c("Ensembl_gene_id" = "Ensembl_gene_id"))
-    
+
     # Column50 - splicing
     variants <- add_column(variants, Splicing = "NA")
     if ("spliceregion" %in% colnames(impacts))
@@ -293,7 +293,6 @@ create_report <- function(family, samples){
 	          variants[i, "Splicing"] <- s_splicing_field
         }
     }else print("VEP MaxEntScan annotation is missing")
-    
     # Column 51: number of callers
     variants <- add_column(variants, Number_of_callers = "Number_of_callers")
     
@@ -344,11 +343,13 @@ fix_column_name <- function(column_name){
 # merges ensembl, gatk-haplotype reports
 merge_reports <- function(family, samples){
     ensemble_file <- paste0(family, ".create_report.csv")
-    ensemble <- read.csv(ensemble_file, stringsAsFactors = F)
+    ensemble <- read_csv(ensemble_file, col_types = cols(Position = "c", Depth = "i", Quality = "d", Frequency_in_C4R = "c", 
+						     Gnomad_af_popmax = "d", Gnomad_af = "d", Gnomad_ac = "i",
+						     Gnomad_hom = "i", Info = "c"))
     ensemble$superindex <- with(ensemble, paste(Position, Ref, Alt, sep = '-'))
     
     for (i in 1:nrow(ensemble)){
-        v_impacts <- strsplit(ensemble[i,"Info"], "," , fixed = T)[[1]]
+        v_impacts <- str_split_fixed(ensemble[i, "Info"], ",", n = 2)[[1]]
 	    for (impact in v_impacts){
             if (grepl(":NM_", impact, fixed = T)){
                 v_subimpacts <- strsplit(impact, ":", fixed=T)[[1]]
@@ -357,7 +358,6 @@ merge_reports <- function(family, samples){
             }
         }
     }
-    
     ensemble_table_file <- paste0(family, ".table")
     if (file.exists(ensemble_table_file)){
         ensemble_table <- read.delim(ensemble_table_file, stringsAsFactors = F)
