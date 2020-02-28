@@ -1,0 +1,104 @@
+details:
+- algorithm:
+    aligner: bwa
+    effects: vep
+    effects_transcripts: all
+    ensemble:
+      numpass: 2
+      use_filtered: false
+    mark_duplicates: true
+    realign: false
+    recalibrate: false
+    save_diskspace: true
+    tools_on:
+    - gemini
+    - svplots
+    - qualimap
+    - vep_splicesite_annotations
+    - noalt_calling
+    variantcaller:
+    - gatk-haplotype
+    - samtools
+    - platypus
+    - freebayes
+    vcfanno:
+    - /home/atheyt@med.umanitoba.ca/cre/cre.vcfanno.conf
+  analysis: variant2
+  description: 151002_7001448_0359_AC7F6GANXX_Sample_HG002-EEogPU_v02-KIT-Av5_AGATGTAC_L008.posiSrt.markDup
+  files:
+  - /home/atheyt@med.umanitoba.ca/Pipeline_Tests/Test14/AshkenaziFam/input/151002_7001448_0359_AC7F6GANXX_Sample_HG002-EEogPU_v02-KIT-Av5_AGATGTAC_L008.posiSrt.markDup.bam
+  genome_build: GRCh37
+  metadata:
+    batch: AshkenaziFam
+- algorithm:
+    aligner: bwa
+    effects: vep
+    effects_transcripts: all
+    ensemble:
+      numpass: 2
+      use_filtered: false
+    mark_duplicates: true
+    realign: false
+    recalibrate: false
+    save_diskspace: true
+    tools_on:
+    - gemini
+    - svplots
+    - qualimap
+    - vep_splicesite_annotations
+    - noalt_calling
+    variantcaller:
+    - gatk-haplotype
+    - samtools
+    - platypus
+    - freebayes
+    vcfanno:
+    - /home/atheyt@med.umanitoba.ca/cre/cre.vcfanno.conf
+  analysis: variant2
+  description: 151002_7001448_0359_AC7F6GANXX_Sample_HG003-EEogPU_v02-KIT-Av5_TCTTCACA_L008.posiSrt.markDup
+  files:
+  - /home/atheyt@med.umanitoba.ca/Pipeline_Tests/Test14/AshkenaziFam/input/151002_7001448_0359_AC7F6GANXX_Sample_HG003-EEogPU_v02-KIT-Av5_TCTTCACA_L008.posiSrt.markDup.bam
+  genome_build: GRCh37
+  metadata:
+    batch: AshkenaziFam
+- algorithm:
+    aligner: bwa
+    effects: vep
+    effects_transcripts: all
+    ensemble:
+      numpass: 2
+      use_filtered: false
+    mark_duplicates: true
+    realign: false
+    recalibrate: false
+    save_diskspace: true
+    tools_on:
+    - gemini
+    - svplots
+    - qualimap
+    - vep_splicesite_annotations
+    - noalt_calling
+    variantcaller:
+    - gatk-haplotype
+    - samtools
+    - platypus
+    - freebayes
+    vcfanno:
+    - /home/atheyt@med.umanitoba.ca/cre/cre.vcfanno.conf
+  analysis: variant2
+  description: 151002_7001448_0359_AC7F6GANXX_Sample_HG004-EEogPU_v02-KIT-Av5_CCGAAGTA_L008.posiSrt.markDup
+  files:
+  - /home/atheyt@med.umanitoba.ca/Pipeline_Tests/Test14/AshkenaziFam/input/151002_7001448_0359_AC7F6GANXX_Sample_HG004-EEogPU_v02-KIT-Av5_CCGAAGTA_L008.posiSrt.markDup.bam
+  genome_build: GRCh37
+  metadata:
+    batch: AshkenaziFam
+fc_name: AshkenaziFam
+resources:
+  default:
+    cores: 7
+    jvm_opts:
+    - -Xms750m
+    - -Xmx7000m
+    memory: 7G
+upload:
+  dir: ../final
