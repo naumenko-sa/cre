@@ -1,0 +1,28 @@
+details:
+- algorithm:
+    aligner: bwa
+    effects: snpeff
+    effects_transcripts: all
+    realign: false
+    recalibrate: false
+    mark_duplicates: true
+    save_diskspace: true
+    tools_on:
+    - noalt_calling
+    variantcaller:
+    - mutect2
+    - vardict
+  analysis: variant2
+  description: '912R_A337376'
+  files:
+  - /hpf/largeprojects/ccmbio/naumenko/project_cheo/912R/input/912R_A337376.bam
+  genome_build: hg38
+resources:
+  default:
+    cores: 7
+    jvm_opts:
+    - -Xms750m
+    - -Xmx7000m
+    memory: 7G
+upload:
+  dir: ../final
