@@ -63,13 +63,22 @@ then
 	i.spliceregion"
 fi
 
-sQuery=$sQuery" from variants v,variant_impacts i where "$severity_filter"v.gnomad_af_popmax <= "$max_af" and \
-		v.variant_id=i.variant_id and \
-		(v.dp>="$depth_threshold" or v.dp='' or v.dp is null)"
+initialQuery=$sQuery" from variants v,variant_impacts i"
+
+# if no alt_depth threshold set, use dp settings
+if [ $alt_depth_3 -ne 1 ]
+then
+	# if alt depth flag not set, just use the DP threshold
+	sQuery=$sQuery" where "$severity_filter"v.gnomad_af_popmax <= "$max_af" and \
+	v.variant_id=i.variant_id and \
+	(v.dp>="$depth_threshold" or v.dp='' or v.dp is null)"
+else
+	# otherwise, don't set DP threshold (use the AD filter later)
+	sQuery=$sQuery" where "$severity_filter"v.gnomad_af_popmax <= "$max_af" and \
+	v.variant_id=i.variant_id"
+fi
 
 #echo $sQuery
-
-
 s_gt_filter=''
 if [ -n "$denovo" ] && [ "$denovo" == 1 ]
 then
@@ -89,5 +98,15 @@ else
     gemini query --header -q "$sQuery" $file
 fi
 
-# TODO: we are not adding back in the Clinvar variants here, but can by doing the same complmenet
-# model as in cre.gemini2txt.vcf2db.sh
+# if set, run the clinvar query
+if [ -n "$keep_clinvar" ] && [ "$keep_clinvar" == 1 ]
+then
+    # grab the clinvar variants
+    cQuery=$initialQuery # grab earlier field selection
+    # everything that has a clinvar_sig value
+    cQuery=$cQuery" where gnomad_af_popmax <= ${max_af} and clinvar_sig <> ''"
+    # only get variants where AD >= 1 (any sample with an alternate read)
+    s_gt_filter="(gt_alt_depths).(*).(>=1).(any)"
+    # run query
+    gemini query -q "$cQuery" --gt-filter "$c_gt_filter" $file
+fi

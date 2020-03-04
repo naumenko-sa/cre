@@ -153,8 +153,12 @@ function f_make_report
 	export denovo=1
     fi
 
-    cre.gemini2txt.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af $alt_depth_3 $keep_clinvar > $family.variants.txt
-    cre.gemini.variant_impacts.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af $alt_depth_3 $keep_clinvar > $family.variant_impacts.txt
+    cre.gemini2txt.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af $alt_depth_3 $keep_clinvar > $family.variants.all.txt
+    cre.gemini.variant_impacts.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af $alt_depth_3 $keep_clinvar > $family.variant_impacts.all.txt
+
+    # remove duplicate lines from results of gemini query
+    awk '!a[$0]++' $family.variants.all.txt > $family.variants.txt
+    awk '!a[$0]++' $family.variant_impacts.all.txt > $family.variant_impacts.txt
 
     for f in *.vcf.gz
     do
