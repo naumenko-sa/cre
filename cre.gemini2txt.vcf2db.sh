@@ -120,7 +120,7 @@ if [ -n "$alt_depth_3" ] && [ "$alt_depth_3" == 1 ]
 then
     # keep variant where the alt depth is >=3 in any one of the samples
     s_gt_filter="(gt_alt_depths).(*).(>=3).(any)"
-    gemini query -q "$sQuery" --gt-filter "${s_gt_filter}" --header $file
+		gemini query -q "$sQuery" --gt-filter "${s_gt_filter}" --header $file
 else
     # otherwise, just run with existing DP filter
     gemini query --header -q "$sQuery" $file
