@@ -4,9 +4,16 @@ from os.path import basename, splitext
 
 #Usage: python3 add_hpo_terms_to_wes.py <phenotips_hpo_terms> <wes.report.csv>
 
-HPO_DF = pd.read_csv(sys.argv[1], comment='#', skip_blank_lines=True,\
-	sep="\t",  encoding="ISO-8859-1", engine='python').set_index("Gene ID")\
-	.drop(columns=["Gene Symbol", "HPO IDs"])
+try:
+	HPO_DF = pd.read_csv(sys.argv[1], comment='#', skip_blank_lines=True,\
+					sep="\t",  encoding="ISO-8859-1", engine='python').set_index("Gene ID")\
+					.drop(columns=["Gene Symbol", "HPO IDs"])
+except Exception as e:
+  # direct from phenotips version (not g4rd)
+	HPO_DF = pd.read_csv(sys.argv[1], comment='#', skip_blank_lines=True, \
+           sep="\t",  encoding="ISO-8859-1", engine='python').set_index("Gene ID")\
+           .drop(columns=[" Gene symbol", "HPO IDs"])
+		
 WES_REPORT = pd.read_csv(sys.argv[2], encoding="ISO-8859-1").set_index("Position")
 OUT = "%s.w_hpoterms.tsv" % splitext(basename(sys.argv[2]))[0]
 
