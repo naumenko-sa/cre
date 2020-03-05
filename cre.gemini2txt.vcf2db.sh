@@ -28,6 +28,8 @@ max_af=$4
 alt_depth_3=$5
 keep_clinvar=$6
 
+echo 'RUNNING HERE!'
+
 gemini query -q "select name from samples order by name" $file > samples.txt
 
 sQuery="select \
@@ -93,9 +95,11 @@ initialQuery=$sQuery # keep the field selection part for later use
 #gnomad_af includes gnomad WGS
 if [ $alt_depth_3 -ne 1 ]
 then
+		echo "USING DP FILTER"
     # if alt depth flag not set, just use the DP threshold
     sQuery=$sQuery" where (dp >= "${depth_threshold}" or dp = '' or dp is null) "${severity_filter}" and gnomad_af_popmax <= "${max_af}""
 else
+		echo "SKIPPING DP FILTER"
     # AD will be set later (on GT filter of query)
     sQuery=$sQuery" where gnomad_af_popmax <= "${max_af}" "${severity_filter}""
 fi
@@ -118,6 +122,7 @@ fi
 # if set, run query with the AD filter
 if [ -n "$alt_depth_3" ] && [ "$alt_depth_3" == 1 ]
 then
+		echo "USING ALT_DEPTH FILTER"
     # keep variant where the alt depth is >=3 in any one of the samples
     s_gt_filter="(gt_alt_depths).(*).(>=3).(any)"
 		gemini query -q "$sQuery" --gt-filter "${s_gt_filter}" --header $file
@@ -134,7 +139,7 @@ then
     # everything that has a clinvar_sig value
     cQuery=$cQuery" where gnomad_af_popmax <= ${max_af} and clinvar_sig <> ''"
     # only get variants where AD >= 1 (any sample with an alternate read)
-    s_gt_filter="(gt_alt_depths).(*).(>=1).(any)"
+    c_gt_filter="(gt_alt_depths).(*).(>=1).(any)"
     # run query
     gemini query -q "$cQuery" --gt-filter "$c_gt_filter" $file
 fi

@@ -150,7 +150,7 @@ function f_make_report
     
     if [ "$type" == "denovo" ]
     then
-	export denovo=1
+			export denovo=1
     fi
 
     cre.gemini2txt.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af $alt_depth_3 $keep_clinvar > $family.variants.all.txt
@@ -245,7 +245,10 @@ function f_make_report
     fi
 
     echo RUNNING AS TYPE: "${type}"
-    Rscript ~/cre/cre.vcf2db.R $family "${type}"
+    #Rscript ~/cre/cre.vcf2db.R $family "${type}"
+    pwd
+    Rscript ~/cre_testing/cre.vcf2db.R $family "${type}"
+
     
     cd $family
     #rm $family.create_report.csv $family.merge_reports.csv
