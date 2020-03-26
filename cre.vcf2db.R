@@ -1,7 +1,7 @@
 # variant report generator
 
 # store date to be used when writing files
-datetime <- format(Sys.time(),"%Y-%m-%d_%H-%M-%S")
+datetime <- format(Sys.time(),"%Y-%m-%d_%H-%M")
 
 # Rscript ~/cre/cre.vcf2.db.R <family> noncoding|default=NULL,coding
 add_placeholder <- function(variants, column_name, placeholder){
@@ -641,7 +641,7 @@ annotate_w_care4rare <- function(family,samples,type){
                           all.x = T, all.y = F)
     }
     
-    select_and_write2(variants, samples, paste0(family, type, datetime))
+    select_and_write2(variants, samples, paste0(family, type, ".", datetime))
 }
 
 load_tables <- function(debug = F){
@@ -683,7 +683,7 @@ load_tables <- function(debug = F){
 
 # creates clinical report - more conservative filtering and less columns
 clinical_report <- function(project,samples,type){
-    report_file_name <- paste0(project, type, datetime,".csv")
+    report_file_name <- paste0(project, type, ".", datetime,".csv")
     full_report <- read.csv(report_file_name, header = T, stringsAsFactors = F)
     
     full_report$max_alt <- with(full_report, pmax(get(paste0("Alt_depths.", samples))))
@@ -724,7 +724,7 @@ clinical_report <- function(project,samples,type){
       "Sift_score", "Polyphen_score", "Cadd_score", "Vest3_score", "Revel_score",
       "Imprinting_status", "Pseudoautosomal")]
 
-    write.csv(filtered_report, paste0(project, ".clinical.", type, datetime, ".csv"), row.names = F)
+    write.csv(filtered_report, paste0(project, ".clinical.", type, ".", datetime, ".csv"), row.names = F)
 }
 
 library(stringr)

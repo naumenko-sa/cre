@@ -234,7 +234,7 @@ function f_make_report
         noncoding=""
     fi
 
-    echo RUNNING AS TYPE: "${type}"
+    echo GENERATING REPORT WITH TYPE: "${type}"
     Rscript ~/cre/cre.vcf2db.R $family "${type}"
     
     cd $family
@@ -264,6 +264,12 @@ if [ "$type" == "rnaseq" ]
 then
     export depth_threshold=5
     export severity_filter=ALL
+fi
+
+# set wes.regular as default type
+if [ -z $type ]
+then
+    type="wes.regular"
 fi
 
 #no cleanup by default
