@@ -18,11 +18,8 @@ depth_threshold=$2
 severity_threshold=$3
 
 max_af=$4
-alt_depth_3=$5
-keep_clinvar=$6
 
-echo "settings:"
-echo $file $depth_threshold $severity_threshold $max_af $alt_depth_3 $keep_clinvar
+alt_depth=3
 
 if [[ "$severity_threshold" == 'ALL' || "$severity_threshold" == "wes.synonymous" ]]
 then
@@ -66,22 +63,14 @@ then
 	i.spliceregion"
 fi
 
-initialQuery=$sQuery" from variants v,variant_impacts i"
+initialQuery=$sQuery" from variants v,variant_impacts i" #store field selection
 
-# if no alt_depth threshold set, use dp settings
-if [ $alt_depth_3 -ne 1 ]
-then
-	# if alt depth flag not set, just use the DP threshold
-	sQuery=$initialQuery" where "$severity_filter"v.gnomad_af_popmax <= "$max_af" and \
-	v.variant_id=i.variant_id and \
-	(v.dp>="$depth_threshold" or v.dp='' or v.dp is null)"
-else
-	# otherwise, don't set DP threshold (use the AD filter later)
-	sQuery=$initialQuery" where "$severity_filter"v.gnomad_af_popmax <= "$max_af" and \
-	v.variant_id=i.variant_id"
-fi
+
+sQuery=$initialQuery" where "$severity_filter"v.gnomad_af_popmax <= "$max_af" and \
+v.variant_id=i.variant_id"
 
 s_gt_filter=''
+
 if [ -n "$denovo" ] && [ "$denovo" == 1 ]
 then
     proband=`gemini query -q "select name from samples where phenotype=2" $file`
@@ -92,22 +81,14 @@ then
 #		 (gt_types."$proband" == )"
     sQuery=$sQuery" and qual>=500"
     gemini query -q "$sQuery" --gt-filter "$s_gt_filter" --header $file
-elif [ -n "$alt_depth_3" ] && [ "$alt_depth_3" == 1 ]
-then
-    s_gt_filter="(gt_alt_depths).(*).(>=3).(any)"
-		gemini query -q "$sQuery" --gt-filter "$s_gt_filter" --header $file
 else
-    gemini query --header -q "$sQuery" $file
-fi
-# if set, run the clinvar query
-if [ -n "$keep_clinvar" ] && [ "$keep_clinvar" == 1 ]
-then
+    s_gt_filter="(gt_alt_depths).(*).(>="${alt_depth}").(any)"
+		gemini query -q "$sQuery" --gt-filter "$s_gt_filter" --header $file
     # grab the clinvar variants
-    cQuery=$initialQuery # grab earlier field selection
+    cQuery=$initialQuery 
     # everything that has a clinvar_sig value
     cQuery=$cQuery" where gnomad_af_popmax <= ${max_af} and v.variant_id=i.variant_id and clinvar_sig <> ''"
     # only get variants where AD >= 1 (any sample with an alternate read)
     s_gt_filter="(gt_alt_depths).(*).(>=1).(any)"
-    # run query
     gemini query -q "$cQuery" --gt-filter "$s_gt_filter" $file
 fi

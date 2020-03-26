@@ -22,13 +22,10 @@ fi
 depth_threshold=$2
 
 severity_threshold=$3
-#echo $severity_threshold
 
 max_af=$4
-alt_depth_3=$5
-keep_clinvar=$6
 
-echo 'RUNNING HERE!'
+alt_depth=3
 
 gemini query -q "select name from samples order by name" $file > samples.txt
 
@@ -42,7 +39,7 @@ sQuery="select \
         dp as Depth,\
         qual as Quality,\
         gene as Gene,\
-        clinvar_pathogenic as Clinvar,\
+        clinvar_sig as Clinvar,\
         ensembl_gene_id as Ensembl_gene_id,\
         transcript as Ensembl_transcript_id,\
         aa_length as AA_position,\
@@ -93,18 +90,10 @@ initialQuery=$sQuery # keep the field selection part for later use
 
 #max_aaf_all frequency is from gemini.conf and does not include gnomad WGS frequencing, gnomad WES only
 #gnomad_af includes gnomad WGS
-if [ $alt_depth_3 -ne 1 ]
-then
-		echo "USING DP FILTER"
-    # if alt depth flag not set, just use the DP threshold
-    sQuery=$sQuery" where (dp >= "${depth_threshold}" or dp = '' or dp is null) "${severity_filter}" and gnomad_af_popmax <= "${max_af}""
-else
-		echo "SKIPPING DP FILTER"
-    # AD will be set later (on GT filter of query)
-    sQuery=$sQuery" where gnomad_af_popmax <= "${max_af}" "${severity_filter}""
-fi
+sQuery=$sQuery" where gnomad_af_popmax <= "${max_af}" "${severity_filter}""
 
 s_gt_filter=''
+# denovo 0/1 is exported in cre.sh
 if [ -n "$denovo" ] && [ "$denovo" == 1 ]
 then
     # https://www.biostars.org/p/359117/
@@ -117,29 +106,15 @@ then
     # otherwise a lot of trash variants
     sQuery=$sQuery" and qual>=500"
     gemini query -q "$sQuery" --gt-filter "$s_gt_filter" --header $file
-fi
-
-# if set, run query with the AD filter
-if [ -n "$alt_depth_3" ] && [ "$alt_depth_3" == 1 ]
-then
-		echo "USING ALT_DEPTH FILTER"
-    # keep variant where the alt depth is >=3 in any one of the samples
-    s_gt_filter="(gt_alt_depths).(*).(>=3).(any)"
-		gemini query -q "$sQuery" --gt-filter "${s_gt_filter}" --header $file
 else
-    # otherwise, just run with existing DP filter
-    gemini query --header -q "$sQuery" $file
-fi
+    # keep variant where the alt depth is >=3 in any one of the samples
+    s_gt_filter="(gt_alt_depths).(*).(>="${alt_depth}").(any)"
+	gemini query -q "$sQuery" --gt-filter "${s_gt_filter}" --header $file
 
-# if set, run the clinvar query
-if [ -n "$keep_clinvar" ] && [ "$keep_clinvar" == 1 ]
-then
-    # grab the clinvar variants
-    cQuery=$initialQuery # grab earlier field selection
-    # everything that has a clinvar_sig value
+    # also get the clinvar variants (duplicates will be removed later)
+    cQuery=$initialQuery
     cQuery=$cQuery" where gnomad_af_popmax <= ${max_af} and clinvar_sig <> ''"
     # only get variants where AD >= 1 (any sample with an alternate read)
     c_gt_filter="(gt_alt_depths).(*).(>=1).(any)"
-    # run query
     gemini query -q "$cQuery" --gt-filter "$c_gt_filter" $file
 fi
