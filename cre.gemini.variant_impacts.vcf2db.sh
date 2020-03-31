@@ -82,13 +82,13 @@ then
     sQuery=$sQuery" and qual>=500"
     gemini query -q "$sQuery" --gt-filter "$s_gt_filter" --header $file
 else
-    s_gt_filter="(gt_alt_depths).(*).(>="${alt_depth}").(any)"
+    s_gt_filter="(gt_alt_depths).(*).(>="${alt_depth}").(any) or (gt_alt_depths).(*).(==-1).(all)"
 		gemini query -q "$sQuery" --gt-filter "$s_gt_filter" --header $file
     # grab the clinvar variants
     cQuery=$initialQuery 
     # everything that has a clinvar_sig value
     cQuery=$cQuery" where gnomad_af_popmax <= ${max_af} and v.variant_id=i.variant_id and clinvar_sig <> ''"
     # only get variants where AD >= 1 (any sample with an alternate read)
-    s_gt_filter="(gt_alt_depths).(*).(>=1).(any)"
+    s_gt_filter="(gt_alt_depths).(*).(>=1).(any) or (gt_alt_depths).(*).(==-1).(all)"
     gemini query -q "$cQuery" --gt-filter "$s_gt_filter" $file
 fi

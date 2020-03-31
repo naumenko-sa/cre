@@ -115,6 +115,6 @@ else
     cQuery=$initialQuery
     cQuery=$cQuery" where gnomad_af_popmax <= ${max_af} and clinvar_sig <> ''"
     # only get variants where AD >= 1 (any sample with an alternate read)
-    c_gt_filter="(gt_alt_depths).(*).(>=1).(any)"
+    c_gt_filter="(gt_alt_depths).(*).(>=1).(any) or (gt_alt_depths).(*).(==-1).(all)"
     gemini query -q "$cQuery" --gt-filter "$c_gt_filter" $file
 fi
