@@ -107,8 +107,8 @@ then
     sQuery=$sQuery" and qual>=500"
     gemini query -q "$sQuery" --gt-filter "$s_gt_filter" --header $file
 else
-    # keep variant where the alt depth is >=3 in any one of the samples
-    s_gt_filter="(gt_alt_depths).(*).(>="${alt_depth}").(any)"
+    # keep variant where the alt depth is >=3 in any one of the samples or they're all -1 (sometimes happens for freebayes called variants?)
+    s_gt_filter="(gt_alt_depths).(*).(>="${alt_depth}").(any) or (gt_alt_depths).(*).(==-1).(all)"
 	gemini query -q "$sQuery" --gt-filter "${s_gt_filter}" --header $file
 
     # also get the clinvar variants (duplicates will be removed later)
