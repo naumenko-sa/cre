@@ -152,6 +152,8 @@ create_report <- function(family, samples,type){
         if (nrow(gene_impacts) > 0){
             v_impacts <- paste0(gene_impacts$gene, ":exon", gene_impacts$exon,
                                 ":", gene_impacts$hgvsc, ":", gene_impacts$hgvsp)
+						# replace %3D with its url encoded character, "="
+						v_impacts <- str_replace_all(v_impacts,"%3D","=")
             s_impacts <- paste(v_impacts, collapse = ",")
         }
         else s_impacts <- 'NA'
@@ -624,7 +626,9 @@ annotate_w_care4rare <- function(family,samples,type){
     }
     
     variants$Seen_in_C4R_samples[is.na(variants$Seen_in_C4R_samples)] <- 0        
-    
+		# truncate column if it has more than 30000 variants
+		variants$Seen_in_C4R_samples <- strtrim(variants$Seen_in_C4R_samples, 30000)
+		    
     if (exists("hgmd")){
         variants$HGMD_gene <- NULL
         variants$HGMD_id <- NULL
