@@ -601,7 +601,22 @@ merge_reports <- function(family, samples, type){
                 ensemble[i,field_depth] <- 0
         }
     }
-    
+
+    # after the alt depths are fixed, remove all variants that don't pass the alt depth <= 3 filter
+    while (i<=nrow(ensemble)){
+        any_pass <- F
+        for (sample in samples){
+            field_depth <- paste0("Alt_depths.", sample)
+            if (ensemble[i, field_depth] >= 3){
+                any_pass <- T
+            }
+        }
+        if (any_pass == F){
+            # if none of the samples pass the AD filter, remove the variant
+            ensemble<-ensemble[-i,]
+        }
+    }
+
     select_and_write2(ensemble, samples, paste0(family, ".merge_reports"))
 }
 
