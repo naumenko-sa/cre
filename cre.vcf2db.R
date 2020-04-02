@@ -608,7 +608,12 @@ merge_reports <- function(family, samples, type){
         any_pass <- F
         for (sample in samples){
             field_depth <- paste0("Alt_depths.", sample)
-            alt_depth <- as.integer(ensemble[i, field_depth])
+            if (is.na(ensemble[i, field_depth])){
+               alt_depth <- 0
+            }
+            else{
+                alt_depth <- as.integer(ensemble[i, field_depth])
+            }
             if(alt_depth>=3){
                 any_pass <- T
             }
