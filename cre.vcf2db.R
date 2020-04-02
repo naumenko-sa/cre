@@ -611,9 +611,18 @@ merge_reports <- function(family, samples, type){
             if (is.na(ensemble[i, field_depth])){
                alt_depth <- 0
             }
+            else if (grepl(",",ensemble[i, field_depth])){
+                # there can be multiple ad values reported here. use the largest
+                alt_depths <- unlist(strsplit(ensemble[i, field_depth], ","))
+                alt_depth <- 0
+                for (a in alt_depths) {
+                    if (!(is.na(a)) && (as.integer(a) > alt_depth)){alt_depth <- as.integer(a)}
+                }
+            }
             else{
                 alt_depth <- as.integer(ensemble[i, field_depth])
             }
+            # alt depth for sample has been set, check if it passes threshold
             if(alt_depth>=3){
                 any_pass <- T
             }
@@ -625,7 +634,7 @@ merge_reports <- function(family, samples, type){
             #    field_depth <- paste0("Alt_depths.", sample)
             #    print(ensemble[i, field_depth])
             #}
-            # if none of the samples pass the AD filter, remove the variant
+            #if none of the samples pass the AD filter, remove the variant
             ensemble<-ensemble[-i,]
         }
         i <- i+1
