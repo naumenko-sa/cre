@@ -602,17 +602,24 @@ merge_reports <- function(family, samples, type){
         }
     }
 
-    # after the alt depths are fixed, remove all variants that don't pass the alt depth <= 3 filter
+    # after the alt depths columns are fixed, remove all variants that don't pass the alt depth <= 3 filter
     i <- 2
     while (i<=nrow(ensemble)){
         any_pass <- F
         for (sample in samples){
             field_depth <- paste0("Alt_depths.", sample)
-            if (ensemble[i, field_depth] >= 3){
+            alt_depth <- as.integer(ensemble[i, field_depth])
+            if(alt_depth>=3){
                 any_pass <- T
             }
         }
         if (any_pass == F){
+            #print("removing:")
+            #print(ensemble[i, "Position"])
+            #for (sample in samples){
+            #    field_depth <- paste0("Alt_depths.", sample)
+            #    print(ensemble[i, field_depth])
+            #}
             # if none of the samples pass the AD filter, remove the variant
             ensemble<-ensemble[-i,]
         }
