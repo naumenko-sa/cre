@@ -11,7 +11,7 @@ HPO_DF = pd.read_csv(sys.argv[1], comment='#', skip_blank_lines=True,\
 
 #Phenotips TSV has a space in column name: " Gene symbol"
 HPO_DF.columns = HPO_DF.columns.str.strip()
-HPO_DF.rename(columns={'Gene symbol': 'Gene Symbol'})
+HPO_DF.columns = HPO_DF.columns.str.replace("symbol","Symbol")
 
 WES_REPORT = pd.read_csv(sys.argv[2], encoding="ISO-8859-1").set_index("Position")
 OUT = "%s.w_hpoterms.tsv" % splitext(basename(sys.argv[2]))[0]
