@@ -11,12 +11,13 @@ HPO_DF = pd.read_csv(sys.argv[1], comment='#', skip_blank_lines=True,\
 
 #Phenotips TSV has a space in column name: " Gene symbol"
 HPO_DF.columns = HPO_DF.columns.str.strip()
+HPO_DF.rename(columns={'Gene symbol': 'Gene Symbol'})
 
 WES_REPORT = pd.read_csv(sys.argv[2], encoding="ISO-8859-1").set_index("Position")
 OUT = "%s.w_hpoterms.tsv" % splitext(basename(sys.argv[2]))[0]
 
 if "Ensembl_gene_id" in WES_REPORT.columns:
-        HPO_DF = HPO_DF.set_index("Gene ID").drop(columns=[" Gene symbol",])
+        HPO_DF = HPO_DF.set_index("Gene ID").drop(columns=["Gene Symbol"])
         OUT_DF = WES_REPORT.join(HPO_DF, on="Ensembl_gene_id")\
                 .rename(columns={"Number of occurrences": "HPO_count", "Features": "HPO_terms"}).fillna("NA")
 else:
