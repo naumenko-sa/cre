@@ -46,7 +46,7 @@ genotype2zygocity <- function (genotype_str, ref){
 }
 
 # output : family.ensemble.txt
-create_report <- function(family, samples,type){
+create_report <- function(family, samples){
     file <- paste0(family, ".variants.txt")
     variants <- get_variants_from_file(file)
     
