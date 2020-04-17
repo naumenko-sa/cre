@@ -104,7 +104,7 @@ Current directory should have a list of projects in projects.txt.
 
 # 6. Step 5 in detail
 
-6.1 [Report description](https://docs.google.com/document/d/1zL4QoINtkUd15a0AK4WzxXoTWp2MRcuQ9l_P9-xSlS4/edit?usp=sharing).\
+6.1 [Report description](https://docs.google.com/document/d/1ZNiFIrhDrkOwqh950LmInhUuWeG3Rqrydc9amN3GCT0/edit?usp=sharing).\
 6.2 [Report example for Ashkenazim trio from NIST](https://drive.google.com/open?id=0B_bLL10GwDnsN29vY3RRdGlXMWM). \
 6.3 [gemini.gemini2txt.sh](../master/gemini.gemini2txt.sh) [project-ensembl.db] - dumps a gemini database into text file. \
 6.4 [gemini.variant_impacts.sh](../master/gemini.variant_impacts.sh) [project-ensembl.db] dumps variant impacts from gemini. \
