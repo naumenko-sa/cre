@@ -26,7 +26,7 @@ genotype2zygocity <- function (genotype_str, ref){
     # greedy
     genotype_str <- gsub("|", "/", genotype_str, fixed = T)
     genotype_str <- gsub("./.", "Insufficient_coverage", genotype_str, fixed = T)
-    #genotype_str = gsub(".","NO_CALL",genotype_str,fixed=T)
+    genotype_str = gsub(".","NO_CALL",genotype_str,fixed=T)
       
     if(grepl("Insufficient_coverage", genotype_str)){
       result <- genotype_str
