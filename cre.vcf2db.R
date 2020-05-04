@@ -785,8 +785,7 @@ args <- commandArgs(trailingOnly = T)
 print(args)
 family <- args[1]
 
-#coding <- if(is.null(args[2])) T else F #REMOVING THIS FOR TESTING
-coding <- F
+coding <- if(is.null(args[2])) T else F
 
 type <- if(is.na(args[2])) '' else args[2]
 
