@@ -154,8 +154,8 @@ function f_make_report
 			export denovo=1
     fi
 
-    cre.gemini2txt.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variants.all.txt
-    cre.gemini.variant_impacts.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variant_impacts.all.txt
+    ~/cre/cre.gemini2txt.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variants.all.txt
+    ~/cre/cre.gemini.variant_impacts.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variant_impacts.all.txt
 
     # remove duplicate lines from results of gemini query
     awk '!a[$0]++' $family.variants.all.txt > $family.variants.txt
