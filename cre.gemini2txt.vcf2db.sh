@@ -39,7 +39,7 @@ sQuery="select \
         dp as Depth,\
         qual as Quality,\
         gene as Gene,\
-        clinvar_pathogenic || COALESCE(',' || clinvar_sig, '') as Clinvar, \
+        clinvar_pathogenic || COALESCE(';' || clinvar_sig, '') as Clinvar, \
         ensembl_gene_id as Ensembl_gene_id,\
         transcript as Ensembl_transcript_id,\
         aa_length as AA_position,\
