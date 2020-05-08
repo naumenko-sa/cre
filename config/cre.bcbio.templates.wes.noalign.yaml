@@ -21,11 +21,11 @@ details:
     - gatk4
     variantcaller:
     - gatk-haplotype
-    - samtools
     - platypus
     - freebayes
+    - samtools
     vcfanno:
-    - /home/naumenko/cre/cre.vcfanno.conf
+    - ~/cre/cre.vcfanno.conf
   analysis: variant2
   description: 'project_sample'
   files:
