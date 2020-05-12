@@ -16,7 +16,7 @@ get_variants_from_file <- function (filename){
 }
 
 # returns Hom / Het / - (for HOM reference)
-genotype2zygocity <- function (genotype_str, ref){
+genotype2zygocity <- function (genotype_str, ref, alt_depth){
     # test
     # genotype_str = "A|A|B"
     # genotype_str = "./." - call not possible
@@ -26,10 +26,12 @@ genotype2zygocity <- function (genotype_str, ref){
     # greedy
     genotype_str <- gsub("|", "/", genotype_str, fixed = T)
     genotype_str <- gsub("./.", "Insufficient_coverage", genotype_str, fixed = T)
-    #genotype_str = gsub(".","NO_CALL",genotype_str,fixed=T)
+    #genotype_str <- gsub("/.","NO_CALL",genotype_str,fixed=T)
       
     if(grepl("Insufficient_coverage", genotype_str)){
       result <- genotype_str
+    }else if(alt_depth == 0){
+      result <- '-'
     }else{
         ar <- strsplit(genotype_str, "/", fixed = T)
         len <- length(ar[[1]])
@@ -108,7 +110,7 @@ create_report <- function(family, samples){
         #t = lapply(variants[,paste0("gts.",sample),"Ref"],genotype2zygocity)
         #t = lapply(variants[,paste0("gts.",sample),"Ref"],genotype2zygocity)
         t <- unlist(mapply(genotype2zygocity, variants[,paste0("gts.",sample)], 
-                           variants[,"Ref"]))
+                           variants[,"Ref"], variants[,paste0("gt_alt_depths.",sample)]))
         variants[,zygocity_column_name] <- unlist(t)
     
         burden_column_name <- paste0("Burden.", sample)
