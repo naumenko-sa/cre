@@ -613,7 +613,8 @@ merge_reports <- function(family, samples, type){
         for (sample in samples){
             field_depth <- paste0("Alt_depths.", sample)
 
-            if (ensemble[i, "Position"] == "7:75628457"){
+            if (strcmp(ensemble[i, "Position"],"7:75628457")){
+                print('testing catch')
                 print(field_depth)
                 print(ensemble[i, field_depth])
             }
@@ -635,7 +636,8 @@ merge_reports <- function(family, samples, type){
             if(alt_depth>=3){
                 any_pass <- T
             }
-            if (ensemble[i, "Position"] == "7:75628457"){
+            if (strcmp(ensemble[i, "Position"],"7:75628457")){
+                print("testing catch")
                 print(field_depth)
                 print(alt_depth)
             }
