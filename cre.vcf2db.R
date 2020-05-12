@@ -602,18 +602,17 @@ merge_reports <- function(family, samples, type){
             field_depth <- paste0("Alt_depths.", sample)
             if (is.na(ensemble[i, field_depth]))
                 ensemble[i,field_depth] <- 0
-        }
+        
     }
 
     # after the alt depths columns are fixed, remove all variants that don't pass the alt depth <= 3 filter
     i <- 2
-    while (i<=nrow(ensemble)){
+    for (i in 1:nrow(ensemble)){
         any_pass <- F
-
         for (sample in samples){
             field_depth <- paste0("Alt_depths.", sample)
 
-            if (strcmp(ensemble[i, "Position"],"7:75628457")){
+            if (ensemble[i, "Position"] == "7:75628457"){ 
                 print('testing catch')
                 print(field_depth)
                 print(ensemble[i, field_depth])
@@ -636,11 +635,6 @@ merge_reports <- function(family, samples, type){
             if(alt_depth>=3){
                 any_pass <- T
             }
-            if (strcmp(ensemble[i, "Position"],"7:75628457")){
-                print("testing catch")
-                print(field_depth)
-                print(alt_depth)
-            }
         }
         if (any_pass == F){
             print("removing:")
@@ -651,6 +645,15 @@ merge_reports <- function(family, samples, type){
             }
             #if none of the samples pass the AD filter, remove the variant
             ensemble<-ensemble[-i,]
+        }
+        else{
+            print("keeping:")
+            print(ensemble[i, "Position"])
+            for (sample in samples){
+                field_depth <- paste0("Alt_depths.", sample)
+                print(ensemble[i, field_depth])
+            }
+
         }
         
         i <- i+1
