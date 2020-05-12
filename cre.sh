@@ -221,7 +221,7 @@ function f_make_report
         bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt decompose -s - | vt uniq - -o $fprefix.subset.vcf.gz
         tabix $fprefix.subset.vcf.gz
         f_fix_sample_names $fprefix
-        vcf.platypus.getNV.sh $fprefix.subset.vcf.gz $reference
+        vcf.platypus.getNV.gatk3.sh $fprefix.subset.vcf.gz $reference
     fi
 
     cd ..
