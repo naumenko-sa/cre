@@ -612,7 +612,7 @@ merge_reports <- function(family, samples, type){
 
 parse_ad <- function(ad_cell) {
   if (is.na(ad_cell)){
-    alt_depth <- 0
+    alt_depth <- as.integer(0)
   }
   else if (grepl(",",ad_cell)){
     # there can be multiple ad values reported here. use the largest
@@ -712,9 +712,19 @@ clinical_report <- function(project,samples,type){
     full_report <- read.csv(report_file_name, header = T, stringsAsFactors = F)
     
     full_report$max_alt <- with(full_report, pmax(get(paste0("Alt_depths.", samples))))
-    
+
+    for (i in 1:nrow(full_report)){
+        for (sample in samples){
+            field_depth <- paste0("Alt_depths.", sample)
+            parsed_alt_depth <- parse_ad(full_report[i,field_depth])
+            full_report[i,field_depth] <- parsed_alt_depth
+        }
+    }
+
+    # for clinical, only keep variants where one of the alt depths was >= 20
+    full_report <- dplyr::filter_at(full_report, paste0("Alt_depths.",samples), any_vars(as.integer(.) >= 20))    
     filtered_report <- subset(full_report, 
-               Quality > 1000 & Gnomad_af_popmax < 0.005 & Frequency_in_C4R < 6 & max_alt >=20,
+               Quality > 1000 & Gnomad_af_popmax < 0.005 & Frequency_in_C4R < 6,
                select = c("Position", "GNOMAD_Link", "Ref", "Alt", "Gene", paste0("Zygosity.", samples), 
                           paste0("Burden.",samples),
                           paste0("Alt_depths.",samples),
