@@ -600,56 +600,30 @@ merge_reports <- function(family, samples, type){
         }
         for (sample in samples){
             field_depth <- paste0("Alt_depths.", sample)
-            if (is.na(ensemble[i, field_depth]))
-                ensemble[i,field_depth] <- 0
-        
+            parsed_alt_depth <- parse_ad(ensemble[i,field_depth])
+            ensemble[i,field_depth] <- parsed_alt_depth 
+        }
     }
 
-    # after the alt depths columns are fixed, remove all variants that don't pass the alt depth <= 3 filter
-    i <- 2
-    while(i <= nrow(ensemble)){
-        any_pass <- F
-        for (sample in samples){
-           field_depth <- paste0("Alt_depths.", sample)
-            if (is.na(ensemble[i, field_depth])){
-               alt_depth <- 0
-            }
-            else if (grepl(",",ensemble[i, field_depth])){
-                # there can be multiple ad values reported here. use the largest
-                alt_depths <- unlist(strsplit(ensemble[i, field_depth], ","))
-                alt_depth <- 0
-                for (a in alt_depths) {
-                    if (!(is.na(a)) && (as.integer(a) > alt_depth)){alt_depth <- as.integer(a)}
-                }
-            }
-            else{alt_depth <- as.integer(ensemble[i, field_depth])}
-            # alt depth for sample has been set, check if it passes threshold
-            if(alt_depth>=3){any_pass <- T}
-        }
-        if (any_pass == F){
-            print(i)
-            print("removing:")
-            print(ensemble[i, "Position"])
-            for (sample in samples){
-                field_depth <- paste0("Alt_depths.", sample)
-                print(ensemble[i, field_depth])
-            }
-            #if none of the samples pass the AD filter, remove the variant
-            ensemble<-ensemble[-i,]
-        }
-        else{
-            print(i)
-            print("keeping:")
-            print(ensemble[i, "Position"])
-            for (sample in samples){
-                field_depth <- paste0("Alt_depths.", sample)
-                print(ensemble[i, field_depth])
-            }
-        }
-        i <- i+1
-    }
+    # after the alt depths columns are fixed, remove all variants that don't pass the alt depth >= 3 filter
+    filtered_ensemble <- dplyr::filter_at(ensemble, paste0("Alt_depths.",samples), any_vars(as.integer(.) >= 3))
+    select_and_write2(filtered_ensemble, samples, paste0(family, ".merge_reports"))	
+}
 
-    select_and_write2(ensemble, samples, paste0(family, ".merge_reports"))
+parse_ad <- function(ad_cell) {
+  if (is.na(ad_cell)){
+    alt_depth <- 0
+  }
+  else if (grepl(",",ad_cell)){
+    # there can be multiple ad values reported here. use the largest
+    alt_depths <- unlist(strsplit(ad_cell, ","))
+    alt_depth <- 0
+    for (a in alt_depths) {
+      if (!(is.na(a)) && (as.integer(a) > alt_depth)){alt_depth <- as.integer(a)}
+    }
+  }
+  else{alt_depth <- as.integer(ad_cell)}
+  return(alt_depth)
 }
 
 annotate_w_care4rare <- function(family,samples,type){
@@ -743,6 +717,7 @@ clinical_report <- function(project,samples,type){
                Quality > 1000 & Gnomad_af_popmax < 0.005 & Frequency_in_C4R < 6 & max_alt >=20,
                select = c("Position", "GNOMAD_Link", "Ref", "Alt", "Gene", paste0("Zygosity.", samples), 
                           paste0("Burden.",samples),
+                          paste0("Alt_depths.",samples),
                         "Variation", "Info", "Refseq_change", "Omim_gene_description", "Omim_inheritance",
                         "Orphanet", "Clinvar", "Frequency_in_C4R",
                         "Gnomad_af_popmax", "Gnomad_af", "Gnomad_ac", "Gnomad_hom",
