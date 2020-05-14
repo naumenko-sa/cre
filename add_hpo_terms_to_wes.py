@@ -24,6 +24,5 @@ else:
         HPO_DF = HPO_DF.set_index("Gene Symbol").drop(columns=["Gene ID"])
        	OUT_DF = WES_REPORT.join(HPO_DF, on="Gene")\
                 .rename(columns={"Number of occurrences": "HPO_count", "Features": "HPO_terms"}).fillna("NA")
-print(OUT_DF)
 
-OUT_DF.to_csv(OUT, sep="\t")
+OUT_DF.to_csv(OUT, sep="\t", encoding='utf-8')
