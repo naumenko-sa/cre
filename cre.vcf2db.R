@@ -599,10 +599,30 @@ merge_reports <- function(family, samples, type){
             l <- strsplit(ensemble[i, "Trio_coverage"],"_")[[1]]
             ensemble[i, "Depth"] <- sum(as.integer(l))
         }
+        sample_index <- 1
         for (sample in samples){
             field_depth <- paste0("Alt_depths.", sample)
             parsed_alt_depth <- parse_ad(ensemble[i,field_depth])
-            ensemble[i,field_depth] <- parsed_alt_depth 
+            ensemble[i,field_depth] <- parsed_alt_depth
+            # fix the zygosity after the alternate depths are set
+            # if ad is 0 make zygosity -
+            zygocity_column_name <- paste0("Zygosity.", sample)
+            # split by comma to grab the sample's gt
+            #gts <- data.frame(do.call('rbind', strsplit(as.character(ensemble$gts), ",",fixed=TRUE)))
+            #sample_gt <- gts[]
+            #print(i)
+            #print(ensemble[i,"Position"])
+            #print(sample_index)
+            #print("before")
+            #print(ensemble[i,zygocity_column_name])
+            #print("gt")
+            gts <- unlist(strsplit(ensemble[i,"gts"],","))
+            #print(gts[sample_index])
+            fixed_zygosity <- genotype2zygocity(gts[sample_index],ensemble[i,"Ref"],ensemble[i,field_depth])
+            #print("after")
+            #print(fixed_zygosity)
+            ensemble[i,zygocity_column_name] <- fixed_zygosity
+            sample_index <- sample_index + 1
         }
     }
 
