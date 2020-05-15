@@ -119,7 +119,8 @@ create_report <- function(family, samples){
                     get(zygocity_column_name) == 'Hom' | get(zygocity_column_name) == 'Het',
                     select = c("Gene", zygocity_column_name))
         # counts from plyr
-        df_burden <- plyr::count(t, "Gene")    
+        df_burden <- plyr::count(t, "Gene")
+	df_burden <- subset(df_burden, Gene!='None')    
         colnames(df_burden)[2] <- burden_column_name
         variants <- merge(variants, df_burden, all.x = T)
         variants[,burden_column_name][is.na(variants[,burden_column_name])] <- 0
