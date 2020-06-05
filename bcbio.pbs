@@ -11,7 +11,7 @@
 # experience is that the best combination for WES and SK HPC is 7cores/50G
 # wgs alignment: -v threads=40 -l mem=150G,vmem=150G, bigmem nodes=512G RAM + 64 cores, 2 nodes - crashes w memory error, 40 threads is too much
 
-#PBS -l walltime=240:00:00,nodes=1:ppn=7
+#PBS -l walltime=540:00:00,nodes=1:ppn=7
 #PBS -joe .
 #PBS -d .
 #PBS -l vmem=70g,mem=70g

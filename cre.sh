@@ -12,7 +12,7 @@
 #	max_af = af filter, default = 0.01
 ####################################################################################################
 
-#PBS -l walltime=20:00:00,nodes=1:ppn=1
+#PBS -l walltime=30:00:00,nodes=1:ppn=1
 #PBS -joe .
 #PBS -d .
 #PBS -l vmem=40g,mem=40g
