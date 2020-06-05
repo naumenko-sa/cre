@@ -1,4 +1,9 @@
 # variant report generator
+
+# store date to be used when writing files
+#datetime <- format(Sys.time(),"%Y-%m-%d_%H-%M") # can use to get timestamp for testing
+datetime <- format(Sys.time(),"%Y-%m-%d")
+
 # Rscript ~/cre/cre.vcf2.db.R <family> noncoding|default=NULL,coding
 add_placeholder <- function(variants, column_name, placeholder){
     variants[,column_name] <- with(variants, placeholder)
@@ -11,7 +16,7 @@ get_variants_from_file <- function (filename){
 }
 
 # returns Hom / Het / - (for HOM reference)
-genotype2zygocity <- function (genotype_str, ref){
+genotype2zygocity <- function (genotype_str, ref, alt_depth){
     # test
     # genotype_str = "A|A|B"
     # genotype_str = "./." - call not possible
@@ -21,10 +26,12 @@ genotype2zygocity <- function (genotype_str, ref){
     # greedy
     genotype_str <- gsub("|", "/", genotype_str, fixed = T)
     genotype_str <- gsub("./.", "Insufficient_coverage", genotype_str, fixed = T)
-    #genotype_str = gsub(".","NO_CALL",genotype_str,fixed=T)
+    #genotype_str <- gsub("/.","NO_CALL",genotype_str,fixed=T)
       
     if(grepl("Insufficient_coverage", genotype_str)){
       result <- genotype_str
+    }else if(alt_depth == 0){
+      result <- '-'
     }else{
         ar <- strsplit(genotype_str, "/", fixed = T)
         len <- length(ar[[1]])
@@ -103,7 +110,7 @@ create_report <- function(family, samples){
         #t = lapply(variants[,paste0("gts.",sample),"Ref"],genotype2zygocity)
         #t = lapply(variants[,paste0("gts.",sample),"Ref"],genotype2zygocity)
         t <- unlist(mapply(genotype2zygocity, variants[,paste0("gts.",sample)], 
-                           variants[,"Ref"]))
+                           variants[,"Ref"], variants[,paste0("gt_alt_depths.",sample)]))
         variants[,zygocity_column_name] <- unlist(t)
     
         burden_column_name <- paste0("Burden.", sample)
@@ -112,7 +119,8 @@ create_report <- function(family, samples){
                     get(zygocity_column_name) == 'Hom' | get(zygocity_column_name) == 'Het',
                     select = c("Gene", zygocity_column_name))
         # counts from plyr
-        df_burden <- plyr::count(t, "Gene")    
+        df_burden <- plyr::count(t, "Gene")
+	df_burden <- subset(df_burden, Gene!='None')    
         colnames(df_burden)[2] <- burden_column_name
         variants <- merge(variants, df_burden, all.x = T)
         variants[,burden_column_name][is.na(variants[,burden_column_name])] <- 0
@@ -148,6 +156,8 @@ create_report <- function(family, samples){
         if (nrow(gene_impacts) > 0){
             v_impacts <- paste0(gene_impacts$gene, ":exon", gene_impacts$exon,
                                 ":", gene_impacts$hgvsc, ":", gene_impacts$hgvsp)
+						# replace %3D with its url encoded character, "="
+						v_impacts <- str_replace_all(v_impacts,"%3D","=")
             s_impacts <- paste(v_impacts, collapse = ",")
         }
         else s_impacts <- 'NA'
@@ -385,7 +395,7 @@ fix_column_name <- function(column_name){
 }
 
 # merges ensembl, gatk-haplotype reports
-merge_reports <- function(family, samples){
+merge_reports <- function(family, samples, type){
     ensemble_file <- paste0(family, ".create_report.csv")
     ensemble <- read.csv(ensemble_file, stringsAsFactors = F)
     ensemble$superindex <- with(ensemble, paste(Position, Ref, Alt, sep = '-'))
@@ -589,17 +599,55 @@ merge_reports <- function(family, samples){
             l <- strsplit(ensemble[i, "Trio_coverage"],"_")[[1]]
             ensemble[i, "Depth"] <- sum(as.integer(l))
         }
+        sample_index <- 1
         for (sample in samples){
             field_depth <- paste0("Alt_depths.", sample)
-            if (is.na(ensemble[i, field_depth]))
-                ensemble[i,field_depth] <- 0
+            parsed_alt_depth <- parse_ad(ensemble[i,field_depth])
+            ensemble[i,field_depth] <- parsed_alt_depth
+            # fix the zygosity after the alternate depths are set
+            # if ad is 0 make zygosity -
+            zygocity_column_name <- paste0("Zygosity.", sample)
+            # split by comma to grab the sample's gt
+            #gts <- data.frame(do.call('rbind', strsplit(as.character(ensemble$gts), ",",fixed=TRUE)))
+            #sample_gt <- gts[]
+            #print(i)
+            #print(ensemble[i,"Position"])
+            #print(sample_index)
+            #print("before")
+            #print(ensemble[i,zygocity_column_name])
+            #print("gt")
+            gts <- unlist(strsplit(ensemble[i,"gts"],","))
+            #print(gts[sample_index])
+            fixed_zygosity <- genotype2zygocity(gts[sample_index],ensemble[i,"Ref"],ensemble[i,field_depth])
+            #print("after")
+            #print(fixed_zygosity)
+            ensemble[i,zygocity_column_name] <- fixed_zygosity
+            sample_index <- sample_index + 1
         }
     }
-    
-    select_and_write2(ensemble, samples, paste0(family, ".merge_reports"))
+
+    # after the alt depths columns are fixed, remove all variants that don't pass the alt depth >= 3 filter
+    filtered_ensemble <- dplyr::filter_at(ensemble, paste0("Alt_depths.",samples), any_vars(as.integer(.) >= 3))
+    select_and_write2(filtered_ensemble, samples, paste0(family, ".merge_reports"))	
 }
 
-annotate_w_care4rare <- function(family,samples){
+parse_ad <- function(ad_cell) {
+  if (is.na(ad_cell)){
+    alt_depth <- as.integer(0)
+  }
+  else if (grepl(",",ad_cell)){
+    # there can be multiple ad values reported here. use the largest
+    alt_depths <- unlist(strsplit(ad_cell, ","))
+    alt_depth <- 0
+    for (a in alt_depths) {
+      if (!(is.na(a)) && (as.integer(a) > alt_depth)){alt_depth <- as.integer(a)}
+    }
+  }
+  else{alt_depth <- as.integer(ad_cell)}
+  return(alt_depth)
+}
+
+annotate_w_care4rare <- function(family,samples,type){
     variants <- read.csv(paste0(family, ".merge_reports.csv"), stringsAsFactors = F)
   
     variants$superindex <- with(variants, paste(Position, Ref, Alt, sep='-'))
@@ -620,7 +668,9 @@ annotate_w_care4rare <- function(family,samples){
     }
     
     variants$Seen_in_C4R_samples[is.na(variants$Seen_in_C4R_samples)] <- 0        
-    
+		# truncate column if it has more than 30000 variants
+		variants$Seen_in_C4R_samples <- strtrim(variants$Seen_in_C4R_samples, 30000)
+		    
     if (exists("hgmd")){
         variants$HGMD_gene <- NULL
         variants$HGMD_id <- NULL
@@ -637,7 +687,7 @@ annotate_w_care4rare <- function(family,samples){
                           all.x = T, all.y = F)
     }
     
-    select_and_write2(variants, samples, paste0(family, ".wes.", Sys.Date()))
+    select_and_write2(variants, samples, paste0(family, ".", type, ".", datetime))
 }
 
 load_tables <- function(debug = F){
@@ -678,16 +728,27 @@ load_tables <- function(debug = F){
 }
 
 # creates clinical report - more conservative filtering and less columns
-clinical_report <- function(project,samples){
-    report_file_name <- paste0(project,".wes.",Sys.Date(),".csv")
+clinical_report <- function(project,samples,type){
+    report_file_name <- paste0(project, ".", type, ".", datetime,".csv")
     full_report <- read.csv(report_file_name, header = T, stringsAsFactors = F)
     
     full_report$max_alt <- with(full_report, pmax(get(paste0("Alt_depths.", samples))))
-    
+
+    for (i in 1:nrow(full_report)){
+        for (sample in samples){
+            field_depth <- paste0("Alt_depths.", sample)
+            parsed_alt_depth <- parse_ad(full_report[i,field_depth])
+            full_report[i,field_depth] <- parsed_alt_depth
+        }
+    }
+
+    # for clinical, only keep variants where one of the alt depths was >= 20
+    full_report <- dplyr::filter_at(full_report, paste0("Alt_depths.",samples), any_vars(as.integer(.) >= 20))    
     filtered_report <- subset(full_report, 
-               Quality > 1000 & Gnomad_af_popmax < 0.005 & Frequency_in_C4R < 6 & max_alt >=20,
+               Quality > 1000 & Gnomad_af_popmax < 0.005 & Frequency_in_C4R < 6,
                select = c("Position", "GNOMAD_Link", "Ref", "Alt", "Gene", paste0("Zygosity.", samples), 
                           paste0("Burden.",samples),
+                          paste0("Alt_depths.",samples),
                         "Variation", "Info", "Refseq_change", "Omim_gene_description", "Omim_inheritance",
                         "Orphanet", "Clinvar", "Frequency_in_C4R",
                         "Gnomad_af_popmax", "Gnomad_af", "Gnomad_ac", "Gnomad_hom",
@@ -720,7 +781,7 @@ clinical_report <- function(project,samples){
       "Sift_score", "Polyphen_score", "Cadd_score", "Vest3_score", "Revel_score",
       "Imprinting_status", "Pseudoautosomal")]
 
-    write.csv(filtered_report, paste0(project, ".wes.clinical.", Sys.Date(), ".csv"), row.names = F)
+    write.csv(filtered_report, paste0(project, ".clinical.", type, ".", datetime, ".csv"), row.names = F)
 }
 
 library(stringr)
@@ -735,21 +796,31 @@ c4r_database_path <- "/hpf/largeprojects/ccm_dccforge/dccforge/results/database"
 # for correct processing. most of them start with numbers, and R adds X automatically
 
 args <- commandArgs(trailingOnly = T)
+print(args)
 family <- args[1]
 
 coding <- if(is.null(args[2])) T else F
+coding <- F
+
+type <- if(is.na(args[2])) '' else args[2]
 
 debug <- F
 
+print(paste0("Running cre.vcf2db.R with inputs: ", family, coding, type))
 setwd(family)
 
 samples <- unlist(read.table("samples.txt", stringsAsFactors = F))
 samples <- gsub("-", ".", samples)
-    
+
+print("Loading tables")
 load_tables(debug)
+print("Creating report")
 create_report(family,samples)
-merge_reports(family,samples)
-annotate_w_care4rare(family,samples)
-clinical_report(family,samples)
+print("Merging reports")
+merge_reports(family,samples,type)
+print("Annotating Reports")
+annotate_w_care4rare(family,samples,type)
+print("Writing Clinical Report")
+clinical_report(family,samples,type)
 
 setwd("..")

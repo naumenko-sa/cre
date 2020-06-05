@@ -22,9 +22,10 @@ fi
 depth_threshold=$2
 
 severity_threshold=$3
-#echo $severity_threshold
 
 max_af=$4
+
+alt_depth=3
 
 gemini query -q "select name from samples order by name" $file > samples.txt
 
@@ -38,7 +39,7 @@ sQuery="select \
         dp as Depth,\
         qual as Quality,\
         gene as Gene,\
-        clinvar_pathogenic as Clinvar,\
+				COALESCE(clinvar_pathogenic, '') || COALESCE( ';' || NULLIF(clinvar_sig,''), '') as Clinvar, \
         ensembl_gene_id as Ensembl_gene_id,\
         transcript as Ensembl_transcript_id,\
         aa_length as AA_position,\
@@ -71,28 +72,28 @@ done < samples.txt
 # https://groups.google.com/forum/#!topic/gemini-variation/U3uEvWCzuQo
 # v.depth = 'None' see https://github.com/chapmanb/bcbio-nextgen/issues/1894
 
-if [[ "$severity_threshold" == "ALL" ]]
+if [[ "$severity_threshold" == 'ALL' || "$severity_threshold" == "wes.synonymous" ]]
 then
 #used for RNA-seq = 20k variants in the report
     severity_filter=""
-elif [[ "$severity_threshold" == "wes.synonymous" ]]
-then
-    severity_filter=" and (is_coding=1 or is_splicing=1)"
 #for WES = 1k variants in the report
 else
     severity_filter=" and impact_severity<>'LOW' "
 fi
 
+
+sQuery=$sQuery"hgvsc as Nucleotide_change_ensembl,\
+        hgvsp as Protein_change_ensembl,\
+        old_multiallelic as Old_multiallelic from variants"
+
+initialQuery=$sQuery # keep the field selection part for later use
+
 #max_aaf_all frequency is from gemini.conf and does not include gnomad WGS frequencing, gnomad WES only
 #gnomad_af includes gnomad WGS
-sQuery=$sQuery"hgvsc as Nucleotide_change_ensembl,\
-		hgvsp as Protein_change_ensembl,\
-        old_multiallelic as Old_multiallelic
-		from variants \
-        where \
-	        (dp >= "$depth_threshold" or dp = '' or dp is null) "$severity_filter" and gnomad_af_popmax <= "$max_af
+sQuery=$sQuery" where gnomad_af_popmax <= "${max_af}" "${severity_filter}""
 
 s_gt_filter=''
+# denovo 0/1 is exported in cre.sh
 if [ -n "$denovo" ] && [ "$denovo" == 1 ]
 then
     # https://www.biostars.org/p/359117/
@@ -106,5 +107,14 @@ then
     sQuery=$sQuery" and qual>=500"
     gemini query -q "$sQuery" --gt-filter "$s_gt_filter" --header $file
 else
-    gemini query --header -q "$sQuery" $file
+    # keep variant where the alt depth is >=3 in any one of the samples or they're all -1 (sometimes happens for freebayes called variants?)
+    s_gt_filter="(gt_alt_depths).(*).(>="${alt_depth}").(any) or (gt_alt_depths).(*).(==-1).(all)"
+	gemini query -q "$sQuery" --gt-filter "${s_gt_filter}" --header $file
+
+    # also get the clinvar variants (duplicates will be removed later)
+    cQuery=$initialQuery
+    cQuery=$cQuery" where gnomad_af_popmax <= ${max_af} and Clinvar <> ''"
+    # only get variants where AD >= 1 (any sample with an alternate read)
+    c_gt_filter="(gt_alt_depths).(*).(>=1).(any) or (gt_alt_depths).(*).(==-1).(all)"
+    gemini query -q "$cQuery" --gt-filter "$c_gt_filter" $file
 fi

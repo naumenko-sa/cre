@@ -17,7 +17,7 @@ depth_threshold=$2
 
 severity_threshold=$3
 
-if [[ "$severity_threshold" == 'ALL' ]]
+if [[ "$severity_threshold" == 'ALL' || "$severity_threshold" == "wes.synonymous" ]]
 then
 #used for RNA-seq = 20k variants in the report
     severity_filter=""

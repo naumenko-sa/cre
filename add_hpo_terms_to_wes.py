@@ -25,4 +25,4 @@ else:
        	OUT_DF = WES_REPORT.join(HPO_DF, on="Gene")\
                 .rename(columns={"Number of occurrences": "HPO_count", "Features": "HPO_terms"}).fillna("NA")
 
-OUT_DF.to_csv(OUT, sep="\t")
+OUT_DF.to_csv(OUT, sep="\t", encoding='utf-8')

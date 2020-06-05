@@ -12,10 +12,13 @@
 #	max_af = af filter, default = 0.01
 ####################################################################################################
 
-#PBS -l walltime=20:00:00,nodes=1:ppn=1
+#PBS -l walltime=30:00:00,nodes=1:ppn=1
 #PBS -joe .
 #PBS -d .
 #PBS -l vmem=40g,mem=40g
+
+# default settings:
+# max af > 0.1, ad > 3, plus and any variants with a clinvar entry and ad > 1
 
 # cleanup is different for wes.fast template - don't remove gatk db
 function f_cleanup
@@ -148,11 +151,15 @@ function f_make_report
     
     if [ "$type" == "denovo" ]
     then
-	export denovo=1
+			export denovo=1
     fi
 
-    cre.gemini2txt.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variants.txt
-    cre.gemini.variant_impacts.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variant_impacts.txt
+    ~/cre/cre.gemini2txt.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variants.all.txt
+    ~/cre/cre.gemini.variant_impacts.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variant_impacts.all.txt
+
+    # remove duplicate lines from results of gemini query
+    awk '!a[$0]++' $family.variants.all.txt > $family.variants.txt
+    awk '!a[$0]++' $family.variant_impacts.all.txt > $family.variant_impacts.txt
 
     for f in *.vcf.gz
     do
@@ -214,7 +221,7 @@ function f_make_report
         bcftools view -R ${family}-ensemble.db.txt.positions $fprefix.vcf.gz | bcftools sort | vt decompose -s - | vt uniq - -o $fprefix.subset.vcf.gz
         tabix $fprefix.subset.vcf.gz
         f_fix_sample_names $fprefix
-        vcf.platypus.getNV.sh $fprefix.subset.vcf.gz $reference
+        vcf.platypus.getNV.gatk3.sh $fprefix.subset.vcf.gz $reference
     fi
 
     cd ..
@@ -226,8 +233,9 @@ function f_make_report
     else
         noncoding=""
     fi
-		
-    Rscript ~/cre/cre.vcf2db.R $family $noncoding
+
+    echo GENERATING REPORT WITH TYPE: "${type}"
+    Rscript ~/cre/cre.vcf2db.R $family "${type}"
     
     cd $family
     #rm $family.create_report.csv $family.merge_reports.csv
@@ -256,6 +264,12 @@ if [ "$type" == "rnaseq" ]
 then
     export depth_threshold=5
     export severity_filter=ALL
+fi
+
+# set wes.regular as default type
+if [ -z $type ]
+then
+    type="wes.regular"
 fi
 
 #no cleanup by default

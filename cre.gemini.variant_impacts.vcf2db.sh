@@ -19,14 +19,12 @@ severity_threshold=$3
 
 max_af=$4
 
-if [[ "$severity_threshold" == 'ALL' ]]
+alt_depth=3
+
+if [[ "$severity_threshold" == 'ALL' || "$severity_threshold" == "wes.synonymous" ]]
 then
-#used for RNA-seq = 20k variants in the report
+	  #used for RNA-seq = 20k variants in the report
     severity_filter=""
-#use for WES = 1k variants in the report
-elif [[ "$severity_threshold" == "wes.synonymous" ]]
-then
-    severity_filter="(v.is_coding=1 or v.is_splicing=1) and "
 else
     severity_filter="v.impact_severity<>'LOW' and "
 fi
@@ -65,14 +63,14 @@ then
 	i.spliceregion"
 fi
 
-sQuery=$sQuery" from variants v,variant_impacts i where "$severity_filter"v.gnomad_af_popmax <= "$max_af" and \
-		v.variant_id=i.variant_id and \
-		(v.dp>="$depth_threshold" or v.dp='' or v.dp is null)"
+initialQuery=$sQuery" from variants v,variant_impacts i" #store field selection
 
-#echo $sQuery
 
+sQuery=$initialQuery" where "$severity_filter"v.gnomad_af_popmax <= "$max_af" and \
+v.variant_id=i.variant_id"
 
 s_gt_filter=''
+
 if [ -n "$denovo" ] && [ "$denovo" == 1 ]
 then
     proband=`gemini query -q "select name from samples where phenotype=2" $file`
@@ -84,5 +82,13 @@ then
     sQuery=$sQuery" and qual>=500"
     gemini query -q "$sQuery" --gt-filter "$s_gt_filter" --header $file
 else
-    gemini query --header -q "$sQuery" $file
+    s_gt_filter="(gt_alt_depths).(*).(>="${alt_depth}").(any) or (gt_alt_depths).(*).(==-1).(all)"
+		gemini query -q "$sQuery" --gt-filter "$s_gt_filter" --header $file
+    # grab the clinvar variants
+    cQuery=$initialQuery 
+    # everything that has a clinvar_sig value
+    cQuery=$cQuery" where gnomad_af_popmax <= ${max_af} and v.variant_id=i.variant_id and clinvar_sig <> ''"
+    # only get variants where AD >= 1 (any sample with an alternate read)
+    s_gt_filter="(gt_alt_depths).(*).(>=1).(any) or (gt_alt_depths).(*).(==-1).(all)"
+    gemini query -q "$cQuery" --gt-filter "$s_gt_filter" $file
 fi
