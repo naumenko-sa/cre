@@ -34,8 +34,8 @@ do
 		ls $family/*20*.csv;
 	fi
 
-	# submit a job to regenerate (uncomment to run)
-  if [ "$dryrun" = false ]
+	# submit a job to regenerate
+  if [ "$dryrun" = false ] && [ -d $family ]
 	then
 	  ~/cre/generate_reports.sh $family # generate both report types
   else
