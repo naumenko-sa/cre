@@ -28,19 +28,26 @@ def get_latest_wes_report_paths():
 
 		# sorted - ascending order
 		for family in glob(join(family_prefix_dir, "*/")):
-			reports = sorted([report for report in glob(join(family, "*wes*")) if "clinical" not in report])
-			report_paths.append(reports[-1]) #latest report since prefix is: yyyy-mm-dd
+			reports = sorted([report for report in glob(join(family, "*wes*")) if "clinical" not in report \
+			and "synonymous" not in report])
+
+			if len(reports) >= 1:
+				report_paths.append(reports[-1]) #latest report since prefix is: yyyy-mm-dd
+			else:
+				print("No report files found for %s" % family)
 
 	return report_paths
 
 for report in get_latest_wes_report_paths():
 	print("Parsing %s" % report)
 
+	sep = "," if report.endswith(".csv") else "\t"
+
 	try:
-		df = pd.read_csv(report)
+		df = pd.read_csv(report, sep=sep)
 	except UnicodeDecodeError:
 		print("UnicodeDecodeError on %s. Trying latin-1 decoding." % report)
-		df = pd.read_csv(report, encoding='latin-1')
+		df = pd.read_csv(report, encoding='latin-1', sep=sep)
 
 	zygosity_cols = [col for col in df.columns if col.startswith("Zygosity.")]
 	burden_cols = [col for col in df.columns if col.startswith("Burden.")]
