@@ -209,30 +209,44 @@ create_report <- function(family, samples){
                       by.y = "ensembl_gene_id", all.x = T)
     
     # Column19 - Omim_gene_description
-    #TEJA's changes begin
-    #omim_file_name <- paste0(default_tables_path,"/omim.txt")
-    omim_file_name <- paste0(default_tables_path,"/omim.gene.desc.csv")
-    if (file.exists(omim_file_name)){
-	    #omim <- read.delim2(omim_file_name, stringsAsFactors=F)
-	    #variants <- merge(variants, omim, all.x=T)
-	    omim <- read.csv(omim_file_name, stringsAsFactors=F)
-        variants <- merge(variants, omim, by.x="Gene", by.y ="Gene_name", all.x=T)
-        variants <- merge(variants, omim, by.x="Ensembl_gene_id", by.y="ensembl_gene_id", all.x=T)
-        variants$Omim_gene_description <- coalesce(variants$Omim_gene_description.x, variants$Omim_gene_description.y)
-        variants$Omim_gene_description[is.na(variants$Omim_gene_description)] <- 0
-    }
-        
     # Column20 - Omim_inheritance 
-    #omim_inheritance_file_name <- paste0(default_tables_path,"/omim.inheritance.csv")        
-    omim_inheritance_file_name <- paste0(default_tables_path,"/omim.gene.inherit.csv")
-    if (file.exists(omim_inheritance_file_name)){
-	    omim_inheritance <- read.csv(omim_inheritance_file_name, stringsAsFactors = F)
-	    #variants <- merge(variants, omim_inheritance, all.x = T)
-        variants <- merge(variants, omim_inheritance, by.x="Gene", by.y ="Gene_name", all.x=T)
-        variants <- merge(variants, omim_inheritance, by.x="Ensembl_gene_id", by.y="ensembl_gene_id", all.x=T)
-        variants$Omim_inheritance <- coalesce(variants$Omim_inheritance.x, variants$Omim_inheritance.y) 
-    }
-    #END OF TEJA's CHANGES
+    omim_map_file <- paste0(default_tables_path,"/omim_hgnc_join_omim_phenos_2020-07-02.tsv")
+
+       if(file.exists(omim_map_file)){
+
+         # read in tsv
+         hgnc_join_omim_phenos <- read.delim(omim_map_file, stringsAsFactors=FALSE)
+
+         print(head(hgnc_join_omim_phenos))
+
+         print("Just read the hgnc join omim phenos")
+
+         # select only relevant columns from the key file (gene name (to be joined on), the mim inheritance, and the phenotypes)
+         hgnc_omim <-  hgnc_join_omim_phenos %>%
+           dplyr::select(Omim_inheritance = mim_inheritance,
+                 Omim_gene_description = phenotypes,
+                 gene_name) %>%
+           # replace NAs with "" so it doesn't multi join on them
+           mutate_all(~ ifelse(is.na(.), "", .))
+
+         print("Successfully altered hgnc_omim")
+
+         print(head(variants))
+         print("OMIM")
+         print(head(hgnc_omim))
+
+         # assuming the column w/ gene name is 'gene_name'
+         variants <-  left_join(variants, hgnc_omim,
+                            by = c("Gene" = "gene_name")) %>%
+           # replace the ""s back with NAs
+           # this should not conflict with the other columns..
+           mutate_at(vars(-one_of("gene_name")), ~ ifelse(. == "", NA, .)) %>%
+           # replace NA phenotypes with zero like in the current script -
+           # i guess this is redundant and could go directly from "" to 0 but is useful for sanity checking
+           mutate(Omim_inheritance = ifelse(is.na(Omim_inheritance ), 0, Omim_inheritance))
+       }
+
+    print("Successfully joined on OMIM file")
 
     # Column 21 = Orphanet
     # previous name - orphanet.deduplicated.txt
