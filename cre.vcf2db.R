@@ -210,7 +210,7 @@ create_report <- function(family, samples){
     
     # Column19 - Omim_gene_description
     # Column20 - Omim_inheritance 
-    omim_map_file <- paste0(default_tables_path,"/omim_hgnc_join_omim_phenos_2020-07-02.tsv")
+    omim_map_file <- paste0(default_tables_path,"/omim_hgnc_join_omim_phenos_2020-07-24.tsv")
 
        if(file.exists(omim_map_file)){
 
@@ -223,9 +223,7 @@ create_report <- function(family, samples){
 
          # select only relevant columns from the key file (gene name (to be joined on), the mim inheritance, and the phenotypes)
          hgnc_omim <-  hgnc_join_omim_phenos %>%
-           dplyr::select(Omim_inheritance = mim_inheritance,
-                 Omim_gene_description = phenotypes,
-                 gene_name) %>%
+           dplyr::select(gene_name, omim_phenotype, omim_inheritance) %>% 
            # replace NAs with "" so it doesn't multi join on them
            mutate_all(~ ifelse(is.na(.), "", .))
 
@@ -240,10 +238,7 @@ create_report <- function(family, samples){
                             by = c("Gene" = "gene_name")) %>%
            # replace the ""s back with NAs
            # this should not conflict with the other columns..
-           mutate_at(vars(-one_of("gene_name")), ~ ifelse(. == "", NA, .)) %>%
-           # replace NA phenotypes with zero like in the current script -
-           # i guess this is redundant and could go directly from "" to 0 but is useful for sanity checking
-           mutate(Omim_inheritance = ifelse(is.na(Omim_inheritance ), 0, Omim_inheritance))
+           mutate(Gene, ~ ifelse(. == "", NA, .)) 
        }
 
     print("Successfully joined on OMIM file")
