@@ -1,9 +1,9 @@
 # 01. Map HGNC Gene Names (Approved/Alternative/Previous) to OMIM Phenotypic Information and Inheritance
 # Author: Delvin So
 # 11/14/2019 - now reports multiple inheritances rather than just the first one
-# 07/24/2020 - fixed so the final output is cast to wide, with each gene corresponding to a single string of omim phenotype and inheritances
-# Parsing failures are from the comments at the end of the mim files
-# Usage: Rscript map_omim_hgnc.R hgnc_website.txt mimTitles.txt genemap2.txt mim2gene.txt OMIM
+# fixed so the final output is cast to wide, with each gene corresponding to a single string of omim phenotype and inheritances
+# 08/2020, retain entire omim phenotype, separated by '|' and added MF (multifactorial) as shorthand
+# Rscript map_omim_hgnc.R hgnc_website.txt mimTitles.txt genemap2.txt mim2gene.txt test
 
 suppressPackageStartupMessages(library(tidyverse))
 args <- commandArgs(trailingOnly = TRUE) # returns argumentn after --args
@@ -17,17 +17,12 @@ gene_map_file <- args[3]
 mim2gene_file <- args[4]
 output_prefix <- args[5]
 
-print(hgnc_file_path)
-print(mim_titles_file)
-print(gene_map_file)
-print(mim2gene_file)
-print(output_prefix)
-#mim_titles_file <- "mimTitles.txt"
-#mim2gene_file <- "mim2gene.txt"
-#gene_map_file <- "genemap2.txt"
-# morbid_map_file <- "morbidmap.txt"
-#hgnc_file_path <- "hgnc_website.txt"
-#output_prefix <- Sys.Date()
+# mim_titles_file <- "mimTitles.txt"
+# mim2gene_file <- "mim2gene.txt"
+# gene_map_file <- "genemap2.txt"
+# # morbid_map_file <- "morbidmap.txt"
+# hgnc_file_path <- "hgnc_website.txt"
+# output_prefix <- Sys.Date()
 
 
 # ---- read in HGNC and clean -----
@@ -115,7 +110,8 @@ mim_info <- mim_map %>%
 # 
 # print(paste0("Total Genes, Genes + Phenotype: ", total_omim_genes)) # debug, 15733
 
-# 'flatten' the hgnc approved symbols/synonyms/previous symbols so each gene symbol is mapped to its hgnc_id
+# 'flatten' the hgnc approved symbols/synonyms/previous symbols
+# so each gene symbol is mapped to its hgnc_id
   
   # separate hgnc synonyms and convert into a stacked format
   hgnc_synonyms <- hgnc_file %>%
@@ -306,7 +302,7 @@ hgnc_join_omim_phenos <- mim_join_hgnc_res %>%
   # select(hgnc_id, approved_name, mim_number, phenotypes, ensembl_id) %>%
   mutate(phenotypes = str_to_lower(phenotypes)) %>%
   # this grabs everything after any occurence of and including 'Autosomal|X-Linked|Y-Linked' up until a semi colon, comma or nothing
-  mutate(mim_inheritance = str_extract_all(phenotypes, "(autosomal|x-linked|y-linked).*?(\\;|\\,|$)")) %>% 
+  mutate(mim_inheritance = str_extract_all(phenotypes, "(multifactorial|autosomal|x-linked|y-linked).*?(\\;|\\,|$)")) %>% 
   unnest(mim_inheritance) %>%
   group_by(mim_number) %>%
   # collapse 
@@ -315,11 +311,14 @@ hgnc_join_omim_phenos <- mim_join_hgnc_res %>%
   distinct()
 
 
+  
+
 hgnc_join_omim_phenos <- mim_join_hgnc_res %>%
   left_join(hgnc_join_omim_phenos %>% select(mim_number, mim_inheritance), by = "mim_number") %>%
   rename(mim_inheritance_extract = "mim_inheritance") %>% 
   # replace the first occurence of each inheritance with abbreviation, the remaining ones can be removed so we retain only unique occurences
   mutate(mim_inheritance = str_replace(mim_inheritance_extract, "autosomal recessive", "AR"),
+         mim_inheritance = str_replace(mim_inheritance, "multifactorial", "MF"),
          mim_inheritance = str_replace(mim_inheritance, "autosomal dominant", "AD"),
          mim_inheritance = str_replace(mim_inheritance, "x(\\-|\\s)linked recessive", "XL-R"),
          mim_inheritance = str_replace(mim_inheritance, "x(\\-|\\s)linked dominant", "XL-D"),
@@ -337,10 +336,11 @@ hgnc_join_omim_phenos <- mim_join_hgnc_res %>%
                 mim_inheritance = str_replace_all(mim_inheritance, "\\B,\\s*", "")) # remove trailing commas bounded
 
 
+
 # ----- new additions from 07/2020 -----
 # cast so each row is a gene with omim description by casting to wide and concatenating together
 final <- hgnc_join_omim_phenos  %>%  
-  #.[1:1000,] %>% 
+   # sample_n(10000) %>% 
   select(omim_inheritance = mim_inheritance, omim_phenotype = phenotypes, gene_name)  %>% 
   mutate(omim_phenotype = str_to_lower(omim_phenotype)) %>% 
   group_by(gene_name) %>% 
@@ -350,18 +350,33 @@ final <- hgnc_join_omim_phenos  %>%
   mutate(var_id = paste0(variable, id)) %>%
   select(-variable, -id) %>% 
   spread(var_id, value) %>%
-  tidyr::unite_("omim_phenotype", sep = ",", names(.)[str_detect(names(.), 'phenotype')]) %>%
+  # filter(!is.na(omim_phenotype3)) %>% # FOR DEBUGGING
+  tidyr::unite_("omim_phenotype", sep = "|", names(.)[str_detect(names(.), 'phenotype')]) %>%
   tidyr::unite_("omim_inheritance", sep = ",", names(.)[str_detect(names(.), 'inheritance')]) %>% 
-  mutate_at(vars(omim_inheritance, omim_phenotype), ~  str_replace_all(., "NA", "") %>% 
-              str_replace_all("autosomal|recessive|autosomal|dominant|x(\\-|\\s)linked|y(\\-|\\s)linked", "") %>% 
-              str_replace_all("(,|\\;|\\?)+", ",") %>% 
-              str_replace_all("\\(|\\)|\\{|\\}|\\\\|\\/", "") %>% 
-              str_replace_all("[0-9]*", "") %>% 
-              str_replace_all("\\s+", " ") %>%
-              str_replace_all("\\B,\\s*", "") %>%
-              str_replace_all("(,$)|(,\\s$)", "")) %>%
-  mutate_at(vars(omim_inheritance, omim_phenotype), ~ ifelse(.x == "", NA, .x)) %>%
-  arrange(omim_inheritance)
+  mutate_at(vars(omim_inheritance, omim_phenotype), ~  str_replace_all(., "NA", "") )%>% 
+  mutate(omim_phenotype =  str_replace_all(omim_phenotype, "multifactorial|autosomal|recessive|autosomal|dominant|x(\\-|\\s)linked|y(\\-|\\s)linked", ""),
+         omim_phenotype = str_replace_all(omim_phenotype, "\\s+", " "), # replace multiple spaces with one space
+         omim_phenotype = str_replace_all(omim_phenotype, ", ,", ","), # remaining commas after the first regex removes the words
+         omim_phenotype = str_replace_all(omim_phenotype, "\\|+", "|"),  # replace multiple delimiters with one
+         omim_phenotype = str_replace_all(omim_phenotype, "\\|$", ""), # remove delimiter if it's the last item) 
+         omim_phenotype = str_trim(omim_phenotype)) %>% 
+  mutate(omim_inheritance = str_replace_all(omim_inheritance, ",+", ","), # replaces multiple commas with one
+         omim_inheritance  = str_replace_all(omim_inheritance , "^,", ""),  # remove commas at beginning
+         omim_inheritance = str_replace_all(omim_inheritance, "(,$)|(,\\s$)", "")) %>% # replaces trailing commas
+  mutate(omim_phenotype = ifelse(omim_phenotype == "|", "", omim_phenotype)) #%>%
+  # filter(str_detect(omim_phenotype, "\\|")) # ALSO FOR DEBUGGING
+
+# final %>% print(n = 50)
+
+             # str_replace_all("(,|\\;|\\?)+", ",") %>% 
+              #str_replace_all("\\(|\\)|\\{|\\}|\\\\|\\/", "") %>% 
+              #str_replace_all("[0-9]*", "") %>% 
+              #str_replace_all("\\s+", " ") %>%
+              #str_replace_all("\\B,\\s*", "") %>%
+              #str_replace_all("(,$)|(,\\s$)", "")
+  #             ) %>%
+  # mutate_at(vars(omim_inheritance, omim_phenotype), ~ ifelse(.x == "", NA, .x)) %>%
+  # arrange(omim_inheritance)
 # tidyr::unite_("Omim", sep = ";", names(.)[-1]) %>% 
   # mutate(Omim = str_replace_all(Omim, "NA", ""),
   #        Omim = str_replace_all(Omim, "autosomal|recessive|autosomal|dominant|x(\\-|\\s)linked|y(\\-|\\s)linked", ""),
