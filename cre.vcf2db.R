@@ -208,38 +208,27 @@ create_report <- function(family, samples){
     variants <- merge(variants, gene_descriptions, by.x = "Ensembl_gene_id",
                       by.y = "ensembl_gene_id", all.x = T)
     
-    # Column19 - Omim_gene_description
+    # Column19 - Omim_phenotype
     # Column20 - Omim_inheritance 
-    omim_map_file <- paste0(default_tables_path,"/omim_hgnc_join_omim_phenos_2020-07-24.tsv")
+    # Column20 - Omim_inheritance 
+    omim_map_file <- paste0(default_tables_path,"/OMIM_hgnc_join_omim_phenos_2020-08-05.tsv")
+    if(file.exists(omim_map_file)){
+    # read in tsv
+    hgnc_join_omim_phenos <- read.delim(omim_map_file, stringsAsFactors=FALSE)
+    print(head(hgnc_join_omim_phenos))
+    print("Just read the hgnc join omim phenos")
+    # select only relevant columns from the key file (gene name (to be joined on), the mim inheritance, and the phenotypes)
+    hgnc_omim <-  hgnc_join_omim_phenos %>%
+        dplyr::select(gene_name, omim_phenotype, omim_inheritance) %>%
+        mutate(gene_name = replace(gene_name, is.na(gene_name), ""))
+    print("Successfully altered hgnc_omim")
+    # assuming the column w/ gene name is 'gene_name'
 
-       if(file.exists(omim_map_file)){
-
-         # read in tsv
-         hgnc_join_omim_phenos <- read.delim(omim_map_file, stringsAsFactors=FALSE)
-
-         print(head(hgnc_join_omim_phenos))
-
-         print("Just read the hgnc join omim phenos")
-
-         # select only relevant columns from the key file (gene name (to be joined on), the mim inheritance, and the phenotypes)
-         hgnc_omim <-  hgnc_join_omim_phenos %>%
-           dplyr::select(gene_name, omim_phenotype, omim_inheritance) %>% 
-           # replace NAs with "" so it doesn't multi join on them
-           mutate_all(~ ifelse(is.na(.), "", .))
-
-         print("Successfully altered hgnc_omim")
-
-         print(head(variants))
-         print("OMIM")
-         print(head(hgnc_omim))
-
-         # assuming the column w/ gene name is 'gene_name'
-         variants <-  left_join(variants, hgnc_omim,
-                            by = c("Gene" = "gene_name")) %>%
-           # replace the ""s back with NAs
-           # this should not conflict with the other columns..
-           mutate(Gene, ~ ifelse(. == "", NA, .)) 
-       }
+    variants <-  left_join(variants, hgnc_omim, by = c("Gene" = "gene_name")) 
+    }
+    else{
+    print(paste0("File not found: ",omim_map_file))
+    }
 
     print("Successfully joined on OMIM file")
 
@@ -375,13 +364,14 @@ create_report <- function(family, samples){
 # writes in CSV format
 select_and_write2 <- function(variants, samples, prefix)
 {
+    print(colnames(variants))
     variants <- variants[c(c("Position", "UCSC_Link", "GNOMAD_Link", "Ref", "Alt"),
                           paste0("Zygosity.", samples),
                           c("Gene"),
                           paste0("Burden.", samples),
                           c("gts", "Variation", "Info", "Refseq_change", "Depth", "Quality"),
                           paste0("Alt_depths.", samples),
-                          c("Trio_coverage", "Ensembl_gene_id", "Gene_description", "Omim_gene_description", "Omim_inheritance",
+                          c("Trio_coverage", "Ensembl_gene_id", "Gene_description", "omim_phenotype", "omim_inheritance",
                             "Orphanet", "Clinvar",
                             "Frequency_in_C4R", "Seen_in_C4R_samples", "HGMD_id", "HGMD_gene", "HGMD_tag", "HGMD_ref",
                             "Gnomad_af_popmax", "Gnomad_af", "Gnomad_ac", "Gnomad_hom",
@@ -758,7 +748,7 @@ clinical_report <- function(project,samples,type){
                select = c("Position", "GNOMAD_Link", "Ref", "Alt", "Gene", paste0("Zygosity.", samples), 
                           paste0("Burden.",samples),
                           paste0("Alt_depths.",samples),
-                        "Variation", "Info", "Refseq_change", "Omim_gene_description", "Omim_inheritance",
+                        "Variation", "Info", "Refseq_change", "omim_phenotype", "omim_inheritance",
                         "Orphanet", "Clinvar", "Frequency_in_C4R",
                         "Gnomad_af_popmax", "Gnomad_af", "Gnomad_ac", "Gnomad_hom",
                         "Sift_score", "Polyphen_score", "Cadd_score", "Vest3_score", "Revel_score",
@@ -784,7 +774,7 @@ clinical_report <- function(project,samples,type){
     #order columns
     filtered_report <- filtered_report[c("Position", "GNOMAD_Link", "Ref", "Alt", "Gene", paste0("Zygosity.", samples), 
       paste0("Burden.", samples),
-      "Variation", "Info", "Refseq_change", "Omim_gene_description", "Omim_inheritance",
+      "Variation", "Info", "Refseq_change", "omim_phenotype", "omim_inheritance",
       "Orphanet", "Clinvar", "Frequency_in_C4R",
       "Gnomad_af_popmax", "Gnomad_af", "Gnomad_ac", "Gnomad_hom",
       "Sift_score", "Polyphen_score", "Cadd_score", "Vest3_score", "Revel_score",
