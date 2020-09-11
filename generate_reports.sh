@@ -11,8 +11,24 @@ else
 	email_flag=""
 fi
 
-standard_job="$(qsub ~/cre/cre.sh -v family=${family})"
+cd $family
+family_vcf="${family}-ensemble-annotated-decomposed.vcf.gz"
+if [ -f $family_vcf ]
+then
+	vcf2cre_job="$(qsub ~/cre/cre.vcf2cre.sh -v original_vcf="${family}-ensemble-annotated-decomposed.vcf.gz",project=${family})"
+else
+	echo "${family_vcf} Not Present, Aborting."
+	cd ..
+	exit
+fi
+
+standard_job="$(qsub ~/cre/cre.sh -W depend=afterany:"${vcf2cre_job}" -v family=${family})"
 echo "Standard Report Job ID: ${standard_job}"
 
 synonymous_job="$(qsub ~/cre/cre.sh -W depend=afterany:"${standard_job}" -v family=${family},type=wes.synonymous ${email_flag})"
 echo "Synonymous Report Job ID: ${synonymous_job}"
+
+echo "The Rerun subfolder will be renamed by the current date after the reports are created"
+cleanup_job="$(qsub ~/cre/rename_rerun.sh -W depend=afterok:"${synonymous_job}" -v family=${family})"
+
+cd ..
