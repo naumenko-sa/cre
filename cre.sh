@@ -12,7 +12,7 @@
 #	max_af = af filter, default = 0.01
 ####################################################################################################
 
-#PBS -l walltime=30:00:00,nodes=1:ppn=1
+#PBS -l walltime=23:00:00,nodes=1:ppn=1
 #PBS -joe .
 #PBS -d .
 #PBS -l vmem=40g,mem=40g
@@ -158,8 +158,31 @@ function f_make_report
     ~/cre/cre.gemini.variant_impacts.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variant_impacts.all.txt
 
     # remove duplicate lines from results of gemini query
-    awk '!a[$0]++' $family.variants.all.txt > $family.variants.txt
+    awk '!a[$0]++' $family.variants.all.txt > $family.variants.unfiltered.txt
     awk '!a[$0]++' $family.variant_impacts.all.txt > $family.variant_impacts.txt
+
+    # add header to result file
+    head -n 1 $family.variants.unfiltered.txt > $family.variants.txt
+    
+    # remove all the variants that were only called by one variant caller if it isn't GATK
+    while IFS=$'\t' read -r chrom pos variant; 
+    do 
+        echo ${chrom}:${pos}; 
+        grep ${pos} ${family}.table | while IFS=$'\t' read -r match_chrom match_pos _ _ callers; 
+        do if [ "$pos" == "$match_pos" ]; 
+        then 
+            if [[ "$callers" != "freebayes" ]] && [[ "$callers" != "samtools" ]] && [[ "$callers" != "platypus" ]]; 
+            then
+                # one of the variants is called by > 1 caller OR GATK
+                echo -e ${chrom}'\t'${pos}'\t'"$variant" >> $family.variants.txt; 
+                break; 
+            else
+                # this variant is only called by one caller
+                : # pass
+            fi;
+        fi; 
+        done; 
+    done < $family.variants.unfiltered.txt
 
     for f in *.vcf.gz
     do
@@ -294,3 +317,11 @@ if [ -z $make_report ] || [ $make_report -eq 1 ]
 then
     f_make_report
 fi
+
+#if cleanup set, also make the synonymous report
+if [ $cleanup -eq 1 ]
+then
+    type="wes.synonymous"
+    f_make_report
+fi
+	
