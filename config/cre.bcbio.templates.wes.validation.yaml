@@ -17,7 +17,7 @@ details:
     - freebayes
     - platypus
     ensemble:
-      numpass: 2
+      numpass: 1
     validate: giab-NA12878/truth_small_variants.vcf.gz
     validate_regions: giab-NA12878/truth_regions.bed
   analysis: variant2

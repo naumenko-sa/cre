@@ -165,16 +165,15 @@ function f_make_report
     head -n 1 $family.variants.unfiltered.txt > $family.variants.txt
     
     # remove all the variants that were only called by one variant caller if it isn't GATK
-    while IFS=$'\t' read -r chrom pos variant; 
+    while IFS=$'\t' read -r chrom pos id ref alt variant; 
     do 
-        echo ${chrom}:${pos}; 
-        grep ${pos} ${family}.table | while IFS=$'\t' read -r match_chrom match_pos _ _ callers; 
-        do if [ "$pos" == "$match_pos" ]; 
+        grep ${pos} ${family}.table | while IFS=$'\t' read -r match_chrom match_pos match_ref match_alt callers; 
+        do if [ "$match_chrom" == "$chrom" ] && [ "$match_ref" == "$ref" ] && [ "$match_alt" == "$alt" ]; 
         then 
             if [[ "$callers" != "freebayes" ]] && [[ "$callers" != "samtools" ]] && [[ "$callers" != "platypus" ]]; 
             then
                 # one of the variants is called by > 1 caller OR GATK
-                echo -e ${chrom}'\t'${pos}'\t'"$variant" >> $family.variants.txt; 
+                echo -e ${chrom}'\t'${pos}'\t'${id}'\t'${ref}'\t'${alt}"$variant" >> $family.variants.txt; 
                 break; 
             else
                 # this variant is only called by one caller
@@ -183,6 +182,7 @@ function f_make_report
         fi; 
         done; 
     done < $family.variants.unfiltered.txt
+
 
     for f in *.vcf.gz
     do
