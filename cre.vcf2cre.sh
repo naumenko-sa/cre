@@ -69,11 +69,9 @@ fi
 echo "#################################################"
 echo `date` "Generating gemini database"
 echo "#################################################"
-vcf2db.py $project.sorted.decomposed.vepeffects.annotated.vcf.gz 	$ped	${project}-ensemble.db
 
 mkdir $project
-
-mv ${project}-ensemble.db $project
+vcf2db.py $project.sorted.decomposed.vepeffects.annotated.vcf.gz 	$ped	${project}/${project}-ensemble.db
 
 mv $project.sorted.decomposed.vepeffects.annotated.vcf.gz ${project}/${project}-ensemble-annotated-decomposed.vcf.gz
 mv $project.sorted.decomposed.vepeffects.annotated.vcf.gz.tbi ${project}/${project}-ensemble-annotated-decomposed.vcf.gz.tbi
