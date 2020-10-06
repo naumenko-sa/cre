@@ -5,7 +5,7 @@
 # uses hgvs notation and no --pick = all effects for a gene
 # 10h walltime is not enough for genomes or big multisample vcfs
 
-#PBS -l walltime=23:00:00,nodes=1:ppn=1
+#PBS -l walltime=100:00:00,nodes=1:ppn=5
 #PBS -joe .
 #PBS -d .
 #PBS -l vmem=30g,mem=30g
