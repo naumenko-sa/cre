@@ -294,3 +294,10 @@ if [ -z $make_report ] || [ $make_report -eq 1 ]
 then
     f_make_report
 fi
+
+#if cleanup set, also make the synonymous report
+if [ $cleanup -eq 1 ]
+then
+    type="wes.synonymous"
+    f_make_report
+fi
