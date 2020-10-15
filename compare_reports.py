@@ -1,64 +1,53 @@
+import argparse
 import pandas as pd
 import sys
 
-#reports generated from cre report_changes branch
-# Synonymous: no filter applied on the severity of variants
-# new report: alt_depth at least 3 in any of three samples, alt_depth of 1 and in clinvar
-# variants in old report should all be included in the new report, and any additional variants will have alt_depth of at least 3 in any samples or 1 if in clinvar
-
-#old reports
-wes = sys.argv[1]
-wes = pd.read_csv(wes, encoding='latin-1')
-
-#reports from report_changes branch (new reports)
-wes_regular = sys.argv[2]
-wes_regular = pd.read_csv(wes_regular,  encoding='latin-1')
+def import_variants(report):
+    report = pd.read_csv(report,  encoding='ISO-8859-1')
+    report = report.set_index(['Position', 'Ref', 'Alt'])
+    return report
 
 
-print('Comparing wes.regular to old wes report')
-#test that all variants in wes (old report) are also in wes_regular (new report)
-wes_regular_variants = wes_regular['Position'].tolist()
-not_in_wes_regular = []
-for variant in wes['Position'].tolist():
-    if variant not in wes_regular_variants:
-        print(wes[wes['Position'] == variant]['Depth'].tolist()[0])
-        if int(wes[wes['Position'] == variant]['Depth'].tolist()[0]) >= 10:
-            pass
-        else:
-            print(variant)
-            print('Variant not present in new report that was present in old report')
+def get_missing_variants(report1, report2):
+    report1_joined_report2 = report1.join(report2, how='left', lsuffix='_1', rsuffix='_2')
+    not_in_report1 = report2[~report2.index.isin(report1_joined_report2.index)]
+    return not_in_report1
+
+def select_columns(report, columns):
+    report = report[columns]
+    return report
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description='Outputs variants that differ between reports')
+    parser.add_argument('-old', help='old variant report', required=True)
+    parser.add_argument('-new', help='new variant report', required=True)
+    parser.add_argument('-columns', nargs= '+', help='list of columns of interest', required=True)
+    args = parser.parse_args()
+
+    old = import_variants(args.old)
+    new = import_variants(args.new)
+
+    if old.columns.tolist() == new.columns.tolist():
+        print('Columns in old report are the same as columns in the new report')
     else:
-        pass
+        new_columns = list(set(new.columns.tolist()) - set(old.columns.tolist()))
+        missing_columns = list(set(old.columns.tolist()) - set(new.columns.tolist()))
+        print('Columns in old and new report are different')
+        print('New columns:')
+        print(new_columns)
+        print('Missing columns:')
+        print(missing_columns)
 
-#get variants in wes_regular (new report) that are not in wes (old report)
-wes_variants = wes['Position'].tolist()
-not_in_wes = []
-for variant in wes_regular['Position'].tolist():
-    if variant not in wes_variants:
-        not_in_wes.append(variant)
-    else:
-        pass
+    not_in_old = get_missing_variants(old, new)
+    not_in_new = get_missing_variants(new, old)
 
-#make dataframe of variants that were not present in old report but are present in new
-not_in_wes_list = [wes_regular[wes_regular['Position'] == position] for position in not_in_wes]
+    columns = args.columns
+    not_in_old = select_columns(not_in_old, columns)
+    not_in_new = select_columns(not_in_new, columns)
 
-#If no additional variants in new report, nothing to test
-if len(not_in_wes_list) == 0:
-    print('No additional variants with new filters in wes report')
-#If there are additional variants with the new filters, test that they comply with stated new filters
-else:
-    not_in_wes_df = pd.concat(not_in_wes_list)
+    not_in_old.to_csv('variants_not_in_old.csv',  encoding='ISO-8859-1')
+    not_in_new.to_csv('variants_not_in_new.csv',  encoding='ISO-8859-1')
 
-    col_names = not_in_wes_df.columns.tolist()
-    alt_depth = [col_name for col_name in col_names if 'Alt_depths' in col_name]
 
-    #check that variants present in new report that are not present in the old reports
-    #have alt_depth > 3 in at least one sample or are present in ClinVar
-    for index,row in not_in_wes_df.iterrows():
-        alt_depth_all = [int(row[ad]) for ad in alt_depth]
-        if min(alt_depth_all) >= 3:
-            pass
-        elif row['Clinvar'] != 'None':
-            pass
-        else:
-             print('Variants present in new report do not comply with new filters')
+
