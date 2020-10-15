@@ -296,8 +296,9 @@ then
 fi
 
 #if cleanup set, also make the synonymous report
-if [ $cleanup -eq 1 && "$type" == "wes.regular" ]
+if [ "$type" == "wes.regular" ]
 then
+    echo "HERE!"
     type="wes.synonymous"
     f_make_report
 fi
