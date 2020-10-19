@@ -2,12 +2,18 @@
 
 # input is a text file of newline separated family ids
 family_ids=$1
+report_type=$2
 echo $family_ids
 
-if [ "$2" = "-dryrun" ]; then
+if [ "$3" = "-dryrun" ]; then
 	dryrun=true
 else
   dryrun=false
+fi
+
+if [ "$report_type" != "wes" ] &&  [ "$report_type" != "wgs" ]
+	echo "please pass wes or wgs as second argument"
+	exit
 fi
 
 while read family;
@@ -37,7 +43,7 @@ do
 	# submit a job to regenerate
   if [ "$dryrun" = false ] && [ -d $family ]
 	then
-	  ~/cre/generate_reports.sh $family # generate both report types
+	  ~/cre/generate_reports.sh $family $report_type
   else
     echo "dryrun set, will not generate reports for ${family}"
   fi

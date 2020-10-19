@@ -44,7 +44,7 @@ else
 fi
 
 if [ "$report_type" = "wes" ]; then
-	standard_job="$(qsub ~/cre/cre.sh -W depend=afterany:"${vcf2cre_job}" -v family=${family})"
+	standard_job="$(qsub ~/cre/cre.sh -W depend=afterany:"${vcf2cre_job}" -v family=${family},type=wes.both)"
 	echo "Standard WES Report Job ID: ${standard_job}"
 elif [ "$report_type" = "wgs" ]; then
 	standard_job="$(qsub ~/cre/cre.sh -W depend=afterany:"${vcf2cre_job}" -v family=${family},type=wgs)"
