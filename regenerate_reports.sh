@@ -11,8 +11,8 @@ else
   dryrun=false
 fi
 
-if [ "$report_type" != "wes" ] &&  [ "$report_type" != "wgs" ]; then
-	echo "please pass wes or wgs as second argument"
+if [ "$report_type" != "wes" ] && [ "$report_type" != "wes.both" ] && [ "$report_type" != "wgs" ]; then
+	echo "please pass wes, wes.both, or wgs as second argument"
 	exit
 fi
 
