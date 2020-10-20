@@ -5,6 +5,7 @@ import sys
 def import_variants(report):
     report = pd.read_csv(report,  encoding='ISO-8859-1')
     report = report.set_index(['Position', 'Ref', 'Alt'])
+    report.columns = [col.lower() for col in report.columns.tolist()]
     return report
 
 
@@ -75,7 +76,7 @@ if __name__ == "__main__":
     not_in_new = get_missing_variants(new, old)
 
     # only include columns of interest 
-    columns = args.columns
+    columns = [col.lower() for col in args.columns]
     not_in_old = select_columns(not_in_old, columns)
     not_in_new = select_columns(not_in_new, columns)
     
