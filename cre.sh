@@ -302,7 +302,7 @@ then
 fi
 
 #if cleanup set, also make the synonymous report
-if [ "$both" == "true" ]
+if [ $cleanup -eq 1 ] && [ "$type" == "true" ]
 then
     type="wes.synonymous"
     f_make_report
