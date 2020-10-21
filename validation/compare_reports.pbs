@@ -1,0 +1,32 @@
+#!/bin/bash
+
+#PBS -N report_comparison
+#PBS -d .
+#PBS -l vmem=20g,mem=20g
+#PBS -j oe
+
+
+#usage: qsub compare_reports.pbs -F "<first csv> <second csv> <first db> <second db>"
+
+###
+#example run here: /hpf/largeprojects/ccmbio/aarthi/benchmark-runs/report_comparison
+#qsub validation/compare_reports.pbs -F "crg/HG001.clinical.wes.regular.2020-09-26.csv crg2/NA12878.clinical.wes.regular.2020-09-24.csv crg/HG001-ensemble.db crg2/NA12878-ensemble.db"
+###
+
+
+report_type=`basename $1 .csv | cut -d "." -f2`;
+family=`basename $1 .csv | cut -d "." -f1`;
+left="${family}.${report_type}.uniq.1.pos";
+right="${family}.${report_type}.uniq.2.pos";
+common="${family}.${report_type}.common.pos";
+
+
+#set operations
+sh compare_reports.sh $1 $2
+
+#extract db entries
+sh gemini_compare.sh $3 $4 $left > ${family}.${report_type}.uniq.1.db.txt
+sh gemini_compare.sh $3 $4 $right > ${family}.${report_type}.uniq.2.db.txt
+sh gemini_compare.sh $3 $4 $common > ${family}.${report_type}.common.db.txt
+
+
