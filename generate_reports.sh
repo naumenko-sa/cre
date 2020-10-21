@@ -1,34 +1,64 @@
 #!/bin/bash
 # generate both the regular and synonymous reports for a family
 # pass in the family id as the first positional parameter, use -email to recieve an email when both jobs are done
-# usage: generate_reports.sh <family id> [optional -email] 
+# usage: generate_reports.sh <family id> <report_type> [optional -email] 
 
 family=$1
+report_type=$2
+curr_date=$(date +"%Y-%m-%d")
 
-if [ "$2" == "-email" ]; then
+rerun_folder="${family}_${curr_date}"
+
+if [ "$3" == "-email" ]; then
   email_flag="-m e"
 else
 	email_flag=""
 fi
 
-cd $family
-family_vcf="${family}-ensemble-annotated-decomposed.vcf.gz"
-if [ -f $family_vcf ]
-then
-	vcf2cre_job="$(qsub ~/cre/cre.vcf2cre.sh -v original_vcf="${family}-ensemble-annotated-decomposed.vcf.gz",project=${family})"
+if [ "$report_type" == "wes" ] || [ "$report_type" == "wes.both" ]; then
+	eval script="~/cre/cre.vcf2cre.sh"
+elif [ "$report_type" == "wgs" ]; then
+	eval script="~/crg/crg.vcf2cre.sh"
 else
-	echo "${family_vcf} Not Present, Aborting."
-	cd ..
+	echo "Please enter a report type (wes, wes.both, or wgs)"
 	exit
 fi
 
-standard_job="$(qsub ~/cre/cre.sh -W depend=afterany:"${vcf2cre_job}" -v family=${family})"
-echo "Standard Report Job ID: ${standard_job}"
+if [ -d "$family" ]; then
+	cd $family
+	family_vcf="${family}-ensemble-annotated-decomposed.vcf.gz"
+else
+	echo "Family folder ${family} not found"
+	exit
+fi
 
-synonymous_job="$(qsub ~/cre/cre.sh -W depend=afterany:"${standard_job}" -v family=${family},type=wes.synonymous ${email_flag})"
-echo "Synonymous Report Job ID: ${synonymous_job}"
+if [ -f $family_vcf ]; then
+	mkdir $rerun_folder
+	cd $rerun_folder
+	# could link instead of copying but not sure whether there
+	# would be side effects on the linked file (#TODO: test)
+	cp ../${family_vcf} .
+	vcf2cre_job="$(qsub "${script}" -v original_vcf="${family_vcf}",project=${family})"
+else
+	echo "${family_vcf} not present, exiting."
+	cd ../..
+	exit
+fi
 
-echo "The Rerun subfolder will be renamed by the current date after the reports are created"
-cleanup_job="$(qsub ~/cre/rename_rerun.sh -W depend=afterok:"${synonymous_job}" -v family=${family})"
+if [ "$report_type" = "wes.both" ]; then
+	first_report_job="$(qsub ~/cre/cre.sh -W depend=afterany:"${vcf2cre_job}" -v family=${family},type=wes.regular)"
+	echo "Regular WES Report Job ID: ${first_report_job}"
+	report_job="$(qsub ~/cre/cre.sh -W depend=afterany:"${first_report_job}" -v family=${family},type=wes.synonymous)"
+	echo "Synonymous WES Report Job ID: ${report_job}"
+elif [ "$report_type" = "wes" ]; then
+	report_job="$(qsub ~/cre/cre.sh -W depend=afterany:"${vcf2cre_job}" -v family=${family},type=wes.regular)"
+	echo "Regular WES Report Job ID: ${report_job}"
+elif [ "$report_type" = "wgs" ]; then
+	report_job="$(qsub ~/cre/cre.sh -W depend=afterany:"${vcf2cre_job}" -v family=${family},type=wgs)"
+  echo "WGS Report Job ID: ${report_job}"
+fi
 
-cd ..
+echo "The re-run subfolder will be cleaned up after the reports are created"
+cleanup_job="$(qsub ~/cre/cleanup_run.sh -W depend=afterok:"${report_job}" -v family=${family})"
+
+cd ../..
