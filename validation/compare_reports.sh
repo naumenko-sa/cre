@@ -11,12 +11,13 @@ parallel  --colsep "\t"  'gemini region --reg "{1}:{2}-{3}" --header --columns "
 }
 
 report_type=`basename $1 .csv | cut -d "." -f2`;
-family=`basename $1 .csv | cut -d "." -f1`;
+prefix1=`basename $1 .csv`;
+prefix2=`basename $2 .csv`;
 
 echo "given arguments ->";
 echo "csv: $1 and $2";
 echo "dbs: $3 and $3";
-echo "family = $family, report type = ${report_type}";
+echo "report type = ${report_type}";
 
 if [ "${report_type}" != "$(basename $2 .csv | cut -d "." -f2)" ]; then
 	echo "report type (clinical or regular) should be same for both files. exiting!";
@@ -26,9 +27,9 @@ fi;
 grep -v "Position" $1 | cut -d "," -f1 | sort -k1,1 > 1.pos
 grep -v "Position" $2 | cut -d "," -f1 | sort -k1,1 > 2.pos
 
-left="${family}.${report_type}.uniq.1.pos";
-right="${family}.${report_type}.uniq.2.pos";
-common="${family}.${report_type}.common.pos";
+left="${prefix1}.uniq.pos";
+right="${prefix2}.uniq.pos";
+common="${prefix1}.${prefix2}.common.pos";
 
 comm -12 1.pos 2.pos | awk -vFS=":" -vOFS="\t" '{ split($1,a,"\""); print a[2],int($2)-1,int($2); }' > ${common}
 comm -23 1.pos 2.pos | awk -vFS=":" -vOFS="\t" '{ split($1,a,"\""); print a[2],int($2)-1,int($2); }' > ${left}

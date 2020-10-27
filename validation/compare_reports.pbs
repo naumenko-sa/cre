@@ -15,18 +15,20 @@
 
 
 report_type=`basename $1 .csv | cut -d "." -f2`;
-family=`basename $1 .csv | cut -d "." -f1`;
-left="${family}.${report_type}.uniq.1.pos";
-right="${family}.${report_type}.uniq.2.pos";
-common="${family}.${report_type}.common.pos";
+prefix1=`basename $1 .csv`;
+prefix2=`basename $2 .csv`;
+
+left="${prefix1}.uniq.pos";
+right="${prefix2}.uniq.pos";
+common="${prefix1}.${prefix2}.common.pos";
 
 
 #set operations
 sh compare_reports.sh $1 $2
 
 #extract db entries
-sh gemini_compare.sh $3 $4 $left > ${family}.${report_type}.uniq.1.db.txt
-sh gemini_compare.sh $3 $4 $right > ${family}.${report_type}.uniq.2.db.txt
-sh gemini_compare.sh $3 $4 $common > ${family}.${report_type}.common.db.txt
+sh gemini_compare.sh $3 $4 $left > ${prefix1}.uniq.db.txt
+sh gemini_compare.sh $3 $4 $right > ${prefix2}.uniq.db.txt
+sh gemini_compare.sh $3 $4 $common > ${prefix1}.${prefix2}.common.db.txt
 
 
