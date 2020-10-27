@@ -22,11 +22,11 @@ common="${family}.${report_type}.common.pos";
 
 
 #set operations
-sh compare_reports.sh $1 $2
+sh ~/cre/validation/compare_reports.sh $1 $2
 
 #extract db entries
-sh gemini_compare.sh $3 $4 $left > ${family}.${report_type}.uniq.1.db.txt
-sh gemini_compare.sh $3 $4 $right > ${family}.${report_type}.uniq.2.db.txt
-sh gemini_compare.sh $3 $4 $common > ${family}.${report_type}.common.db.txt
+sh ~/cre/validation/gemini_compare.sh $3 $4 $left > ${family}.${report_type}.uniq.1.db.txt
+sh ~/cre/validation/gemini_compare.sh $3 $4 $right > ${family}.${report_type}.uniq.2.db.txt
+sh ~/cre/validation/gemini_compare.sh $3 $4 $common > ${family}.${report_type}.common.db.txt
 
 
