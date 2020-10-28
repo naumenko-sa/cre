@@ -1,0 +1,44 @@
+#!/bin/bash
+
+#PBS -N rtg-snv
+#PBS -l vmem=500g,mem=500g
+#PBS -l walltime=15:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -j oe
+#PBS -d .
+#usage:
+#qsub rtg-snv.pbs -v truth="<path to truth vcf>",test="<path to test vcf>",out="output folder name"[,bed="<path to bed intervals>"(optional)]
+
+isempty () {
+	if [ -z "$1" ]; then
+		echo "required argument $1 was not set. exiting!";
+		exit;
+	fi;
+}
+
+isempty $truth
+isempty $test
+isempty $out
+
+if [ -z "$bed" ]; then
+	extra="";
+else
+	extra="-e $bed";
+fi;
+
+export _JAVA_OPTIONS="-Xmx80g"
+RTG=/hpf/largeprojects/ccmbio/arun/Tools/rtg-tools/rtg-tools-3.10.1/RTG.jar;
+SDF=/hpf/largeprojects/ccmbio/aarthi/benchmark-runs/GRch37_SDF;
+
+java -jar $RTG vcfeval -b $truth -c $test -o $out -t $SDF $extra
+
+#can pass >1 *roc.tsv.gz from different runs
+#rocplot will exit if the requested png file already exists
+
+##ROC##
+java -jar $RTG rocplot --line-width=3 --png="$out/${out}_roc.png" ${out}/weighted_roc.tsv.gz
+java -jar $RTG rocplot --line-width=3 --png="$out/${out}_snv-indel_roc.png"  ${out}/snp_roc.tsv.gz ${out}/non_snp_roc.tsv.gz
+
+##Precision/Recall##
+java -jar $RTG rocplot -P --line-width=3 --png="$out/${out}_pr.png" ${out}/weighted_roc.tsv.gz
+java -jar $RTG rocplot -P --line-width=3 --png="$out/${out}_snv-indel_pr.png"  ${out}/snp_roc.tsv.gz ${out}/non_snp_roc.tsv.gz
