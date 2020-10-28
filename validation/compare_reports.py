@@ -11,6 +11,11 @@ def import_variants(report):
 
 def get_missing_variants(report1, report2):
     not_in_report1 = report2[~report2.index.isin(report1.index)]
+    not_in_report1 = not_in_report1.reset_index()[['Position', 'Ref', 'Alt']]
+    not_in_report1['Chrom'] = [pos.split(':')[0] for pos in not_in_report1['Position'].tolist()]
+    not_in_report1['Start'] = [int(pos.split(':')[1])-1 for pos in not_in_report1['Position'].tolist()]
+    not_in_report1['End'] = not_in_report1['Start']
+    not_in_report1 = not_in_report1[['Chrom', 'Start', 'End', 'Ref', 'Alt']]
     return not_in_report1
 
 
@@ -44,15 +49,13 @@ def get_diff_annotations(report1, report2, diff_columns, left_suffix, right_suff
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description='Assess differences between two variant reports')
+        description='Assess differences in variants and annotations between two variant reports')
     parser.add_argument('-old', help='old variant report', required=True)
     parser.add_argument('-new', help='new variant report', required=True)
-    parser.add_argument('-output_folder', help='path to output folder', required=True)
-    parser.add_argument('-columns', nargs= '+', help='list of columns of interest, e.g. Clinvar', required=True)
     args = parser.parse_args()
 
-    old_name = args.old.split('/')[-1].strip('csv')
-    new_name = args.new.split('/')[-1].strip('csv')
+    old_name = args.old.split('/')[-1]
+    new_name = args.new.split('/')[-1]
     family = args.new.split('/')[-1].split('.')[0]
     
     old = import_variants(args.old)
@@ -62,35 +65,26 @@ if __name__ == "__main__":
 
     # determine if column names in new report are equivalent to column names in old report
     if old_cols == new_cols:
-        print('Columns in old report are the same as columns in the new report')
+        new_columns, missing_columns = [], []
     else:
         new_columns, missing_columns = get_diff_columns(new_cols, old_cols)
-        print('Columns in old and new report are different')
-        print('New columns:')
-        print(new_columns)
-        print('Missing columns:')
-        print(missing_columns)
 
     # get variants unique to new and old reports
     not_in_old = get_missing_variants(old, new)
+    not_in_old.to_csv('%s.uniq.pos'%new_name.strip('.csv'), index=False, header=False, sep='\t')
     not_in_new = get_missing_variants(new, old)
+    not_in_new.to_csv('%s.uniq.pos'%old_name.strip('.csv'), index=False, header=False, sep='\t')
 
-    # only include columns of interest 
-    columns = [col.lower() for col in args.columns]
-    not_in_old = select_columns(not_in_old, columns)
-    not_in_new = select_columns(not_in_new, columns)
-    
-
-    not_in_old.to_csv('%smissing.csv'%old_name,  encoding='ISO-8859-1')
-    not_in_new.to_csv('%smissing.csv'%new_name,  encoding='ISO-8859-1')
-
-
-    # for variants cmmon to new and old reports, test for annotation equivalence
+    # for variants common to new and old reports, test for annotation equivalence
     # include new and old annotations in csv with common variants if annotations are not equivalent
     different_columns = new_columns + missing_columns
     diff_annotations = get_diff_annotations(new, old, different_columns, '_new', '_old')
     diff_annotations = diff_annotations[sorted(diff_annotations)]
     diff_annotations.to_csv('%s.different_annotations.csv'%family, encoding='ISO-8859-1')
 
-
-
+    # write summary file
+    summary = open('summary.txt', 'w')
+    summary.write(
+        ('Comparing reports: {}, {}\nColumns unique to {}: {}\nColumns unique to {}: {}\nNumber of variants unique to {}: {}\nNumber of variants unique to {}: {}\nNumber of variants shared: {}').format(
+            old_name, new_name, old_name, missing_columns, new_name, new_columns, old_name, len(not_in_new), new_name, len(not_in_old), len(diff_annotations))
+        )
