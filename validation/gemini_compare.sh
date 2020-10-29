@@ -55,7 +55,7 @@ echo "${columns},db" | tr "," "\t"
 while read -a l; do
 ref=${l[3]};
 alt=${l[4]};
-echo -e "`gemini region  --reg "${l[0]}:${l[1]}-${l[2]}"  --columns "$columns"  --filter "ref='$ref' and alt='$alt'" ${arr[0]}` \t ${arr[1]}"
-echo -e "`gemini region  --reg "${l[0]}:${l[1]}-${l[2]}"  --columns "$columns"  --filter "ref='$ref' and alt='$alt'" ${arr[2]}` \t ${arr[3]}"
+echo -e "`gemini region  --reg "${l[0]}:${l[1]}-${l[2]}"  --columns "$columns"  --filter "ref='$ref' and alt='$alt'" ${arr[0]}` \t${arr[1]}"
+echo -e "`gemini region  --reg "${l[0]}:${l[1]}-${l[2]}"  --columns "$columns"  --filter "ref='$ref' and alt='$alt'" ${arr[2]}` \t${arr[3]}"
 echo;
 done < ${arr[4]};
