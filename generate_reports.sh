@@ -39,9 +39,15 @@ if [ -f $family_vcf ]; then
 	# would be side effects on the linked file (#TODO: test)
 	cp ../${family_vcf} .
 	# for exome reports, need variant tables from the four variant callers
-	if [ -f ../${family}.table ]; then 
-		cp ../*table . 
+	if [ -f ../${family}-freebayes-annotated-decomposed.vcf.gz ]; then 
+		cp ../${family}-freebayes-annotated-decomposed.vcf.gz .  
 	fi
+        if [ -f ../${family}-platypus-annotated-decomposed.vcf.gz ]; then
+                cp ../${family}-platypus-annotated-decomposed.vcf.gz .
+        fi
+        if [ -f ../${family}-samtools-annotated-decomposed.vcf.gz ]; then
+                cp ../${family}-samtools-annotated-decomposed.vcf.gz .
+        fi
 	vcf2cre_job="$(qsub "${script}" -v original_vcf="${family_vcf}",project=${family})"
 else
 	echo "${family_vcf} not present, exiting."
