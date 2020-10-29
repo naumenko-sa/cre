@@ -30,8 +30,8 @@ right="${prefix2}.uniq.pos";
 #common="${prefix1}.${prefix2}.common.pos";
 
 #extract db entries
-sh ~/cre/validation/gemini_compare.sh $3 $4 $left gene impact ensembl_gene_id callers > ${prefix1}.uniq.db.txt
-sh ~/cre/validation/gemini_compare.sh $3 $4 $right gene impact ensembl_gene_id callers > ${prefix2}.uniq.db.txt
+sh ~/cre/validation/gemini_compare.sh $3 ${prefix1} $4 ${prefix2} $left gene impact ensembl_gene_id callers > ${prefix1}.uniq.db.txt
+sh ~/cre/validation/gemini_compare.sh $3 ${prefix1} $4 ${prefix2} $right gene impact ensembl_gene_id callers > ${prefix2}.uniq.db.txt
 #sh ~/cre/validation/gemini_compare.sh $3 $4 $common gene impact ensembl_gene_id callers > ${prefix1}.${prefix2}.common.db.txt
 
 

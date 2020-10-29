@@ -11,18 +11,18 @@
 nargs=$#;
 arr=(`echo $@ | awk '{ for(i=1;i<=NF;i++) print $i; }'`);
 
-if [ $nargs -lt 3 ]; then
+if [ $nargs -lt 5 ]; then
 	echo "You must pass at least 3 arguments to the script."
 	echo "usage:"
-	echo "sh gemini_compare.sh ensemble1.db ensemble2.db pos.bed [space seperated column names in ensemble variants db]"
+	echo "sh gemini_compare.sh ensemble1.db prefix 1 ensemble2.db prefix2 pos.bed [space seperated column names in ensemble variants db]"
 	echo "Exiting!"
 	exit;
 fi;
 
-if [ $nargs -gt 3 ]; then 
+if [ $nargs -gt 5 ]; then 
 	n=`expr $nargs - 1`;
 	arg_columns=();
-	for i in `seq 3 $n`; do
+	for i in `seq 5 $n`; do
 		arg_columns+=(${arr[$i]});
 	done;
 	arg_columns=","$(IFS=","; echo "${arg_columns[*]}");
@@ -55,7 +55,7 @@ echo "${columns},db" | tr "," "\t"
 while read -a l; do
 ref=${l[3]};
 alt=${l[4]};
-echo -e "`gemini region  --reg "${l[0]}:${l[1]}-${l[2]}"  --columns "$columns"  --filter "ref='$ref' and alt='$alt'" ${arr[0]}` \t db1"
-echo -e "`gemini region  --reg "${l[0]}:${l[1]}-${l[2]}"  --columns "$columns"  --filter "ref='$ref' and alt='$alt'" ${arr[1]}` \t db2"
+echo -e "`gemini region  --reg "${l[0]}:${l[1]}-${l[2]}"  --columns "$columns"  --filter "ref='$ref' and alt='$alt'" ${arr[0]}` \t ${arr[1]}"
+echo -e "`gemini region  --reg "${l[0]}:${l[1]}-${l[2]}"  --columns "$columns"  --filter "ref='$ref' and alt='$alt'" ${arr[2]}` \t ${arr[3]}"
 echo;
-done < ${arr[2]};
+done < ${arr[4]};
