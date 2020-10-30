@@ -10,7 +10,7 @@ def db_output_to_dict(db_output):
     with open(db_output) as csvfile:
         reader = csv.DictReader(csvfile, delimiter='\t')
         for row in reader:
-            alt_depths = [row[col] for col in row if 'gt_depths' in col]
+            alt_depths = [row[col] for col in row if 'gt_alt_depths' in col]
             if row['db'] == args.prefix1:
                 variant = row['chrom'] + ':' +  row['start'] + ':' + row['end'] + ':' + row['ref'] + ':' + row['alt']
                 db1[variant] = {'impact_severity': row['impact_severity'], 'clinvar_sig': row['clinvar_sig'], 'clinvar_pathogenic': row['clinvar_pathogenic'], 'alt_depths': alt_depths}
@@ -33,7 +33,8 @@ def get_explanations(report1_var, report2_var):
             explanation[variant] = 'Change in impact_severity from %s to LOW'%report1_var[variant]['impact_severity']
         elif 3 <= max(report1_var[variant]['alt_depths']) < 10:
             explanation[variant] = 'Alt depth less than 10 but greater than 3'
-
+        elif int(max(report1_var[variant]['alt_depths'])) < 3 and int(max(report2_var[variant]['alt_depths'])) < 3 :
+            explanation[variant] = 'Alt depth less than 3'
         else:
             explanation[variant] = 'Cannot explain'
     return explanation
