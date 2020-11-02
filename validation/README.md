@@ -55,4 +55,38 @@ We will make updates to cre every six months, and we will perform validation at 
           19:633528:633529:G:GGCGCCGCCGCCGCCGCCGCC | Change in impact_severity from HIGH to LOW
 
 ## VCF validation 
-TODO
+
+Validate pipeline performance using GIAB benchmark datasets. 
+1. Test set: Download and run benchmark dataset with your pipeline 
+   1. WGS: ftp:/­/­ftp.­sra.­ebi.­ac.­uk/­vol1/­run/­ERR323/­ERR3239334/­NA12878.­final.­cram
+   2. WES: https://www.internationalgenome.org/data-portal/sample/NA12878 
+2. Truth set: Download the latest variant calls (VCF) and high-confidence regions (BED) from [here](http://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/release/NA12878_HG001/latest/GRCh37/)
+3. Use the following script to compare truth vs test. "bed" and "restrict" are optional, and their equivalent argument in vcfeval are,
+   * bed: `-e, --evaluation-regions` 
+   * restrict: `--bed-regions`
+   ```bash
+   qsub rtg-validations.pbs -v truth="<path to truth vcf>",test="<path to test vcf>",out="output folder name"[,bed="<path to high-conf bed>",restrict="<path to exomes.bed>"(optional)]
+   ```
+
+
+4. The truth set calls are from Whole-genome, and so there will be higher number of false negatives when benchmarking WES calls. You can do one of the below steps to restrict regions to exomes,
+   1. intersect the giab high-confidence bed and "exome.bed" with bedtools and pass this as `bed=intersect.bed` to the script (see [here](https://github.com/bcbio/bcbio-nextgen/blob/747045809e493a5cca0dad0ec4ff053afafd6708/config/examples/NA12878.validate.sh) what to use for exome.bed)
+   2. pass `bed=giab-high-conf.bed,restrict=exome.bed` to the script (this may have some effect in scoring as per this [thread](https://groups.google.com/a/realtimegenomics.com/g/rtg-users/c/eY5ptObCQTo))
+
+### Outputs
+
+* summary.txt: TP, FP, FN, Precision, Specificity, F-measure (use the 'None' row)
+* fn.vcf.gz: false-negative variants
+* fp.vcf.gz: false-positive variants
+* tp.vcf.gz: true-positive variants in test set
+* tp-baseline.vcf.gz: true-positive variants in truth set
+* crg2_gatk4.0.12_giab_roc.png: roc created from weigthed_roc.tsv.gz
+* crg2_gatk4.0.12_giab_pr.png: precision-recall curve created from weigthed_roc.tsv.gz
+* crg2_gatk4.0.12_giab_snv-indel_pr.png: precision-recall curve created for snp/indel split using non_snp_roc.tsv.gz and snp_roc.tsv.gz
+* crg2_gatk4.0.12_giab_snv-indel_roc.png: roc created for snp/indel split using non_snp_roc.tsv.gz and snp_roc.tsv.gz
+  
+You can also create a combined ROC/Precision-recall curve using any number of validation results like below,
+
+```bash
+rtg rocplot validation1/weigthed_roc.tsv.gz validation2/weigthed_roc.tsv.gz --png=validation12_roc.png
+```

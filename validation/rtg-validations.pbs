@@ -7,7 +7,7 @@
 #PBS -j oe
 #PBS -d .
 #usage:
-#qsub rtg-snv.pbs -v truth="<path to truth vcf>",test="<path to test vcf>",out="output folder name"[,bed="<path to bed intervals>"(optional)]
+#qsub rtg-validations.pbs -v truth="<path to truth vcf>",test="<path to test vcf>",out="output folder name"[,bed="<path to high-conf bed>",restrict="<path to exomes.bed>"(optional)]
 
 isempty () {
 	if [ -z "$1" ]; then
@@ -24,6 +24,10 @@ if [ -z "$bed" ]; then
 	extra="";
 else
 	extra="-e $bed";
+fi;
+
+if [ ! -z $restrict ]; then
+	extra=${extra}" --bed-regions=$restrict"
 fi;
 
 export _JAVA_OPTIONS="-Xmx80g"
