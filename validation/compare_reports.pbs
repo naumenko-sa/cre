@@ -1,0 +1,38 @@
+#!/bin/bash
+
+#PBS -N report_comparison
+#PBS -d .
+#PBS -l vmem=20g,mem=20g
+#PBS -j oe
+
+
+#usage: qsub compare_reports.pbs -F "<first csv> <second csv> <first db> <second db>"
+
+###
+#example run here: /hpf/largeprojects/ccmbio/aarthi/benchmark-runs/report_comparison
+#qsub validation/compare_reports.pbs -F "crg/HG001.clinical.wes.regular.2020-09-26.csv crg2/NA12878.clinical.wes.regular.2020-09-24.csv crg/HG001-ensemble.db crg2/NA12878-ensemble.db"
+###
+
+report_type=`basename $1 .csv | cut -d "." -f2`;
+prefix1=`basename $1 .csv`;
+prefix2=`basename $2 .csv`;
+
+if [ "${report_type}" != "$(basename $2 .csv | cut -d "." -f2)" ]; then
+	echo "report type (clinical or regular) should be same for both files. exiting!";
+	exit;
+fi;
+
+#summarize variant counts and compare annotations
+python ~/cre/validation/compare_reports.py -old $1 -new $2
+
+left="${prefix1}.uniq.pos";
+right="${prefix2}.uniq.pos";
+#common="${prefix1}.${prefix2}.common.pos";
+
+#extract db entries
+sh ~/cre/validation/gemini_compare.sh $3 ${prefix1} $4 ${prefix2} $left gene impact ensembl_gene_id callers > ${prefix1}.uniq.db.txt
+sh ~/cre/validation/gemini_compare.sh $3 ${prefix1} $4 ${prefix2} $right gene impact ensembl_gene_id callers > ${prefix2}.uniq.db.txt
+#sh ~/cre/validation/gemini_compare.sh $3 $4 $common gene impact ensembl_gene_id callers > ${prefix1}.${prefix2}.common.db.txt
+
+
+
