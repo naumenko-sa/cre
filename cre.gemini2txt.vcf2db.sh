@@ -39,7 +39,8 @@ sQuery="select \
         dp as Depth,\
         qual as Quality,\
         gene as Gene,\
-				COALESCE(clinvar_pathogenic, '') || COALESCE( ';' || NULLIF(clinvar_sig,''), '') as Clinvar, \
+		COALESCE(clinvar_pathogenic, '') || COALESCE( ';' || NULLIF(clinvar_sig,''), '') as Clinvar, \
+        clinvar_status as Clinvar_status, \
         ensembl_gene_id as Ensembl_gene_id,\
         transcript as Ensembl_transcript_id,\
         aa_length as AA_position,\
@@ -117,4 +118,10 @@ else
     # only get variants where AD >= 1 (any sample with an alternate read)
     c_gt_filter="(gt_alt_depths).(*).(>=1).(any) or (gt_alt_depths).(*).(==-1).(all)"
     gemini query -q "$cQuery" --gt-filter "$c_gt_filter" $file
+
+    # if allele frequency is > 1% and Clinvar is pathogenic, likely pathogenic or conflicting and any status except for no assertion
+    cQuery=$initialQuery
+    cQuery=$cQuery" where gnomad_af_popmax > ${max_af} and Clinvar_status != 'no_assertion_criteria_provided' and Clinvar in ('Pathogenic', 'Likely_pathogenic', 'Conflicting_interpretations_of_pathogenicity')"
+    gemini query -q "$cQuery" $file
+
 fi
