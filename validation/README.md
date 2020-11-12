@@ -8,7 +8,7 @@ We will make updates to cre every six months, and we will perform validation at 
 
 ## Report validation
 1. Compare report generated prior to updates (first csv) to report generated post-updates (second csv): 
-2. `qsub -F "<first_csv> <second_csv> <first_db> <second_db>"`
+2. `qsub -F ~/cre/validation/compare_reports.pbs "<first_csv> <second_csv> <first_db> <second_db>"`
    
    where <first_db> refers to the gemini database associated with the first report, and <second_db> refers to the gemini database associated with the second report. 
    
