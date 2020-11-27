@@ -21,9 +21,9 @@ details:
     - gatk4
     variantcaller:
     - gatk-haplotype
+    - samtools
     - platypus
     - freebayes
-    - samtools
     vcfanno:
     - /home/ccmmarvin/cre/cre.vcfanno.conf
   analysis: variant2
