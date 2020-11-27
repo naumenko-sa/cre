@@ -20,7 +20,7 @@ details:
     - noalt_calling
     variantcaller: false
     vcfanno:
-    - /home/teja/cre/cre.vcfanno.conf
+    - /home/helrick/cre/cre.vcfanno.conf
   analysis: variant2
   description: [familyid]_sample
   vrn_file: ../input/[vrn_file]
