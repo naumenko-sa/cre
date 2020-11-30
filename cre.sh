@@ -163,6 +163,28 @@ function f_make_report
 
     # add header to result file
     head -n 1 $family.variants.unfiltered.txt > $family.variants.txt
+
+    # report filtered vcf for import in phenotips
+    # note that if there is a multiallelic SNP, with one rare allele and one frequent one, both will be reported in the VCF,
+    # and just a rare one in the excel report
+    cat $family.variants.unfiltered.txt | cut -f 1,2 | sed 1d | sed s/chr// | sort -k1,1 -k2,2n > ${family}-ensemble.db.txt.positions
+    
+    # this may produce duplicate records if two positions from positions file overlap with a variant 
+    # (there are 2 positions and 2 overlapping variants, first reported twice)
+    bcftools view -R ${family}-ensemble.db.txt.positions ${family}-ensemble-annotated-decomposed.vcf.gz | bcftools sort | vt uniq - | vt rminfo -t CSQ,Interpro_domain,MutPred_Top5features,MutationTaster_AAE - -o $family.vcf.gz
+    tabix $family.vcf.gz
+    
+    rm $family.tmp.vcf.gz $family.tmp.vcf.gz.tbi
+
+    #individual vcfs for uploading to phenome central
+    vcf.split_multi.sh $family.vcf.gz
+
+    reference=$(readlink -f `which bcbio_nextgen.py`)
+    reference=`echo $reference | sed s/"anaconda\/bin\/bcbio_nextgen.py"/"genomes\/Hsapiens\/GRCh37\/seq\/GRCh37.fa"/`
+    
+    echo $reference
+
+    vcf.ensemble.getCALLERS.sh $family.vcf.gz $reference
     
     # remove all the variants that were only called by one variant caller if it isn't GATK
     while IFS=$'\t' read -r chrom pos id ref alt variant; 
@@ -173,7 +195,7 @@ function f_make_report
             if [[ "$callers" != "freebayes" ]] && [[ "$callers" != "samtools" ]] && [[ "$callers" != "platypus" ]]; 
             then
                 # one of the variants is called by > 1 caller OR GATK
-                echo -e ${chrom}'\t'${pos}'\t'${id}'\t'${ref}'\t'${alt}"$variant" >> $family.variants.txt; 
+                echo -e ${chrom}'\t'${pos}'\t'${id}'\t'${ref}'\t'${alt}'\t'"$variant" >> $family.variants.txt; 
                 break; 
             else
                 # this variant is only called by one caller
@@ -192,27 +214,27 @@ function f_make_report
 	fi
     done
 
-    # report filtered vcf for import in phenotips
-    # note that if there is a multiallelic SNP, with one rare allele and one frequent one, both will be reported in the VCF,
-    # and just a rare one in the excel report
-    cat $family.variants.txt | cut -f 1,2 | sed 1d | sed s/chr// | sort -k1,1 -k2,2n > ${family}-ensemble.db.txt.positions
+    # # report filtered vcf for import in phenotips
+    # # note that if there is a multiallelic SNP, with one rare allele and one frequent one, both will be reported in the VCF,
+    # # and just a rare one in the excel report
+    # cat $family.variants.txt | cut -f 1,2 | sed 1d | sed s/chr// | sort -k1,1 -k2,2n > ${family}-ensemble.db.txt.positions
     
-    # this may produce duplicate records if two positions from positions file overlap with a variant 
-    # (there are 2 positions and 2 overlapping variants, first reported twice)
-    bcftools view -R ${family}-ensemble.db.txt.positions ${family}-ensemble-annotated-decomposed.vcf.gz | bcftools sort | vt uniq - | vt rminfo -t CSQ,Interpro_domain,MutPred_Top5features,MutationTaster_AAE - -o $family.vcf.gz
-    tabix $family.vcf.gz
+    # # this may produce duplicate records if two positions from positions file overlap with a variant 
+    # # (there are 2 positions and 2 overlapping variants, first reported twice)
+    # bcftools view -R ${family}-ensemble.db.txt.positions ${family}-ensemble-annotated-decomposed.vcf.gz | bcftools sort | vt uniq - | vt rminfo -t CSQ,Interpro_domain,MutPred_Top5features,MutationTaster_AAE - -o $family.vcf.gz
+    # tabix $family.vcf.gz
     
-    rm $family.tmp.vcf.gz $family.tmp.vcf.gz.tbi
+    # rm $family.tmp.vcf.gz $family.tmp.vcf.gz.tbi
 
     #individual vcfs for uploading to phenome central
     vcf.split_multi.sh $family.vcf.gz
 
-    reference=$(readlink -f `which bcbio_nextgen.py`)
-    reference=`echo $reference | sed s/"anaconda\/bin\/bcbio_nextgen.py"/"genomes\/Hsapiens\/GRCh37\/seq\/GRCh37.fa"/`
+    # reference=$(readlink -f `which bcbio_nextgen.py`)
+    # reference=`echo $reference | sed s/"anaconda\/bin\/bcbio_nextgen.py"/"genomes\/Hsapiens\/GRCh37\/seq\/GRCh37.fa"/`
     
-    echo $reference
+    # echo $reference
 
-    vcf.ensemble.getCALLERS.sh $family.vcf.gz $reference
+    # vcf.ensemble.getCALLERS.sh $family.vcf.gz $reference
 
     #decompose first for the old version of bcbio!
     #gemini.decompose.sh ${family}-freebayes.vcf.gz
