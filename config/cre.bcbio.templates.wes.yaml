@@ -24,7 +24,7 @@ details:
     - platypus
     - freebayes
     vcfanno:
-    - /home/teja/cre/cre.vcfanno.conf
+    - /home/helrick/cre/cre.vcfanno.conf
   analysis: variant2
   description: '912R_A337376'
   files:

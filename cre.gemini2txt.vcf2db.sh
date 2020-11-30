@@ -58,7 +58,8 @@ sQuery="select \
         gerp_score as Gerp_score,\
         aa_change as AA_change,\
         hgvsc as Codon_change,\
-        phylop20way_mammalian as Conserved_in_20_mammals,
+        phylop20way_mammalian as Conserved_in_20_mammals,\
+        COALESCE(spliceai_score, '') as SpliceAI_score,
         gts,"
 
 while read sample
