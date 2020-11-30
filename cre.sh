@@ -12,7 +12,7 @@
 #	max_af = af filter, default = 0.01
 ####################################################################################################
 
-#PBS -l walltime=30:00:00,nodes=1:ppn=1
+#PBS -l walltime=23:00:00,nodes=1:ppn=1
 #PBS -joe .
 #PBS -d .
 #PBS -l vmem=40g,mem=40g
@@ -158,21 +158,16 @@ function f_make_report
     ~/cre/cre.gemini.variant_impacts.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variant_impacts.all.txt
 
     # remove duplicate lines from results of gemini query
-    awk '!a[$0]++' $family.variants.all.txt > $family.variants.txt
+    awk '!a[$0]++' $family.variants.all.txt > $family.variants.unfiltered.txt
     awk '!a[$0]++' $family.variant_impacts.all.txt > $family.variant_impacts.txt
 
-    for f in *.vcf.gz
-    do
-	if [ ! -f $f.tbi ]
-	then 
-	   tabix $f
-	fi
-    done
+    # add header to result file
+    head -n 1 $family.variants.unfiltered.txt > $family.variants.txt
 
     # report filtered vcf for import in phenotips
     # note that if there is a multiallelic SNP, with one rare allele and one frequent one, both will be reported in the VCF,
     # and just a rare one in the excel report
-    cat $family.variants.txt | cut -f 1,2 | sed 1d | sed s/chr// | sort -k1,1 -k2,2n > ${family}-ensemble.db.txt.positions
+    cat $family.variants.unfiltered.txt | cut -f 1,2 | sed 1d | sed s/chr// | sort -k1,1 -k2,2n > ${family}-ensemble.db.txt.positions
     
     # this may produce duplicate records if two positions from positions file overlap with a variant 
     # (there are 2 positions and 2 overlapping variants, first reported twice)
@@ -190,6 +185,34 @@ function f_make_report
     echo $reference
 
     vcf.ensemble.getCALLERS.sh $family.vcf.gz $reference
+    
+    # remove all the variants that were only called by one variant caller if it isn't GATK
+    while IFS=$'\t' read -r chrom pos id ref alt variant; 
+    do 
+        grep ${pos} ${family}.table | while IFS=$'\t' read -r match_chrom match_pos match_ref match_alt callers; 
+        do if [ "$match_chrom" == "$chrom" ] && [ "$match_ref" == "$ref" ] && [ "$match_alt" == "$alt" ]; 
+        then 
+            if [[ "$callers" != "freebayes" ]] && [[ "$callers" != "samtools" ]] && [[ "$callers" != "platypus" ]]; 
+            then
+                # one of the variants is called by > 1 caller OR GATK
+                echo -e ${chrom}'\t'${pos}'\t'${id}'\t'${ref}'\t'${alt}'\t'"$variant" >> $family.variants.txt; 
+                break; 
+            else
+                # this variant is only called by one caller
+                : # pass
+            fi;
+        fi; 
+        done; 
+    done < $family.variants.unfiltered.txt
+
+
+    for f in *.vcf.gz
+    do
+	if [ ! -f $f.tbi ]
+	then 
+	   tabix $f
+	fi
+    done
 
     #decompose first for the old version of bcbio!
     #gemini.decompose.sh ${family}-freebayes.vcf.gz
