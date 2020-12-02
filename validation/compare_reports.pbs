@@ -2,7 +2,8 @@
 
 #PBS -N report_comparison
 #PBS -d .
-#PBS -l vmem=20g,mem=20g
+#PBS -l vmem=30g,mem=30g
+#PBS -l walltime=15:00:00
 #PBS -j oe
 
 
@@ -22,7 +23,7 @@ if [ "${report_type}" != "$(basename $2 .csv | cut -d "." -f2)" ]; then
 	exit;
 fi;
 
-#summarize variant counts and compare annotations
+#summarize variant counts and compare report annotations
 python ~/cre/validation/compare_reports.py -old $1 -new $2
 
 left="${prefix1}.uniq.pos";
@@ -30,9 +31,12 @@ right="${prefix2}.uniq.pos";
 #common="${prefix1}.${prefix2}.common.pos";
 
 #extract db entries
-sh ~/cre/validation/gemini_compare.sh $3 ${prefix1} $4 ${prefix2} $left gene impact ensembl_gene_id callers > ${prefix1}.uniq.db.txt
-sh ~/cre/validation/gemini_compare.sh $3 ${prefix1} $4 ${prefix2} $right gene impact ensembl_gene_id callers > ${prefix2}.uniq.db.txt
-#sh ~/cre/validation/gemini_compare.sh $3 $4 $common gene impact ensembl_gene_id callers > ${prefix1}.${prefix2}.common.db.txt
+script=/hpf/largeprojects/ccmbio/ccmmarvin_shared/validation/scripts;
+sh ${script}/gemini_compare.sh $3 ${prefix1} $4 ${prefix2} $left gene impact ensembl_gene_id callers clinvar_status > ${prefix1}.uniq.db.txt&
+sh ${script}/gemini_compare.sh $3 ${prefix1} $4 ${prefix2} $right gene impact ensembl_gene_id callers clinvar_status > ${prefix2}.uniq.db.txt
+##sh ~/cre/validation/gemini_compare.sh $3 $4 $common gene impact ensembl_gene_id callers > ${prefix1}.${prefix2}.common.db.txt
 
+wait
 
-
+#evaluate differences
+python ~/cre/validation/validation_2020-11.py -db_output1 ${prefix1}.uniq.db.txt -prefix1 ${prefix1} -db_output2 ${prefix2}.uniq.db.txt -prefix2 ${prefix2}
