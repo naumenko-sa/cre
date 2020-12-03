@@ -11,6 +11,7 @@ We will make updates to cre every six months, and we will perform validation at 
 2. `qsub -F ~/cre/validation/compare_reports.pbs "<first_csv> <second_csv> <first_db> <second_db>"`
    
    where <first_db> refers to the gemini database associated with the first report, and <second_db> refers to the gemini database associated with the second report. 
+   To retrieve the updated/newly added column names from the db for comparison, you must manually add these column names as last arguments in the lines calling "gemini_compare.sh" inside the `compare_reports.pbs`
    
    Outputs:
     *  summary.txt: summarizes the number of variants shared between reports, and variants unique to each report. Also lists the column headers that differ between reports.
@@ -68,10 +69,9 @@ Validate pipeline performance using GIAB benchmark datasets.
    qsub rtg-validations.pbs -v truth="<path to truth vcf>",test="<path to test vcf>",out="output folder name"[,bed="<path to high-conf bed>",restrict="<path to exomes.bed>"(optional)]
    ```
 
-
 4. The truth set calls are from Whole-genome, and so there will be higher number of false negatives when benchmarking WES calls. You can do one of the below steps to restrict regions to exomes,
-   1. intersect the giab high-confidence bed and "exome.bed" with bedtools and pass this as `bed=intersect.bed` to the script (see [here](https://github.com/bcbio/bcbio-nextgen/blob/747045809e493a5cca0dad0ec4ff053afafd6708/config/examples/NA12878.validate.sh) what to use for exome.bed)
-   2. pass `bed=giab-high-conf.bed,restrict=exome.bed` to the script (this may have some effect in scoring as per this [thread](https://groups.google.com/a/realtimegenomics.com/g/rtg-users/c/eY5ptObCQTo))
+   1. intersect the giab high-confidence bed file with capture kit regions, and callable BED file from bcbio run. Pass this resulting file as `bed`
+   to the script (see [here](https://github.com/bcbio/bcbio-nextgen/blob/747045809e493a5cca0dad0ec4ff053afafd6708/config/examples/NA12878.validate.sh))
 
 ### Outputs
 
@@ -80,12 +80,12 @@ Validate pipeline performance using GIAB benchmark datasets.
 * fp.vcf.gz: false-positive variants
 * tp.vcf.gz: true-positive variants in test set
 * tp-baseline.vcf.gz: true-positive variants in truth set
-* crg2_gatk4.0.12_giab_roc.png: roc created from weigthed_roc.tsv.gz
-* crg2_gatk4.0.12_giab_pr.png: precision-recall curve created from weigthed_roc.tsv.gz
-* crg2_gatk4.0.12_giab_snv-indel_pr.png: precision-recall curve created for snp/indel split using non_snp_roc.tsv.gz and snp_roc.tsv.gz
-* crg2_gatk4.0.12_giab_snv-indel_roc.png: roc created for snp/indel split using non_snp_roc.tsv.gz and snp_roc.tsv.gz
+* <prefix>_roc.png: roc created from weigthed_roc.tsv.gz
+* <prefix>_pr.png: precision-recall curve created from weigthed_roc.tsv.gz
+* <prefix>_snv-indel_pr.png: precision-recall curve created for snp/indel split using non_snp_roc.tsv.gz and snp_roc.tsv.gz
+* <prefix>_snv-indel_roc.png: roc created for snp/indel split using non_snp_roc.tsv.gz and snp_roc.tsv.gz
   
-You can also create a combined ROC/Precision-recall curve using any number of validation results like below,
+You can also create a combined ROC/Precision-recall curve in single plot using any number of validation results like below,
 
 ```bash
 rtg rocplot validation1/weigthed_roc.tsv.gz validation2/weigthed_roc.tsv.gz --png=validation12_roc.png
