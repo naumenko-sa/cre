@@ -7,22 +7,28 @@ import sys
 def db_output_to_dict(db_output):
     db1 = {}
     db2 = {}
+    columns = ["impact_severity", "clinvar_sig", "clinvar_pathogenic", "callers", "clinvar_status"]
     with open(db_output) as csvfile:
         reader = csv.DictReader(csvfile, delimiter='\t')
         for row in reader:
-            alt_depths = [row[col] for col in row if 'gt_alt_depths' in col]
+            alt_depths = [ int(row[col].strip(' ')) if not row[col] is None else row[col] for col in row if 'gt_alt_depths' in col ]
+            depths = [ int(row[col].strip(' ')) if not row[col] is None else row[col] for col in row if 'gt_depths' in col ]
             if row['db'] == args.prefix1:
                 variant = row['chrom'] + ':' +  row['start'] + ':' + row['end'] + ':' + row['ref'] + ':' + row['alt']
-                db1[variant] = {'impact_severity': row['impact_severity'], 'clinvar_sig': row['clinvar_sig'], 'clinvar_pathogenic': row['clinvar_pathogenic'], 'alt_depths': alt_depths, 'callers': row['callers']}
+                db1[variant] = {column: row[column] for column in columns if column in row }
+                db1[variant].update({'alt_depths': alt_depths, 'depths': depths})
             elif row['db'] == args.prefix2:
                 variant = row['chrom'] + ':' +  row['start'] + ':' + row['end'] + ':' + row['ref'] + ':' + row['alt']
-                db2[variant] = {'impact_severity': row['impact_severity'], 'clinvar_sig': row['clinvar_sig'], 'clinvar_pathogenic': row['clinvar_pathogenic'], 'alt_depths': alt_depths, 'callers': row['callers']}
+                db2[variant] = {column: row[column] for column in columns if column in row }
+                db2[variant].update({'alt_depths': alt_depths, 'depths': depths})
     return db1, db2
 
 def get_explanations(report1_var, report2_var):
     explanation = {}
     for variant in report1_var:
-        report1_var[variant]['alt_depths'] = [int(ad.strip(' ')) for ad in report1_var[variant]['alt_depths']]
+        report1_var[variant]['alt_depths'] = max(report1_var[variant]['alt_depths'])
+        report1_var[variant]['depths'] = min(report1_var[variant]['depths'])
+
         if variant not in report2_var:
             if report1_var[variant]['callers'] == 'gatk-haplotype':
                 explanation[variant] = 'Variant only called by GATK'
@@ -34,10 +40,20 @@ def get_explanations(report1_var, report2_var):
             explanation[variant] = 'Change in clinvar_pathogenic from %s to None'%report1_var[variant]['clinvar_pathogenic']
         elif report1_var[variant]['impact_severity'] != 'LOW' and report2_var[variant]['impact_severity'] == 'LOW':
             explanation[variant] = 'Change in impact_severity from %s to LOW'%report1_var[variant]['impact_severity']
-        elif 3 <= max(report1_var[variant]['alt_depths']) < 10:
-            explanation[variant] = 'Alt depth less than 10 but greater than 3'
-        elif int(max(report1_var[variant]['alt_depths'])) < 3 and int(max(report2_var[variant]['alt_depths'])) < 3 :
+
+        #min(depth) >= 10 (why variants were not included previously)
+        #max(alt_depth)>= 3 (why variants are included)
+        elif report1_var[variant]['depths'] >= 10 and min(report2_var[variant]['depths']) < 10:
+            explanation[variant] = 'Min depth less than 10'
+        elif report1_var[variant]['alt_depths'] >= 3 and max(report2_var[variant]['alt_depths']) < 3 :
             explanation[variant] = 'Alt depth less than 3'
+        #elif 'clinvar_status' in report1_var[variant]:
+        elif not report1_var[variant]['clinvar_status'] in ['None',"0"] and report2_var[variant]['clinvar_status'] == "0":
+            explanation[variant] = 'clinvar_status: %s'%(report1_var[variant]['clinvar_status'])
+        #https://github.com/ccmbioinfo/cre/blob/4c7ebe13f8a36251a0ca7f4100a424b9598c1f84/cre.gemini2txt.vcf2db.sh#L110
+        #impact or callers affect inclusion/exclusion
+        elif (report1_var[variant]['alt_depths'] == -1 or max(report2_var[variant]['alt_depths']) == -1 ) and ( not "gatk" in report1_var[variant]['callers']):
+            explanation[variant] = 'Alt depths -1 and called by non-GATK callers'
         else:
             explanation[variant] = 'Cannot explain'
     return explanation
@@ -71,9 +87,3 @@ if __name__ == "__main__":
     
     explanation_2_df = pd.DataFrame.from_dict(explanation_2, orient='index').reset_index()
     explanation_2_df.to_csv('validation_summary_unique_in_%s_%s.csv'%(args.prefix2,today), header=['Variant', 'Explanation'], index=False)
-
-
-
-
-
-
