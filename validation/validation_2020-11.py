@@ -34,10 +34,15 @@ def get_explanations(report1_var, report2_var):
                 explanation[variant] = 'Variant only called by GATK'
             else:   
                 explanation[variant] = 'Variant not present in comparison database'
+        # if only one caller and not GATK:
+        elif report2_var[variant]['callers'] == 'freebayes' or report2_var[variant]['callers'] == 'samtools' or report2_var[variant]['callers'] == 'platypus':
+            explanation[variant] = 'Variant only called by one of freebayes, samtools, or platypus in new report'
+        # change in clinvar annotation
         elif report1_var[variant]['clinvar_sig'] != 'None' and report2_var[variant]['clinvar_sig'] == 'None':
             explanation[variant] = 'Change in clinvar_sig from %s to None'%report1_var[variant]['clinvar_sig']
         elif report1_var[variant]['clinvar_pathogenic'] != 'None' and report2_var[variant]['clinvar_pathogenic'] == 'None':
             explanation[variant] = 'Change in clinvar_pathogenic from %s to None'%report1_var[variant]['clinvar_pathogenic']
+        # change in impact severity (vep)
         elif report1_var[variant]['impact_severity'] != 'LOW' and report2_var[variant]['impact_severity'] == 'LOW':
             explanation[variant] = 'Change in impact_severity from %s to LOW'%report1_var[variant]['impact_severity']
 
@@ -77,7 +82,8 @@ if __name__ == "__main__":
     today = date.today()
     today = today.strftime("%Y-%m-%d")
     explanation_1_df = pd.DataFrame.from_dict(explanation_1, orient='index').reset_index()
-    explanation_1_df.to_csv('validation_summary_unique_in_%s_%s.csv'%(args.prefix1,today), header=['Variant', 'Explanation'], index=False)
+    if len(explanation_1_df) != 0:
+        explanation_1_df.to_csv('validation_summary_unique_in_%s_%s.csv'%(args.prefix1,today), header=['Variant', 'Explanation'], index=False)
 
     # For variants unique to report 2, determine reason they were not included in report 1
     db2_unique = db_output_to_dict(args.db_output2)
@@ -86,4 +92,5 @@ if __name__ == "__main__":
     explanation_2 = get_explanations(report2_var, report1_var)
     
     explanation_2_df = pd.DataFrame.from_dict(explanation_2, orient='index').reset_index()
-    explanation_2_df.to_csv('validation_summary_unique_in_%s_%s.csv'%(args.prefix2,today), header=['Variant', 'Explanation'], index=False)
+    if len(explanation_2_df) != 0:
+        explanation_2_df.to_csv('validation_summary_unique_in_%s_%s.csv'%(args.prefix2,today), header=['Variant', 'Explanation'], index=False)
