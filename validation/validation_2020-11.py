@@ -49,8 +49,14 @@ def get_explanations(report1_var, report2_var):
         #min(depth) >= 10 (why variants were not included previously)
         #max(alt_depth)>= 3 (why variants are included)
         elif report1_var[variant]['depths'] >= 10 and min(report2_var[variant]['depths']) < 10:
-            explanation[variant] = 'Min depth less than 10'
+            explanation[variant] = 'Max depth less than 10'
         elif report1_var[variant]['alt_depths'] >= 3 and max(report2_var[variant]['alt_depths']) < 3 :
+            explanation[variant] = 'Alt depth less than 3'
+        #some old reports were filtered by depth < 10
+        elif report1_var[variant]['alt_depths'] >= 3 and max(report2_var[variant]['depths']) < 10 :
+            explanation[variant] = 'Max depth less than 10 but alt depth >3'
+        #were very old reports not filtered by depth?
+        elif report1_var[variant]['alt_depths'] < 3 and max(report2_var[variant]['alt_depths']) < 3 :
             explanation[variant] = 'Alt depth less than 3'
         #elif 'clinvar_status' in report1_var[variant]:
         elif not report1_var[variant]['clinvar_status'] in ['None',"0"] and report2_var[variant]['clinvar_status'] == "0":
@@ -62,6 +68,10 @@ def get_explanations(report1_var, report2_var):
         else:
             explanation[variant] = 'Cannot explain'
     return explanation
+
+def summarize_explanations(explanation_df, prefix):
+    explanation_summary = explanation_df.groupby(['Explanation']).count().reset_index()
+    explanation_summary.to_csv('validation_summary_unique_in_%s_%s_counts.csv'%(prefix,today), header=['Explanation', 'Count'], index=False)
 
 
 if __name__ == "__main__":
@@ -83,8 +93,9 @@ if __name__ == "__main__":
     today = today.strftime("%Y-%m-%d")
     explanation_1_df = pd.DataFrame.from_dict(explanation_1, orient='index').reset_index()
     if len(explanation_1_df) != 0:
-        explanation_1_df.to_csv('validation_summary_unique_in_%s_%s.csv'%(args.prefix1,today), header=['Variant', 'Explanation'], index=False)
-
+        explanation_1_df.columns = ['Variant', 'Explanation']
+        explanation_1_df.to_csv('validation_summary_unique_in_%s_%s.csv'%(args.prefix1,today), index=False)
+        summarize_explanations(explanation_1_df, args.prefix1)
     # For variants unique to report 2, determine reason they were not included in report 1
     db2_unique = db_output_to_dict(args.db_output2)
     report1_var = db2_unique[0]
@@ -93,4 +104,6 @@ if __name__ == "__main__":
     
     explanation_2_df = pd.DataFrame.from_dict(explanation_2, orient='index').reset_index()
     if len(explanation_2_df) != 0:
-        explanation_2_df.to_csv('validation_summary_unique_in_%s_%s.csv'%(args.prefix2,today), header=['Variant', 'Explanation'], index=False)
+        explanation_2_df.columns = ['Variant', 'Explanation']
+        explanation_2_df.to_csv('validation_summary_unique_in_%s_%s.csv'%(args.prefix2,today), index=False)
+        summarize_explanations(explanation_2_df, args.prefix2)
