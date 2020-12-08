@@ -28,7 +28,18 @@ then
 else
     severity_filter="v.impact_severity<>'LOW' and "
 fi
-        
+
+#if pipeline is cre, filter out variants only called by one of freebayes, samtools, platypus
+callers=`gemini db_info $file | grep -w "variants" | grep -w "callers"` 
+if [ ! -z "$callers" ]
+then
+	callers="v.callers"
+	caller_filter="v.callers not in ('freebayes', 'samtools', 'platypus')"
+else	
+	callers="00"
+	caller_filter=""
+fi
+
 
 sQuery="select \
 	i.variant_id,\
@@ -52,6 +63,7 @@ sQuery="select \
 	i.hgvsc,\
 	i.hgvsp,\
 	v.source,\
+	$callers,\
 	COALESCE(v.clinvar_pathogenic, '') || COALESCE( ';' || NULLIF(v.clinvar_sig,''), '') as Clinvar, \
 	v.clinvar_status	
 	"
@@ -69,7 +81,7 @@ fi
 initialQuery=$sQuery" from variants v,variant_impacts i" #store field selection
 
 
-sQuery=$initialQuery" where "$severity_filter"v.gnomad_af_popmax <= "$max_af" and \
+sQuery=$initialQuery" where "$severity_filter""$caller_filter" and v.gnomad_af_popmax <= "$max_af" and \
 v.variant_id=i.variant_id"
 
 s_gt_filter=''
@@ -90,12 +102,12 @@ else
     # grab the clinvar variants
     cQuery=$initialQuery 
     # everything that has a clinvar_sig value
-    cQuery=$cQuery" where v.gnomad_af_popmax <= ${max_af} and v.variant_id=i.variant_id and clinvar_sig <> ''"
+    cQuery=$cQuery" where v.gnomad_af_popmax <= ${max_af} and v.variant_id=i.variant_id and "$caller_filter" and clinvar_sig <> ''"
     # only get variants where AD >= 1 (any sample with an alternate read)
     s_gt_filter="(gt_alt_depths).(*).(>=1).(any) or (gt_alt_depths).(*).(==-1).(all)"
     gemini query -q "$cQuery" --gt-filter "$s_gt_filter" $file
 		# add variants where gnomad freq is > 1%, Clinvar is pathogenic, likely pathogenic or conflicting and any status except no assertion 
 		cQuery=$initialQuery
-		cQuery=$cQuery" where v.gnomad_af_popmax > ${max_af} v.variant_id=i.variant_id and v.clinvar_status != 'no_assertion_criteria_provided' and Clinvar in ('Pathogenic', 'Likely_pathogenic', 'Conflicting_interpretations_of_pathogenicity')"
+		cQuery=$cQuery" where v.gnomad_af_popmax > ${max_af} and v.variant_id=i.variant_id and "$caller_filter"  and v.clinvar_status != 'no_assertion_criteria_provided' and Clinvar in ('Pathogenic', 'Likely_pathogenic', 'Conflicting_interpretations_of_pathogenicity')"
 		gemini query -q "$cQuery" $file
 fi
