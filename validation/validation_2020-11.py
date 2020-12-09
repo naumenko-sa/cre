@@ -46,17 +46,13 @@ def get_explanations(report1_var, report2_var):
         elif report1_var[variant]['impact_severity'] != 'LOW' and report2_var[variant]['impact_severity'] == 'LOW':
             explanation[variant] = 'Change in impact_severity from %s to LOW'%report1_var[variant]['impact_severity']
 
-        #min(depth) >= 10 (why variants were not included previously)
         #max(alt_depth)>= 3 (why variants are included)
-        elif report1_var[variant]['depths'] >= 10 and min(report2_var[variant]['depths']) < 10:
-            explanation[variant] = 'Max depth greater than 10 in new report and less than 10 in other report'
         elif report1_var[variant]['alt_depths'] >= 3 and max(report2_var[variant]['alt_depths']) < 3 :
             explanation[variant] = 'Alt depth less than 3 in other report'
-        #some old reports were filtered by depth < 10
-        elif report1_var[variant]['alt_depths'] >= 3 and max(report2_var[variant]['depths']) < 10 :
-            explanation[variant] = 'Max depth less than 10 in both reports but alt depth >3 in this report'
+        elif report1_var[variant]['alt_depths'] == -1 and max(report2_var[variant]['alt_depths']) < 3 :
+            explanation[variant] = 'Alt depth less than 3 in other report'
         #were very old reports not filtered by depth?
-        elif report1_var[variant]['alt_depths'] < 3 and max(report2_var[variant]['alt_depths']) < 3 :
+        elif 0 < report1_var[variant]['alt_depths'] < 3 and max(report2_var[variant]['alt_depths']) < 3 :
             explanation[variant] = 'Alt depth less than 3 in both'
         #elif 'clinvar_status' in report1_var[variant]:
         elif not report1_var[variant]['clinvar_status'] in ['None',"0"] and report2_var[variant]['clinvar_status'] == "0":
@@ -65,6 +61,9 @@ def get_explanations(report1_var, report2_var):
         #impact or callers affect inclusion/exclusion
         elif (report1_var[variant]['alt_depths'] == -1 or max(report2_var[variant]['alt_depths']) == -1 ) and ( not "gatk" in report1_var[variant]['callers']):
             explanation[variant] = 'Alt depths -1 and called by non-GATK callers'
+        #very old report may have depth > 10 filter
+        elif report1_var[variant]['alt_depths'] >= 3 and max(report2_var[variant]['depths']) < 10 :
+             explanation[variant] = 'Max depth less than 10 in both reports but alt depth >3 in this report'
         else:
             explanation[variant] = 'Cannot explain'
     return explanation
