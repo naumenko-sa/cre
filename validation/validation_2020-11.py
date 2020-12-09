@@ -36,7 +36,7 @@ def get_explanations(report1_var, report2_var):
                 explanation[variant] = 'Variant not present in comparison database'
         # if only one caller and not GATK:
         elif report2_var[variant]['callers'] == 'freebayes' or report2_var[variant]['callers'] == 'samtools' or report2_var[variant]['callers'] == 'platypus':
-            explanation[variant] = 'Variant only called by one of freebayes, samtools, or platypus in new report'
+            explanation[variant] = 'Variant only called by one of freebayes, samtools, or platypus in other report'
         # change in clinvar annotation
         elif report1_var[variant]['clinvar_sig'] != 'None' and report2_var[variant]['clinvar_sig'] == 'None':
             explanation[variant] = 'Change in clinvar_sig from %s to None'%report1_var[variant]['clinvar_sig']
@@ -49,15 +49,15 @@ def get_explanations(report1_var, report2_var):
         #min(depth) >= 10 (why variants were not included previously)
         #max(alt_depth)>= 3 (why variants are included)
         elif report1_var[variant]['depths'] >= 10 and min(report2_var[variant]['depths']) < 10:
-            explanation[variant] = 'Max depth less than 10'
+            explanation[variant] = 'Max depth greater than 10 in new report and less than 10 in other report'
         elif report1_var[variant]['alt_depths'] >= 3 and max(report2_var[variant]['alt_depths']) < 3 :
-            explanation[variant] = 'Alt depth less than 3'
+            explanation[variant] = 'Alt depth less than 3 in other report'
         #some old reports were filtered by depth < 10
         elif report1_var[variant]['alt_depths'] >= 3 and max(report2_var[variant]['depths']) < 10 :
-            explanation[variant] = 'Max depth less than 10 but alt depth >3'
+            explanation[variant] = 'Max depth less than 10 in both reports but alt depth >3 in this report'
         #were very old reports not filtered by depth?
         elif report1_var[variant]['alt_depths'] < 3 and max(report2_var[variant]['alt_depths']) < 3 :
-            explanation[variant] = 'Alt depth less than 3'
+            explanation[variant] = 'Alt depth less than 3 in both'
         #elif 'clinvar_status' in report1_var[variant]:
         elif not report1_var[variant]['clinvar_status'] in ['None',"0"] and report2_var[variant]['clinvar_status'] == "0":
             explanation[variant] = 'clinvar_status: %s'%(report1_var[variant]['clinvar_status'])
