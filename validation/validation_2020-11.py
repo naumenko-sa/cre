@@ -7,7 +7,7 @@ import sys
 def db_output_to_dict(db_output):
     db1 = {}
     db2 = {}
-    columns = ["impact_severity", "clinvar_sig", "clinvar_pathogenic", "callers", "clinvar_status"]
+    columns = ["impact_severity", "clinvar_sig", "clinvar_pathogenic", "callers", "clinvar_status", "gnomad_af_popmax"]
     with open(db_output) as csvfile:
         reader = csv.DictReader(csvfile, delimiter='\t')
         for row in reader:
@@ -37,6 +37,9 @@ def get_explanations(report1_var, report2_var):
         # if only one caller and not GATK:
         elif report2_var[variant]['callers'] == 'freebayes' or report2_var[variant]['callers'] == 'samtools' or report2_var[variant]['callers'] == 'platypus':
             explanation[variant] = 'Variant only called by one of freebayes, samtools, or platypus in other report'
+        # variants with non-null clinvar status and gnomad_af_popmax >1% are included in new reports
+        elif not report1_var[variant]['clinvar_status'] in ['None',"0"] and report2_var[variant]['clinvar_status'] == "0" and float(report1_var[variant]['gnomad_af_popmax']) > 0.01:
+            explanation[variant] = 'clinvar_status: %s'%(report1_var[variant]['clinvar_status'])
         # change in clinvar annotation
         elif report1_var[variant]['clinvar_sig'] != 'None' and report2_var[variant]['clinvar_sig'] == 'None':
             explanation[variant] = 'Change in clinvar_sig from %s to None'%report1_var[variant]['clinvar_sig']
@@ -54,9 +57,6 @@ def get_explanations(report1_var, report2_var):
         #were very old reports not filtered by depth?
         elif 0 < report1_var[variant]['alt_depths'] < 3 and max(report2_var[variant]['alt_depths']) < 3 :
             explanation[variant] = 'Alt depth less than 3 in both'
-        #elif 'clinvar_status' in report1_var[variant]:
-        elif not report1_var[variant]['clinvar_status'] in ['None',"0"] and report2_var[variant]['clinvar_status'] == "0":
-            explanation[variant] = 'clinvar_status: %s'%(report1_var[variant]['clinvar_status'])
         #https://github.com/ccmbioinfo/cre/blob/4c7ebe13f8a36251a0ca7f4100a424b9598c1f84/cre.gemini2txt.vcf2db.sh#L110
         #impact or callers affect inclusion/exclusion
         elif (report1_var[variant]['alt_depths'] == -1 or max(report2_var[variant]['alt_depths']) == -1 ) and ( not "gatk" in report1_var[variant]['callers']):
