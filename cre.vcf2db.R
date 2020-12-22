@@ -289,34 +289,55 @@ create_report <- function(family, samples){
     # Column 42? - SpliceAI (actually 47, these column indexes are no longer accurate)
     variants <- add_placeholder(variants, "SpliceAI_impact", "")
     for (i in 1:nrow(variants)){
+        print(i)
         if (variants[i,"SpliceAI_score"] == ""){
-            variants[i, "SpliceAI_impact"] <- "NA"
+            variants[i, "SpliceAI_impact"] <- "NA|NA|NA"
             variants[i, "SpliceAI_score"] <- 0
         } else {
-            spliceai <- strsplit(variants[i,"SpliceAI_score"], "|", fixed = T)[[1]]
-            DS_AG <- spliceai[3]
-            DS_AL <- spliceai[4]	
-            DS_DG <- spliceai[5]	
-            DS_DL <- spliceai[6]	
-            DP_AG <- spliceai[7]	
-            DP_AL <- spliceai[8]	
-            DP_DG <- spliceai[9]	
-            DP_DL <- spliceai[10]	
-            scores <- c(DS_AG, DS_AL, DS_DG, DS_DL)
-            names(scores) <- c("acceptor_gain", "acceptor_loss", "donor_gain", "donor_loss")
-            max_score <- max(scores)
-            for (name in names(scores)){
-                if (scores[name] == max_score){name_max_score <- name}
+            spliceai <- strsplit(variants[i,"SpliceAI_score"], ",", fixed = T)[[1]]
+            score_list <- c("NA", "NA", 0, "NA")
+            names(score_list) <- c("gene", "impact", "score", "pos")
+            for (anno in spliceai){
+                anno <- strsplit(anno, "|", fixed = T)[[1]]
+                gene <- anno[2]
+                DS_AG <- anno[3]
+                DS_AL <- anno[4]	
+                DS_DG <- anno[5]	
+                DS_DL <- anno[6]	
+                DP_AG <- anno[7]	
+                DP_AL <- anno[8]	
+                DP_DG <- anno[9]	
+                DP_DL <- anno[10]	
+                scores <- c(as.numeric(DS_AG), as.numeric(DS_AL), as.numeric(DS_DG), as.numeric(DS_DL))
+                names(scores) <- c("acceptor_gain", "acceptor_loss", "donor_gain", "donor_loss")
+                max_score <- max(scores)        
+                for (name in names(scores)){
+                    if (scores[name] == max_score){name_max_score <- name}
+                }
+                if (name_max_score == 0){
+                    impact <- "NA"
+                } else {
+                    impact <- name_max_score
+                }
+                if (score_list["score"] < max_score){
+                    score_list["score"] <- max_score
+                    score_list["gene"] <- gene
+                    score_list["impact"] <- impact
+                    if (impact == "acceptor_gain"){
+                        score_list["pos"] <- DP_AG
+                        } else if (impact == "acceptor_loss"){
+                        score_list["pos"] <- DP_AL
+                        } else if (impact == "acceptor_loss"){
+                        score_list["pos"] <- DP_DG
+                        } else {
+                        score_list["pos"] <- DP_DL
+                        }
+                    }
+                }
+            variants[i, "SpliceAI_impact"] <- paste(score_list["gene"], score_list["impact"], score_list["pos"], sep="|")
+            variants[i, "SpliceAI_score"] <- score_list["score"]
             }
-            if (name_max_score == 0){
-                variants[i, "SpliceAI_impact"] <- "NA"
-            } else {
-                variants[i, "SpliceAI_impact"] <- name_max_score
-            }
-            variants[i, "SpliceAI_score"] <- max_score
         }
-
-    }
 
     
     # pathogenicity scores
