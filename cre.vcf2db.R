@@ -287,6 +287,37 @@ create_report <- function(family, samples){
     
     # Column41 - Conserved_in_20_mammals
     # Column 42? - SpliceAI (actually 47, these column indexes are no longer accurate)
+    variants <- add_placeholder(variants, "SpliceAI_impact", "")
+    for (i in 1:nrow(variants)){
+        if (variants[i,"SpliceAI_score"] == ""){
+            variants[i, "SpliceAI_impact"] <- "NA"
+            variants[i, "SpliceAI_score"] <- 0
+        } else {
+            spliceai <- strsplit(variants[i,"SpliceAI_score"], "|", fixed = T)[[1]]
+            DS_AG <- spliceai[3]
+            DS_AL <- spliceai[4]	
+            DS_DG <- spliceai[5]	
+            DS_DL <- spliceai[6]	
+            DP_AG <- spliceai[7]	
+            DP_AL <- spliceai[8]	
+            DP_DG <- spliceai[9]	
+            DP_DL <- spliceai[10]	
+            scores <- c(DS_AG, DS_AL, DS_DG, DS_DL)
+            names(scores) <- c("acceptor_gain", "acceptor_loss", "donor_gain", "donor_loss")
+            max_score <- max(scores)
+            for (name in names(scores)){
+                if (scores[name] == max_score){name_max_score <- name}
+            }
+            if (name_max_score == 0){
+                variants[i, "SpliceAI_impact"] <- "NA"
+            } else {
+                variants[i, "SpliceAI_impact"] <- name_max_score
+            }
+            variants[i, "SpliceAI_score"] <- max_score
+        }
+
+    }
+
     
     # pathogenicity scores
     # Column42 = sift
@@ -381,7 +412,7 @@ select_and_write2 <- function(variants, samples, prefix)
                             "Gnomad_af_popmax", "Gnomad_af", "Gnomad_ac", "Gnomad_hom",
                             "Ensembl_transcript_id", "AA_position", "Exon", "Protein_domains", "rsIDs",
                             "Gnomad_oe_lof_score", "Gnomad_oe_mis_score", "Exac_pli_score", "Exac_prec_score", "Exac_pnull_score",
-                            "Conserved_in_20_mammals", "SpliceAI_score", "Sift_score", "Polyphen_score", "Cadd_score", "Vest3_score", "Revel_score", "Gerp_score",
+                            "Conserved_in_20_mammals", "SpliceAI_impact", "SpliceAI_score", "Sift_score", "Polyphen_score", "Cadd_score", "Vest3_score", "Revel_score", "Gerp_score",
                             "Imprinting_status", "Imprinting_expressed_allele", "Pseudoautosomal", "Splicing",
                             "Number_of_callers", "Old_multiallelic"))]
   
