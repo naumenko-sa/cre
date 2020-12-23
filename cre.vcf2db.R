@@ -434,7 +434,7 @@ select_and_write2 <- function(variants, samples, prefix)
                             "Ensembl_transcript_id", "AA_position", "Exon", "Protein_domains", "rsIDs",
                             "Gnomad_oe_lof_score", "Gnomad_oe_mis_score", "Exac_pli_score", "Exac_prec_score", "Exac_pnull_score",
                             "Conserved_in_20_mammals", "SpliceAI_impact", "SpliceAI_score", "Sift_score", "Polyphen_score", "Cadd_score", "Vest3_score", "Revel_score", "Gerp_score",
-                            "Imprinting_status", "Imprinting_expressed_allele", "Pseudoautosomal", "Splicing",
+                            "Imprinting_status", "Imprinting_expressed_allele", "Pseudoautosomal",
                             "Number_of_callers", "Old_multiallelic"))]
   
     variants <- variants[order(variants$Position),]
