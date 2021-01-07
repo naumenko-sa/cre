@@ -4,7 +4,7 @@ details:
     effects: vep
     effects_transcripts: all
     ensemble:
-      numpass: 2
+      numpass: 1
       use_filtered: false
     realign: false
     recalibrate: false

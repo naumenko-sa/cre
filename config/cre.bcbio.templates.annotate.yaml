@@ -4,7 +4,7 @@ details:
     effects: vep
     effects_transcripts: all
     ensemble:
-      numpass: 2
+      numpass: 1
       use_filtered: false
     mark_duplicates: false
     realign: false
@@ -20,7 +20,7 @@ details:
     - noalt_calling
     variantcaller: false
     vcfanno:
-    - /home/teja/cre/cre.vcfanno.conf
+    - /home/ccmmarvin/cre/cre.vcfanno.conf
   analysis: variant2
   description: [familyid]_sample
   vrn_file: ../input/[vrn_file]
