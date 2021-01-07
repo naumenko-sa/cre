@@ -286,6 +286,7 @@ create_report <- function(family, samples){
     }
     
     # Column41 - Conserved_in_20_mammals
+    # Column 42? - SpliceAI (actually 47, these column indexes are no longer accurate)
     
     # pathogenicity scores
     # Column42 = sift
@@ -340,6 +341,9 @@ create_report <- function(family, samples){
 	          variants[i,"Splicing"] <- s_splicing_field
         }
     }else print("VEP MaxEntScan annotation is missing")
+
+    # Column 51: SpliceAI
+
     
     # Column 51: number of callers
     variants <- add_placeholder(variants, "Number_of_callers", "Number_of_callers")
@@ -377,7 +381,7 @@ select_and_write2 <- function(variants, samples, prefix)
                             "Gnomad_af_popmax", "Gnomad_af", "Gnomad_ac", "Gnomad_hom",
                             "Ensembl_transcript_id", "AA_position", "Exon", "Protein_domains", "rsIDs",
                             "Gnomad_oe_lof_score", "Gnomad_oe_mis_score", "Exac_pli_score", "Exac_prec_score", "Exac_pnull_score",
-                            "Conserved_in_20_mammals", "Sift_score", "Polyphen_score", "Cadd_score", "Vest3_score", "Revel_score", "Gerp_score",
+                            "Conserved_in_20_mammals", "SpliceAI_score", "Sift_score", "Polyphen_score", "Cadd_score", "Vest3_score", "Revel_score", "Gerp_score",
                             "Imprinting_status", "Imprinting_expressed_allele", "Pseudoautosomal", "Splicing",
                             "Number_of_callers", "Old_multiallelic"))]
   

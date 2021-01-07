@@ -12,7 +12,7 @@
 #	max_af = af filter, default = 0.01
 ####################################################################################################
 
-#PBS -l walltime=30:00:00,nodes=1:ppn=1
+#PBS -l walltime=23:00:00,nodes=1:ppn=1
 #PBS -joe .
 #PBS -d .
 #PBS -l vmem=40g,mem=40g
@@ -161,19 +161,13 @@ function f_make_report
     awk '!a[$0]++' $family.variants.all.txt > $family.variants.txt
     awk '!a[$0]++' $family.variant_impacts.all.txt > $family.variant_impacts.txt
 
-    for f in *.vcf.gz
-    do
-	if [ ! -f $f.tbi ]
-	then 
-	   tabix $f
-	fi
-    done
 
     # report filtered vcf for import in phenotips
     # note that if there is a multiallelic SNP, with one rare allele and one frequent one, both will be reported in the VCF,
     # and just a rare one in the excel report
     cat $family.variants.txt | cut -f 1,2 | sed 1d | sed s/chr// | sort -k1,1 -k2,2n > ${family}-ensemble.db.txt.positions
     
+
     # this may produce duplicate records if two positions from positions file overlap with a variant 
     # (there are 2 positions and 2 overlapping variants, first reported twice)
     bcftools view -R ${family}-ensemble.db.txt.positions ${family}-ensemble-annotated-decomposed.vcf.gz | bcftools sort | vt uniq - | vt rminfo -t CSQ,Interpro_domain,MutPred_Top5features,MutationTaster_AAE - -o $family.vcf.gz
@@ -190,6 +184,14 @@ function f_make_report
     echo $reference
 
     vcf.ensemble.getCALLERS.sh $family.vcf.gz $reference
+
+    for f in *.vcf.gz
+    do
+	if [ ! -f $f.tbi ]
+	then 
+	   tabix $f
+	fi
+    done
 
     #decompose first for the old version of bcbio!
     #gemini.decompose.sh ${family}-freebayes.vcf.gz

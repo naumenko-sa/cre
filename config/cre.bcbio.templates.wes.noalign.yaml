@@ -5,7 +5,7 @@ details:
     effects: vep
     effects_transcripts: all
     ensemble:
-      numpass: 2
+      numpass: 1
       use_filtered: false
     realign: false
     recalibrate: false
@@ -21,9 +21,9 @@ details:
     - gatk4
     variantcaller:
     - gatk-haplotype
+    - samtools
     - platypus
     - freebayes
-    - samtools
     vcfanno:
     - /home/ccmmarvin/cre/cre.vcfanno.conf
   analysis: variant2

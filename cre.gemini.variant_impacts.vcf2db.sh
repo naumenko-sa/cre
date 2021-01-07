@@ -26,9 +26,20 @@ then
 	  #used for RNA-seq = 20k variants in the report
     severity_filter=""
 else
-    severity_filter="v.impact_severity<>'LOW' and "
+    severity_filter="v.impact_severity<>'LOW' and"
 fi
-        
+
+#if pipeline is cre, filter out variants only called by one of freebayes, samtools, platypus
+callers=`gemini db_info $file | grep -w "variants" | grep -w "callers"` 
+if [ ! -z "$callers" ]
+then
+	callers="v.callers"
+	caller_filter="and v.callers not in ('freebayes', 'samtools', 'platypus')"
+else	
+	callers="00"
+	caller_filter=""
+fi
+
 
 sQuery="select \
 	i.variant_id,\
@@ -52,6 +63,7 @@ sQuery="select \
 	i.hgvsc,\
 	i.hgvsp,\
 	v.source,\
+	$callers,\
 	COALESCE(v.clinvar_pathogenic, '') || COALESCE( ';' || NULLIF(v.clinvar_sig,''), '') as Clinvar, \
 	v.clinvar_status	
 	"
@@ -69,8 +81,8 @@ fi
 initialQuery=$sQuery" from variants v,variant_impacts i" #store field selection
 
 
-sQuery=$initialQuery" where "$severity_filter"v.gnomad_af_popmax <= "$max_af" and \
-v.variant_id=i.variant_id"
+sQuery=$initialQuery" where "$severity_filter" v.gnomad_af_popmax <= "$max_af" and \
+v.variant_id=i.variant_id "$caller_filter""
 
 s_gt_filter=''
 
@@ -86,16 +98,17 @@ then
     gemini query -q "$sQuery" --gt-filter "$s_gt_filter" --header $file
 else
     s_gt_filter="(gt_alt_depths).(*).(>="${alt_depth}").(any) or (gt_alt_depths).(*).(==-1).(all)"
-		gemini query -q "$sQuery" --gt-filter "$s_gt_filter" --header $file
+	gemini query -q "$sQuery" --gt-filter "$s_gt_filter" --header $file
     # grab the clinvar variants
     cQuery=$initialQuery 
     # everything that has a clinvar_sig value
-    cQuery=$cQuery" where v.gnomad_af_popmax <= ${max_af} and v.variant_id=i.variant_id and clinvar_sig <> ''"
+	cQuery=$cQuery" where v.gnomad_af_popmax <= ${max_af} and v.variant_id=i.variant_id and clinvar_sig <> '' "$caller_filter" "
+    #cQuery=$cQuery" where gnomad_af_popmax <= ${max_af} and v.variant_id=i.variant_id and clinvar_sig <> ''"
     # only get variants where AD >= 1 (any sample with an alternate read)
     s_gt_filter="(gt_alt_depths).(*).(>=1).(any) or (gt_alt_depths).(*).(==-1).(all)"
     gemini query -q "$cQuery" --gt-filter "$s_gt_filter" $file
-		# add variants where gnomad freq is > 1%, Clinvar is pathogenic, likely pathogenic or conflicting and any status except no assertion 
-		cQuery=$initialQuery
-		cQuery=$cQuery" where v.gnomad_af_popmax > ${max_af} and v.clinvar_status != 'no_assertion_criteria_provided' and Clinvar in ('Pathogenic', 'Likely_pathogenic', 'Conflicting_interpretations_of_pathogenicity')"
-		gemini query -q "$cQuery" $file
+    # add variants where gnomad freq is > 1%, Clinvar is pathogenic, likely pathogenic or conflicting and any status except no assertion 
+    cQuery=$initialQuery
+    cQuery=$cQuery" where v.gnomad_af_popmax > ${max_af} and v.variant_id=i.variant_id and v.clinvar_status != 'no_assertion_criteria_provided' and Clinvar in ('Pathogenic', 'Likely_pathogenic', 'Conflicting_interpretations_of_pathogenicity') "$caller_filter""
+    gemini query -q "$cQuery" $file
 fi

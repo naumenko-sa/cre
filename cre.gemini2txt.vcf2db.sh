@@ -29,6 +29,18 @@ alt_depth=3
 
 gemini query -q "select name from samples order by name" $file > samples.txt
 
+#if pipeline is cre, filter out variants only called by one of freebayes, samtools, platypus
+callers=`gemini db_info $file | grep -w "variants" | grep -w "callers"` 
+if [ ! -z "$callers" ]
+then
+	callers="callers"
+	caller_filter="and Callers not in ('freebayes', 'samtools', 'platypus')"
+else	
+	callers="00"
+	caller_filter=""
+fi
+
+
 sQuery="select \
         chrom as Chrom,\
         start+1 as Pos,\
@@ -59,7 +71,9 @@ sQuery="select \
         gerp_score as Gerp_score,\
         aa_change as AA_change,\
         hgvsc as Codon_change,\
-        phylop20way_mammalian as Conserved_in_20_mammals,
+        "$callers" as Callers,\
+        phylop20way_mammalian as Conserved_in_20_mammals,\
+        COALESCE(spliceai_score, '') as SpliceAI_score,
         gts,"
 
 while read sample
@@ -91,7 +105,7 @@ initialQuery=$sQuery # keep the field selection part for later use
 
 #max_aaf_all frequency is from gemini.conf and does not include gnomad WGS frequencing, gnomad WES only
 #gnomad_af includes gnomad WGS
-sQuery=$sQuery" where gnomad_af_popmax <= "${max_af}" "${severity_filter}""
+sQuery=$sQuery" where gnomad_af_popmax <= "${max_af}" "$caller_filter""${severity_filter}""
 
 s_gt_filter=''
 # denovo 0/1 is exported in cre.sh
@@ -114,14 +128,14 @@ else
 
     # also get the clinvar variants (duplicates will be removed later)
     cQuery=$initialQuery
-    cQuery=$cQuery" where gnomad_af_popmax <= ${max_af} and Clinvar <> ''"
+    cQuery=$cQuery" where gnomad_af_popmax <= ${max_af} "$caller_filter" and Clinvar <> ''"
     # only get variants where AD >= 1 (any sample with an alternate read)
     c_gt_filter="(gt_alt_depths).(*).(>=1).(any) or (gt_alt_depths).(*).(==-1).(all)"
     gemini query -q "$cQuery" --gt-filter "$c_gt_filter" $file
 
     # if allele frequency is > 1% and Clinvar is pathogenic, likely pathogenic or conflicting and any status except for no assertion
     cQuery=$initialQuery
-    cQuery=$cQuery" where gnomad_af_popmax > ${max_af} and Clinvar_status != 'no_assertion_criteria_provided' and Clinvar in ('Pathogenic', 'Likely_pathogenic', 'Conflicting_interpretations_of_pathogenicity')"
+    cQuery=$cQuery" where gnomad_af_popmax > ${max_af} "$caller_filter" and Clinvar_status != 'no_assertion_criteria_provided' and Clinvar in ('Pathogenic', 'Likely_pathogenic', 'Conflicting_interpretations_of_pathogenicity')"
     gemini query -q "$cQuery" $file
 
 fi

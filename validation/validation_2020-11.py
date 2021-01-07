@@ -13,10 +13,10 @@ def db_output_to_dict(db_output):
             alt_depths = [row[col] for col in row if 'gt_alt_depths' in col]
             if row['db'] == args.prefix1:
                 variant = row['chrom'] + ':' +  row['start'] + ':' + row['end'] + ':' + row['ref'] + ':' + row['alt']
-                db1[variant] = {'impact_severity': row['impact_severity'], 'clinvar_sig': row['clinvar_sig'], 'clinvar_pathogenic': row['clinvar_pathogenic'], 'alt_depths': alt_depths}
+                db1[variant] = {'impact_severity': row['impact_severity'], 'clinvar_sig': row['clinvar_sig'], 'clinvar_pathogenic': row['clinvar_pathogenic'], 'alt_depths': alt_depths, 'callers': row['callers']}
             elif row['db'] == args.prefix2:
                 variant = row['chrom'] + ':' +  row['start'] + ':' + row['end'] + ':' + row['ref'] + ':' + row['alt']
-                db2[variant] = {'impact_severity': row['impact_severity'], 'clinvar_sig': row['clinvar_sig'], 'clinvar_pathogenic': row['clinvar_pathogenic'], 'alt_depths': alt_depths}
+                db2[variant] = {'impact_severity': row['impact_severity'], 'clinvar_sig': row['clinvar_sig'], 'clinvar_pathogenic': row['clinvar_pathogenic'], 'alt_depths': alt_depths, 'callers': row['callers']}
     return db1, db2
 
 def get_explanations(report1_var, report2_var):
@@ -24,7 +24,10 @@ def get_explanations(report1_var, report2_var):
     for variant in report1_var:
         report1_var[variant]['alt_depths'] = [int(ad.strip(' ')) for ad in report1_var[variant]['alt_depths']]
         if variant not in report2_var:
-            explanation[variant] = 'Variant not present in comparison database'
+            if report1_var[variant]['callers'] == 'gatk-haplotype':
+                explanation[variant] = 'Variant only called by GATK'
+            else:   
+                explanation[variant] = 'Variant not present in comparison database'
         elif report1_var[variant]['clinvar_sig'] != 'None' and report2_var[variant]['clinvar_sig'] == 'None':
             explanation[variant] = 'Change in clinvar_sig from %s to None'%report1_var[variant]['clinvar_sig']
         elif report1_var[variant]['clinvar_pathogenic'] != 'None' and report2_var[variant]['clinvar_pathogenic'] == 'None':
