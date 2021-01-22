@@ -287,6 +287,58 @@ create_report <- function(family, samples){
     
     # Column41 - Conserved_in_20_mammals
     # Column 42? - SpliceAI (actually 47, these column indexes are no longer accurate)
+    variants <- add_placeholder(variants, "SpliceAI_impact", "")
+    for (i in 1:nrow(variants)){
+        print(i)
+        if (variants[i,"SpliceAI_score"] == ""){
+            variants[i, "SpliceAI_impact"] <- "NA|NA|NA"
+            variants[i, "SpliceAI_score"] <- 0
+        } else {
+            spliceai <- strsplit(variants[i,"SpliceAI_score"], ",", fixed = T)[[1]]
+            score_list <- c("NA", "NA", 0, "NA")
+            names(score_list) <- c("gene", "impact", "score", "pos")
+            for (anno in spliceai){
+                anno <- strsplit(anno, "|", fixed = T)[[1]]
+                gene <- anno[2]
+                DS_AG <- anno[3]
+                DS_AL <- anno[4]	
+                DS_DG <- anno[5]	
+                DS_DL <- anno[6]	
+                DP_AG <- anno[7]	
+                DP_AL <- anno[8]	
+                DP_DG <- anno[9]	
+                DP_DL <- anno[10]	
+                scores <- c(as.numeric(DS_AG), as.numeric(DS_AL), as.numeric(DS_DG), as.numeric(DS_DL))
+                names(scores) <- c("acceptor_gain", "acceptor_loss", "donor_gain", "donor_loss")
+                max_score <- max(scores)        
+                for (name in names(scores)){
+                    if (scores[name] == max_score){name_max_score <- name}
+                }
+                if (name_max_score == 0){
+                    impact <- "NA"
+                } else {
+                    impact <- name_max_score
+                }
+                if (score_list["score"] < max_score){
+                    score_list["score"] <- max_score
+                    score_list["gene"] <- gene
+                    score_list["impact"] <- impact
+                    if (impact == "acceptor_gain"){
+                        score_list["pos"] <- DP_AG
+                        } else if (impact == "acceptor_loss"){
+                        score_list["pos"] <- DP_AL
+                        } else if (impact == "acceptor_loss"){
+                        score_list["pos"] <- DP_DG
+                        } else {
+                        score_list["pos"] <- DP_DL
+                        }
+                    }
+                }
+            variants[i, "SpliceAI_impact"] <- paste(score_list["gene"], score_list["impact"], score_list["pos"], sep="|")
+            variants[i, "SpliceAI_score"] <- score_list["score"]
+            }
+        }
+
     
     # pathogenicity scores
     # Column42 = sift
@@ -381,8 +433,8 @@ select_and_write2 <- function(variants, samples, prefix)
                             "Gnomad_af_popmax", "Gnomad_af", "Gnomad_ac", "Gnomad_hom",
                             "Ensembl_transcript_id", "AA_position", "Exon", "Protein_domains", "rsIDs",
                             "Gnomad_oe_lof_score", "Gnomad_oe_mis_score", "Exac_pli_score", "Exac_prec_score", "Exac_pnull_score",
-                            "Conserved_in_20_mammals", "SpliceAI_score", "Sift_score", "Polyphen_score", "Cadd_score", "Vest3_score", "Revel_score", "Gerp_score",
-                            "Imprinting_status", "Imprinting_expressed_allele", "Pseudoautosomal", "Splicing",
+                            "Conserved_in_20_mammals", "SpliceAI_impact", "SpliceAI_score", "Sift_score", "Polyphen_score", "Cadd_score", "Vest3_score", "Revel_score", "Gerp_score",
+                            "Imprinting_status", "Imprinting_expressed_allele", "Pseudoautosomal",
                             "Number_of_callers", "Old_multiallelic"))]
   
     variants <- variants[order(variants$Position),]
