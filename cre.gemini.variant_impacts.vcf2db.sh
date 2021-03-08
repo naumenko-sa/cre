@@ -89,11 +89,10 @@ s_gt_filter=''
 if [ -n "$denovo" ] && [ "$denovo" == 1 ]
 then
     proband=`gemini query -q "select name from samples where phenotype=2" $file`
-    mom=`gemini query -q "select name from samples where phenotype=1 and sex=2" $file`
-    dad=`gemini query -q "select name from samples where phenotype=1 and sex=1" $file`
+    mom=`gemini query -q "select name from samples where phenotype=-9 and sex=2" $file`
+    dad=`gemini query -q "select name from samples where phenotype=-9 and sex=1" $file`
     
-    s_gt_filter="gt_types."$proband" == 1 and (gt_types."$dad" == 0 or gt_types."$dad" == 3) and (gt_types."$mom" == 0 or gt_types."$mom" == 3)"
-#		 (gt_types."$proband" == )"
+    s_gt_filter="(gt_types."$proband" == HET and gt_types."$dad" == HOM_REF and gt_types."$mom" == HOM_REF)  and ((gt_alt_depths).(*).(>="${alt_depth}").(any) or (gt_alt_depths).(*).(==-1).(all))"
     sQuery=$sQuery" and qual>=500"
     gemini query -q "$sQuery" --gt-filter "$s_gt_filter" --header $file
 else

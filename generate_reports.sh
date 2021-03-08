@@ -5,19 +5,15 @@
 
 family=$1
 report_type=$2
+ped=$3
 curr_date=$(date +"%Y-%m-%d")
 
 rerun_folder="${family}_${curr_date}"
 
-if [ "$3" == "-email" ]; then
-  email_flag="-m e"
-else
-	email_flag=""
-fi
 
 if [ "$report_type" == "wes" ] || [ "$report_type" == "wes.both" ]; then
 	eval script="~/cre/cre.vcf2cre.sh"
-elif [ "$report_type" == "wgs" ]; then
+elif [ "$report_type" == "wgs" ] || [ "$report_type" == "denovo" ]; then
 	eval script="~/crg/crg.vcf2cre.sh"
 else
 	echo "Please enter a report type (wes, wes.both, or wgs)"
@@ -40,7 +36,7 @@ if [ -f $family_vcf ]; then
 	cp ../${family_vcf} .
 	# for exome reports, need variant tables from the four variant callers
 	cp ../*table . 
-	vcf2cre_job="$(qsub "${script}" -v original_vcf="${family_vcf}",project=${family})"
+	vcf2cre_job="$(qsub "${script}" -v original_vcf="${family_vcf}",project=${family},ped=${ped})"
 else
 	echo "${family_vcf} not present, exiting."
 	cd ../..
@@ -57,6 +53,9 @@ elif [ "$report_type" = "wes" ]; then
 	echo "Regular WES Report Job ID: ${report_job}"
 elif [ "$report_type" = "wgs" ]; then
 	report_job="$(qsub ~/cre/cre.sh -W depend=afterany:"${vcf2cre_job}" -v family=${family},type=wgs)"
+  echo "WGS Report Job ID: ${report_job}"
+elif [ "$report_type" = "denovo" ]; then
+	report_job="$(qsub ~/cre/cre.sh -W depend=afterany:"${vcf2cre_job}" -v family=${family},type=denovo)"
   echo "WGS Report Job ID: ${report_job}"
 fi
 
