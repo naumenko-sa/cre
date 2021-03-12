@@ -92,8 +92,10 @@ then
     mom=`gemini query -q "select name from samples where phenotype=-9 and sex=2" $file`
     dad=`gemini query -q "select name from samples where phenotype=-9 and sex=1" $file`
     
-    s_gt_filter="(gt_types."$proband" == HET and gt_types."$dad" == HOM_REF and gt_types."$mom" == HOM_REF)  and ((gt_alt_depths).(*).(>="${alt_depth}").(any) or (gt_alt_depths).(*).(==-1).(all))"
-    sQuery=$sQuery" and qual>=500"
+    s_gt_filter="((gt_types."$proband" == HET or gt_types."$proband" == HOM_ALT) and gt_types."$dad" == HOM_REF and gt_types."$mom" == HOM_REF) \
+	and (gt_alt_depths."$proband" >="${alt_depth}" or (gt_alt_depths).(*).(==-1).(all)) \
+    and ((gt_alt_depths."$dad" < 10 and gt_alt_depths."$mom" < 10)  or (gt_alt_depths).(*).(==-1).(all))"
+    sQuery=$sQuery " and qual>=400"
     gemini query -q "$sQuery" --gt-filter "$s_gt_filter" --header $file
 else
     s_gt_filter="(gt_alt_depths).(*).(>="${alt_depth}").(any) or (gt_alt_depths).(*).(==-1).(all)"
