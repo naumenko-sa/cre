@@ -36,24 +36,33 @@ if [ -f $family_vcf ]; then
 	cp ../${family_vcf} .
 	# for exome reports, need variant tables from the four variant callers
 	cp ../*table . 
-	vcf2cre_job="$(qsub "${script}" -v original_vcf="${family_vcf}",project=${family},ped=${ped})"
+	if [ ! z "$ped" ]
+		then
+			vcf2cre_job="$(qsub "${script}" -v original_vcf="${family_vcf}",project=${family},ped=${ped})"
+		else
+			vcf2cre_job="$(qsub "${script}" -v original_vcf="${family_vcf}",project=${family})"
+	fi
 else
 	echo "${family_vcf} not present, exiting."
 	cd ../..
 	exit
 fi
 
+# generate wes.regular and wes.synonymous reports only for exomes
 if [ "$report_type" = "wes.both" ]; then
 	first_report_job="$(qsub ~/cre/cre.sh -W depend=afterany:"${vcf2cre_job}" -v family=${family},type=wes.regular)"
 	echo "Regular WES Report Job ID: ${first_report_job}"
 	report_job="$(qsub ~/cre/cre.sh -W depend=afterany:"${first_report_job}" -v family=${family},type=wes.synonymous)"
 	echo "Synonymous WES Report Job ID: ${report_job}"
+# generate wes.regular report for genomes
 elif [ "$report_type" = "wes" ]; then
 	report_job="$(qsub ~/cre/cre.sh -W depend=afterany:"${vcf2cre_job}" -v family=${family},type=wes.regular)"
 	echo "Regular WES Report Job ID: ${report_job}"
+# generate wgs report for genomes (i.e. panel, panel-flank)
 elif [ "$report_type" = "wgs" ]; then
 	report_job="$(qsub ~/cre/cre.sh -W depend=afterany:"${vcf2cre_job}" -v family=${family},type=wgs)"
   echo "WGS Report Job ID: ${report_job}"
+# generate denovo report
 elif [ "$report_type" = "denovo" ]; then
 	report_job="$(qsub ~/cre/cre.sh -W depend=afterany:"${vcf2cre_job}" -v family=${family},type=denovo)"
   echo "WGS Report Job ID: ${report_job}"

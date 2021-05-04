@@ -10,6 +10,7 @@
 # 	type = [ wes.regular (default) | wes.synonymous | wes.fast | rnaseq | wgs | annotate (only for cleaning) | 
 # 	    denovo (all rare variants in wgs, proband should have phenotype=2, parents=phenotype1 also sex for parents in gemini.db) ]
 #	max_af = af filter, default = 0.01
+#   ped = pedigree file, used to amend gemini db with sample information to generate de novo report
 ####################################################################################################
 
 #PBS -l walltime=23:00:00,nodes=1:ppn=1
@@ -150,7 +151,12 @@ function f_make_report
     
     if [ "$type" == "denovo" ]
     then
-			export denovo=1
+        export denovo=1
+        if [ ! -z "$ped" ]
+        then
+            echo "Amending gemini db with pedigree information"
+            gemini amend --sample $ped ${family}-ensemble.db 
+        fi
     fi
 
     ~/cre/cre.gemini2txt.vcf2db.sh ${family}-ensemble.db $depth_threshold $severity_filter $max_af > $family.variants.all.txt
@@ -162,9 +168,9 @@ function f_make_report
 
     if [ "$type" == "denovo" ]
     then
-			#gemini prints the genotype filter to the first line of the file, need to remove
-            tail -n +2 $family.variants.txt > $family.variants.trim.txt
-            mv $family.variants.trim.txt $family.variants.txt
+		#gemini prints the genotype filter to the first line of the file, need to remove
+        tail -n +2 $family.variants.txt > $family.variants.trim.txt
+        mv $family.variants.trim.txt $family.variants.txt
     fi 
 
     # report filtered vcf for import in phenotips
