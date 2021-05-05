@@ -122,7 +122,7 @@ then
     echo $s_gt_filter
     #(gt_types."$proband" == HOM_ALT and gt_types."$dad" == HOM_REF and gt_types."$mom" == HET)"
     # otherwise a lot of trash variants
-    sQuery=$sQuery" and qual>=400"
+    sQuery=$sQuery" and qual>=400 and Old_multiallelic is null"
     gemini query -q "$sQuery" --gt-filter "$s_gt_filter" --header $file
 else
     # keep variant where the alt depth is >=3 in any one of the samples or they're all -1 (sometimes happens for freebayes called variants?)
