@@ -74,6 +74,7 @@ sQuery="select \
         "$callers" as Callers,\
         phylop20way_mammalian as Conserved_in_20_mammals,\
         COALESCE(spliceai_score, '') as SpliceAI_score,
+        uce_100bp as UCE_100bp, uce_200bp as UCE_200bp,
         gts,"
 
 while read sample
