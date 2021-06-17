@@ -25,7 +25,7 @@ details:
     - platypus
     - freebayes
     vcfanno:
-    - ~/cre/cre.vcfanno.conf
+    - /home/ccmmarvin/cre/cre.vcfanno.conf
   analysis: variant2
   description: 'project_sample'
   files:
