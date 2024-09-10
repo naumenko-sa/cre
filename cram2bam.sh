@@ -5,6 +5,8 @@
 #PBS -d .
 #PBS -l vmem=20g,mem=20g
 
+# test
+
 module load java
 
 cramtools bam -I $cram -O $bam -b -R $ref
